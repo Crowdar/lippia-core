@@ -1,5 +1,6 @@
-package com.crowdar.bdd.jbehave;
+package com.crowdar.bdd;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 
 import org.jbehave.core.configuration.Configuration;
@@ -9,6 +10,7 @@ import org.jbehave.core.embedder.EmbedderControls;
 import org.jbehave.core.embedder.StoryControls;
 import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.io.LoadFromClasspath;
+import org.jbehave.core.parsers.RegexStoryParser;
 import org.jbehave.core.reporters.CrossReference;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.reporters.StoryReporterBuilder;
@@ -44,15 +46,26 @@ public class EmbedderBase extends Embedder {
 		
 		Class<? extends EmbedderBase> embedderClass = this.getClass();
 		
-        return new MostUsefulConfiguration().useStoryControls(new StoryControls().doResetStateBeforeScenario(false))
+        return new MostUsefulConfiguration()
+        	.useStoryControls(new StoryControls().doResetStateBeforeScenario(false))
         	.useStoryLoader(new LoadFromClasspath(embedderClass.getClassLoader()))
-            .useStoryReporterBuilder(new StoryReporterBuilder()
+        	.useStoryReporterBuilder(new StoryReporterBuilder()
                 .withCodeLocation(CodeLocations.codeLocationFromClass(embedderClass))
                 .withFormats(Format.STATS, Format.CONSOLE, Format.TXT, CustomHTMLReport.WEB_DRIVER_HTML).withFailureTrace(true)
 				.withFailureTraceCompression(true)
-                .withCrossReference(new CrossReference()))
+                .withCrossReference(new CrossReference())
+                .withRelativeDirectory(
+            		"..".concat(File.separator)
+            		.concat("reports").concat(File.separator)
+            		.concat(System.getProperty("runInstance")).concat(File.separator)
+            		.concat("jbehave").concat(File.separator)
+            		.concat("view")))
+
+//Examples parameters        	
+        	.useStoryParser(new RegexStoryParser(new CustomExampleTableFactory(new LoadFromClasspath(this.getClass()))))
             .useParameterConverters(new ParameterConverters()
                     .addConverters(new DateConverter(new SimpleDateFormat("yyyy-MM-dd")))) // use custom date pattern
+
             .useStepMonitor(new SilentStepMonitor());
     }
 }

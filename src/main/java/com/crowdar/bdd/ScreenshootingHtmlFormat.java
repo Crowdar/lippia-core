@@ -1,4 +1,4 @@
-package com.crowdar.bdd.jbehave;
+package com.crowdar.bdd;
 
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;

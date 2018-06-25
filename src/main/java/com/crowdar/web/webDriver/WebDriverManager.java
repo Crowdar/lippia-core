@@ -8,7 +8,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
-import com.crowdar.Constants;
+import com.crowdar.core.Constants;
 
 import ru.stqa.selenium.factory.SingleWebDriverPool;
 

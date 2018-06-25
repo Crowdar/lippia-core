@@ -1,4 +1,4 @@
-package com.crowdar;
+package com.crowdar.core;
 
 public class Constants {
 
@@ -8,6 +8,7 @@ public class Constants {
 	public static final long WAIT_TIMEOUT_IN_SECONDS = 20;
     public static final long WAIT_SCRIPT_TIMEOUT = 55;
     public static final long WAIT_IMPLICIT_TIMEOUT = 2;
+    public static final long WAIT_FOR_ELEMENT = 30;
 
     
     public static final String DATE_FORMAT = "MM/dd/yyyy";
