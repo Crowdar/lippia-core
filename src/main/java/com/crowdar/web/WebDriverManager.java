@@ -1,4 +1,4 @@
-package com.crowdar.web.webDriver;
+package com.crowdar.web;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +12,7 @@ import com.crowdar.core.Constants;
 
 import ru.stqa.selenium.factory.SingleWebDriverPool;
 
-public final class WebDriverManager {
+public final class WebDriverManager{
 
     private static WebDriver driver;
     private static Wait<WebDriver> wait;
@@ -46,6 +46,16 @@ public final class WebDriverManager {
 
         return driver;
     }
+
+    public static WebDriver getChromeDriver(){
+        build(BrowserConfiguration.CHROME);
+        return getDriver();
+    }
+
+    public static WebDriver getFirefoxDriver(){
+        build(BrowserConfiguration.FIREFOX);
+        return getDriver();
+    }
    
     public static Wait<WebDriver> getFluentnWait(){
     	return wait;
@@ -53,6 +63,5 @@ public final class WebDriverManager {
 
     public static void dismissAll() {
         SingleWebDriverPool.DEFAULT.dismissAll();
-        
     }
 }

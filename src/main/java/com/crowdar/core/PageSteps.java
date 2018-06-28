@@ -1,5 +1,7 @@
 package com.crowdar.core;
 
+import com.crowdar.bdd.cukes.SharedDriver;
+
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +13,7 @@ import com.paulhammant.ngwebdriver.NgWebDriver;
  * @author jCarames
  *
  */
-public abstract class PageSteps {
+public abstract class PageSteps{
 	
 	private WebDriver driver;
 	private NgWebDriver ngWebDriver;
@@ -21,6 +23,13 @@ public abstract class PageSteps {
 	        this.driver = driver;
 	        ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
 	    }
+	}
+
+	public PageSteps(SharedDriver driver){
+		if (driver != null) {
+			this.driver = driver;
+			ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
+		}
 	}
 
 	public WebDriver getDriver() {

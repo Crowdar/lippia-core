@@ -1,13 +1,16 @@
-package com.crowdar.bdd;
+package com.crowdar.bdd.cukes;
+
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
-import cucumber.api.testng.CucumberFeatureWrapper;
 import cucumber.api.testng.TestNGCucumberRunner;
+import cucumber.api.testng.CucumberFeatureWrapper;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 /*@CucumberOptions(
         features = "src/test/resources/features",
         glue = {"com/crowdar/examples/testng"},
@@ -19,26 +22,6 @@ import org.testng.annotations.Test;
                 "rerun:target/cucumber-reports/rerun-reports/rerun.txt"
         })*/
 public class TestNgRunner extends AbstractTestNGCucumberTests {
-    private TestNGCucumberRunner testNGCucumberRunner;
-
-    @BeforeClass(alwaysRun = true)
-    public void setUpClass() throws Exception {
-        testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
-    }
-
-    @Test(groups = "cucumber", description = "Runs Cucumber Feature", dataProvider = "features")
-    public void feature(CucumberFeatureWrapper cucumberFeature) {
-        testNGCucumberRunner.runCucumber(cucumberFeature.getCucumberFeature());
-    }
-
-    @DataProvider
-    public Object[][] features() {
-        return testNGCucumberRunner.provideFeatures();
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void tearDownClass() throws Exception {
-        testNGCucumberRunner.finish();
-    }
-
+    protected WebDriver driver;
+    protected String BASE_URL = "https://www.kayak.com/cars";
 }

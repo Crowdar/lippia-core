@@ -1,4 +1,4 @@
-package com.crowdar.web.webDriver;
+package com.crowdar.web;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -28,13 +28,13 @@ public enum BrowserConfiguration {
 	CHROME {
 		@Override
 		public void localSetup() {
-			System.setProperty("webdriver.chrome.driver",getWebDriverPath().concat("chromedriver2.36.exe"));
+			System.setProperty("webdriver.chrome.driver",getWebDriverPath().concat("chromedriver.exe"));
 		}
 
 		@Override
 		public DesiredCapabilities getDesiredCapabilities() {
 	    	DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			capabilities.setPlatform(Platform.LINUX);
+			capabilities.setPlatform(Platform.WINDOWS);
 			capabilities.setBrowserName(capabilities.getBrowserName());
 			
 			ChromeOptions options = new ChromeOptions();

@@ -11,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.crowdar.bdd.cukes.SharedDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -44,6 +45,14 @@ abstract public class PageBase{
 	private Wait<WebDriver> fluentWait;
 
 	public PageBase(WebDriver driver) {
+		this.driver = driver;
+		this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
+		this.wait = new WebDriverWait(driver, Constants.WAIT_FOR_ELEMENT);
+		this.fluentWait = new FluentWait<WebDriver>(driver).withTimeout(30, TimeUnit.SECONDS)
+				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
+	}
+
+	public PageBase(SharedDriver driver) {
 		this.driver = driver;
 		this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
 		this.wait = new WebDriverWait(driver, Constants.WAIT_FOR_ELEMENT);
