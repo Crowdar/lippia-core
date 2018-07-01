@@ -38,8 +38,12 @@ import com.sun.jna.platform.win32.WinDef.HWND;
  * @author: Juan Manuel Spoleti
  */
 abstract public class PageBase{
+    
 
-	protected WebDriver driver;
+	public static  String BASE_URL; // this is the Base url for all system to be tested
+	protected String url;// this is the url that corespond to this child page and should be initialized in  child contructor child page
+	
+	protected WebDriver driver;	
 	private NgWebDriver ngWebDriver;
 	private WebDriverWait wait;
 	private Wait<WebDriver> fluentWait;
@@ -52,12 +56,27 @@ abstract public class PageBase{
 				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 	}
 
+
 	public PageBase(SharedDriver driver) {
-		this.driver = driver;
-		this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
-		this.wait = new WebDriverWait(driver, Constants.WAIT_FOR_ELEMENT);
-		this.fluentWait = new FluentWait<WebDriver>(driver).withTimeout(30, TimeUnit.SECONDS)
-				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
+		this((WebDriver)driver);
+	}
+
+	/**
+	 * Method that returns the complet url to  the page
+	 *  BASE_URL + url
+	 * @return String complete
+	 */
+	public String getCompleteURL(){
+		return BASE_URL+url;
+	}
+
+	/**
+	 * Method is used to navigated to page complete url
+	 *  BASE_URL + url
+	 * @return String complete
+	 */
+	public void navigateToIt(){
+		driver.get(getCompleteURL());
 	}
 
 	/**
