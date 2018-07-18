@@ -5,6 +5,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 
@@ -34,7 +36,13 @@ public class SharedDriver extends EventFiringWebDriver {
     static {
 
         ChromeDriverManager.getInstance().setup();
-        REAL_DRIVER = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("disable-infobars");
+        options.addArguments("start-maximized");
+        DesiredCapabilities customCapabilities = DesiredCapabilities.chrome();
+        customCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        REAL_DRIVER = new ChromeDriver(customCapabilities);
+
 
     }
 

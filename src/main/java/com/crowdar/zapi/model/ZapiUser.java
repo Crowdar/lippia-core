@@ -11,6 +11,17 @@ public class ZapiUser {
 	@JsonProperty("userName")
 	private String userName;
 
+	@JsonProperty("password")
+	private String Password;
+
+	public String getPassword() {
+		return Password;
+	}
+
+	public void setPassword(String password) {
+		Password = password;
+	}
+
 	public void setAccessKey(String accessKey) {
 		this.accessKey = accessKey;
 	}
@@ -34,5 +45,7 @@ public class ZapiUser {
 	public String getUserName() {
 		return userName;
 	}
+
+
 
 }

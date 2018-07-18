@@ -1,17 +1,23 @@
 package com.crowdar.zapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TestCycle {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ZapiTestCycle extends ZapiModel {
 
 	@JsonProperty("name")
 	private String name;
+
 	@JsonProperty("description")
 	private String description;
+
 	@JsonProperty("startDate")
 	private Long startDate;
+
 	@JsonProperty("projectId")
 	private Long projectId;
+
 	@JsonProperty("versionId")
 	private Long versionId;
 
