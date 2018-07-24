@@ -1,6 +1,6 @@
 package com.crowdar.report;
 
-import com.crowdar.bdd.GUIStoryRunner;
+import com.crowdar.mobile.core.GUIStoryRunner;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;

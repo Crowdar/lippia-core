@@ -1,5 +1,7 @@
-package com.crowdar.bdd;
+package com.crowdar.mobile.core;
 
+import com.crowdar.bdd.GUIStories;
+import com.crowdar.bdd.StoryUtils;
 import com.google.common.collect.Lists;
 import com.crowdar.core.Context;
 import com.crowdar.core.MyThreadLocal;

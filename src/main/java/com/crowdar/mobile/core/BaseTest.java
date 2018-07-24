@@ -1,6 +1,5 @@
 package com.crowdar.mobile.core;
 
-import com.crowdar.bdd.GUIStoryRunner;
 import com.crowdar.core.*;
 import com.relevantcodes.extentreports.LogStatus;
 import com.crowdar.email.EmailUtil;
