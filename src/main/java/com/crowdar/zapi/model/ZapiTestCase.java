@@ -22,6 +22,9 @@ public class ZapiTestCase extends ZapiModel {
 
     }
 
+    public ZapiTestCase(String summary) {
+        this.summary = summary;
+    }
 
     public ZapiProject getProject() {
         return project;

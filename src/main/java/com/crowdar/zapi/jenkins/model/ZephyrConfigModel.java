@@ -3,10 +3,11 @@ package com.crowdar.zapi.jenkins.model;
 import java.util.List;
 
 import com.crowdar.zapi.jenkins.utils.rest.RestClient;
+import com.crowdar.zapi.model.ZapiTestCaseResultModel;
 
 public class ZephyrConfigModel {
 
-	private List<TestCaseResultModel> testcases;
+	private List<ZapiTestCaseResultModel> testcases;
 	private Long zephyrProjectId;
 	private Long versionId;
 	private String cycleId;
@@ -36,11 +37,11 @@ public class ZephyrConfigModel {
 		this.cyclePrefix = cyclePrefix;
 	}
 
-	public List<TestCaseResultModel> getTestcases() {
+	public List<ZapiTestCaseResultModel> getTestcases() {
 		return testcases;
 	}
 
-	public void setTestcases(List<TestCaseResultModel> testcases) {
+	public void setTestcases(List<ZapiTestCaseResultModel> testcases) {
 		this.testcases = testcases;
 	}
 

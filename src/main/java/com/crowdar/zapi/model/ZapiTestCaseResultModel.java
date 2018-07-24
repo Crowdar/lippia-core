@@ -1,9 +1,9 @@
-package com.crowdar.zapi.jenkins.model;
+package com.crowdar.zapi.model;
 
 import com.crowdar.zapi.model.ZapiTestCase;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TestCaseResultModel {
+public class ZapiTestCaseResultModel {
 
 	@JsonProperty("passed")
 	private Boolean passed;

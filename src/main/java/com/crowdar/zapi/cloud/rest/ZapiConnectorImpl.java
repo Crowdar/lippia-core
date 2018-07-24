@@ -1,13 +1,11 @@
 package com.crowdar.zapi.cloud.rest;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
+import com.crowdar.zapi.cloud.rest.client.JwtGenerator;
 import com.crowdar.zapi.model.ZapiTestCase;
 import com.crowdar.zapi.model.ZapiTestCycle;
+import com.crowdar.zapi.model.ZapiUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -20,13 +18,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.crowdar.zapi.model.ZapiUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thed.zephyr.cloud.rest.ZFJCloudRestClient;
-import com.thed.zephyr.cloud.rest.client.JwtGenerator;
 import org.springframework.http.HttpMethod;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 public class
 ZapiConnectorImpl implements ZapiConnector {

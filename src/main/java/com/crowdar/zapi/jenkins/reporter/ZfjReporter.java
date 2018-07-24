@@ -4,12 +4,12 @@ package com.crowdar.zapi.jenkins.reporter;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.crowdar.core.PropertyManager;
 import com.crowdar.zapi.jenkins.utils.rest.*;
 import com.crowdar.zapi.model.ZapiIssueType;
 import com.crowdar.zapi.model.ZapiProject;
@@ -19,7 +19,7 @@ import com.crowdar.zapi.model.ZapiUser;
 import org.apache.commons.lang.StringUtils;
 
 
-import com.crowdar.zapi.jenkins.model.TestCaseResultModel;
+import com.crowdar.zapi.model.ZapiTestCaseResultModel;
 import com.crowdar.zapi.jenkins.model.ZephyrConfigModel;
 import org.apache.log4j.Logger;
 
@@ -37,6 +37,7 @@ public class ZfjReporter {
 	private String cyclePrefix;
 	private String cycleDuration;
 	private ZapiUser user;
+	private String customsfields = "";
 
 	
     private static final String PluginName = new String("[ZapiTestResultReporter]");
@@ -64,7 +65,7 @@ public class ZfjReporter {
 
 
 
-    public boolean perform(int buildNumber, Map<String, Boolean> zephyrTestCaseMap) {
+    public boolean perform(int buildNumber, Map<ZapiTestCase, Boolean> zephyrTestCaseMap) {
 
   
 		if (!validateBuildConfig()) {
@@ -101,46 +102,31 @@ public class ZfjReporter {
 
 
 
-	private boolean prepareZephyrTests(	ZephyrConfigModel zephyrConfig, Map<String, Boolean> zephyrTestCaseMap) {
+	private boolean prepareZephyrTests(	ZephyrConfigModel zephyrConfig, Map<ZapiTestCase, Boolean> zephyrTestCaseMap) {
 
 		boolean status = true;
-		//Map<String, Boolean> zephyrTestCaseMap = new HashMap<String, Boolean>();
 
-		//zephyrTestCaseMap.put("Test 1", true);
-        //zephyrTestCaseMap.put("Test 2", true);
-        //zephyrTestCaseMap.put("Test 3", true);
-        //zephyrTestCaseMap.put("Test 4", false);
-        //zephyrTestCaseMap.put("Test 5", true);
-        //zephyrTestCaseMap.put("Test 6", false);
-
-		
 		logger.info("Total Test Cases : " + zephyrTestCaseMap.size());
 
 		//here is where I am creating the zephyr testcases result
-		List<TestCaseResultModel> testcases = new ArrayList<TestCaseResultModel>();
-
+		List<ZapiTestCaseResultModel> testcases = new ArrayList<ZapiTestCaseResultModel>();
 		
-		Set<String> keySet = zephyrTestCaseMap.keySet();
-		
-		for (Iterator<String> iterator = keySet.iterator(); iterator.hasNext();) {
-			String testCaseName = iterator.next();
-			Boolean isPassed = zephyrTestCaseMap.get(testCaseName);
+		for (ZapiTestCase zapiTest : zephyrTestCaseMap.keySet()) {
 
+			Boolean isPassed = zephyrTestCaseMap.get(zapiTest);
 			ZapiIssueType isssueType = new ZapiIssueType();
 			isssueType.setId(zephyrConfig.getTestIssueTypeId());
-			
 			ZapiProject project = new ZapiProject();
 			project.setId(zephyrConfig.getZephyrProjectId());
-
 			ZapiTestCase fields = new ZapiTestCase();
 			fields.setProject(project);
-			fields.setSummary(testCaseName);
-			fields.setDescription("Creating the Test via Crowdar Automation");
+			fields.setSummary(zapiTest.getSummary());
+			fields.setDescription(zapiTest.getDescription());
 			fields.setIssueType(isssueType);
-			TestCaseResultModel caseWithStatus = new TestCaseResultModel();
+			ZapiTestCaseResultModel caseWithStatus = new ZapiTestCaseResultModel();
 			caseWithStatus.setPassed(isPassed);
 			caseWithStatus.setTestCase(fields);
-			caseWithStatus.setTestCaseName(testCaseName);
+			caseWithStatus.setTestCaseName(zapiTest.getSummary());
 			testcases.add(caseWithStatus);
 		}
 		
@@ -191,16 +177,22 @@ public class ZfjReporter {
 		determineCycleID(zephyrConfig);
 		determineCyclePrefix(zephyrConfig);
         determineTestIssueTypeId(zephyrConfig);
+        determineCustomFields(zephyrConfig);
+
+
 
 		
 		return zephyrConfig;
 	}
 
+	private void determineCustomFields(ZephyrConfigModel zephyrConfig) {
+
+		customsfields = PropertyManager.getProperty("zapi.issues.customfields");
+
+	}
+
 	private void prepareRestClient(ZephyrConfigModel zephyrConfig, String url) {
 		RestClient restClient = null;
-		//restClient = new RestClient(serverAddress, "dario.vallejos","Guille141210",
-		//"https://prod-api.zephyr4jiracloud.com/connect","amlyYTpjNDljMTFmOC1iZTRlLTRkYmQtODUyZS1hNzQyMGJjNWZhMDIgZGFyaW8udmFsbGVqb3MgZGFyaW8udmFsbGVqb3M","Mrh8XzOkW9JLuhrFdIcJ4m2NDSXX9sgYUMNG9OqhMM8");
-
         restClient = new RestClient(serverAddress,
                                     user.getUserName(),
                                     user.getPassword(),

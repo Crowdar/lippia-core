@@ -1,122 +1,63 @@
 package com.crowdar.email;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.properties.EncryptableProperties;
+import com.crowdar.report.ReportManager;
+import com.crowdar.core.PropertyManager;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
 /**
- * Configuracion y envio de mail por TLS adjuntando un archivo.
+ * Configuration and sending of mail by TLS attaching a file.
  */
 public class EmailUtil {
 
-    private static String fromEmail;
-    private static String password;
+	private static Properties config() {
+		
+		Properties props = new Properties();
+        props.put("mail.smtp.host", PropertyManager.getProperty("mail.smtp"));
+        props.put("mail.smtp.port", PropertyManager.getProperty("mail.port"));
+        props.put("mail.debug", PropertyManager.getProperty("mail.debug"));
+        return props;
+	}
 
-    private static Properties config(){
-        Properties mailProperties = new Properties();
-        mailProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-        mailProperties.put("mail.smtp.host", "smtp.gmail.com");
-        mailProperties.put("mail.smtp.port", "587");
-        mailProperties.put("mail.smtp.auth", "true");
-        mailProperties.put("mail.smtp.starttls.enable", "true");
-        return mailProperties;
-    }
+	/**
+	 * Utility method to send simple HTML email
+	 */
+	public static void sendReportEmail() {
+        
+		String from = PropertyManager.getProperty("report.mail.from");
+		String to = PropertyManager.getProperty("report.mail.to");
+		String cc = PropertyManager.getProperty("report.mail.cc");
+		String subject = PropertyManager.getProperty("report.mail.subject");
+		
+		try {
+			System.out.println("Sending Email...");
+			Session session = Session.getDefaultInstance(EmailUtil.config());
+					
+			MimeMessage message = new MimeMessage(session);
 
-    /**
-     * Utility method to send simple HTML email
-     * @param toEmail
-     * @param subject
-     * @param body
-     */
-    public static void sendEmail(String toEmail, String subject, String body){
-        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        InputStream gmailAccountFile = null;
+			message.setFrom(new InternetAddress(from, from));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+			message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc));
+			message.setSubject(subject, "UTF-8");
+			message.setSentDate(new Date());
+			
+			System.out.println("Recipients: " + message.getAllRecipients());
 
-        try {
-            encryptor.setPassword("abhinav");
-
-            Properties props = new EncryptableProperties(encryptor);
-
-            gmailAccountFile = new FileInputStream("gmailAccount.properties");
-            props.load(gmailAccountFile);
-
-            fromEmail = props.getProperty("gmailUser");
-            password = props.getProperty("gmailPassword");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (gmailAccountFile != null) {
-                try {
-                    gmailAccountFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        Properties mailProperties = EmailUtil.config();
-        try
-        {
-            Authenticator auth = new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(fromEmail, password);
-                }
-            };
-            Session session = Session.getInstance(mailProperties, auth);
-
-            MimeMessage msg = new MimeMessage(session);
-
-            msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
-            msg.addHeader("format", "flowed");
-            msg.addHeader("Content-Transfer-Encoding", "8bit");
-
-            msg.setFrom(new InternetAddress(fromEmail, "Crowdar"));
-
-            msg.setSubject(subject, "UTF-8");
-
-            msg.setSentDate(new Date());
-
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
-
-            BodyPart messageBodyPart = new MimeBodyPart();
-            BodyPart attachmentBodyPart = new MimeBodyPart();
-            Multipart multipart = new MimeMultipart();
-
-            String filename = System.getProperty("user.dir") + "/test-output/CrowdarReport.html";
-            DataSource source = new FileDataSource(filename);
-            attachmentBodyPart.setDataHandler(new DataHandler(source));
-            messageBodyPart.setText(body);
-            attachmentBodyPart.setFileName("Crowdar report");
-
-
-            multipart.addBodyPart(messageBodyPart);
-            multipart.addBodyPart(attachmentBodyPart);
-
-            msg.setContent(multipart);
-
-            System.out.println("Message is ready");
-            Transport.send(msg);
-
-            System.out.println("EMail Sent Successfully!!");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+			String reportLink = ReportManager.getPublicUrlReport();
+			message.setText("Report link: \n" + reportLink, "UTF-8");
+			
+			Transport.send(message);
+			System.out.println("Email Sent Successfully!!");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

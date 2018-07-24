@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import com.crowdar.zapi.cloud.rest.client.RestBase;
 import com.crowdar.zapi.jenkins.reporter.ZfjConstants;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -28,7 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.crowdar.zapi.jenkins.model.TestCaseResultModel;
+import com.crowdar.zapi.model.ZapiTestCaseResultModel;
 import com.crowdar.zapi.jenkins.model.ZephyrConfigModel;
 
 public class TestCaseUtil implements RestBase {
@@ -62,7 +61,7 @@ public class TestCaseUtil implements RestBase {
 
 
 		Map<Long, Map<String, Boolean>> testCaseResultMap = new HashMap<Long, Map<String, Boolean>>();
-		List<TestCaseResultModel> testCases = zephyrData.getTestcases();
+		List<ZapiTestCaseResultModel> testCases = zephyrData.getTestcases();
 		if (testCases == null || testCases.size() == 0) {
 			return testCaseResultMap;
 		}
@@ -70,8 +69,8 @@ public class TestCaseUtil implements RestBase {
 			
 		Map<String, Map<Long, String>> searchedTests = searchIssues(zephyrData);
 		
-		for (Iterator<TestCaseResultModel> iterator = testCases.iterator(); iterator.hasNext();) {
-			TestCaseResultModel testCaseWithStatus = (TestCaseResultModel) iterator
+		for (Iterator<ZapiTestCaseResultModel> iterator = testCases.iterator(); iterator.hasNext();) {
+			ZapiTestCaseResultModel testCaseWithStatus = (ZapiTestCaseResultModel) iterator
 					.next();
 			
 				if (searchedTests.containsKey(testCaseWithStatus.getTestCaseName())) {
@@ -116,8 +115,8 @@ public class TestCaseUtil implements RestBase {
 		
 		Map<String, Map<Long, String>> searchedTestsAfterCreation = searchIssues(zephyrData);
 		
-		for (Iterator<TestCaseResultModel> iterator = testCases.iterator(); iterator.hasNext();) {
-			TestCaseResultModel testCaseWithStatus = (TestCaseResultModel) iterator.next();
+		for (Iterator<ZapiTestCaseResultModel> iterator = testCases.iterator(); iterator.hasNext();) {
+			ZapiTestCaseResultModel testCaseWithStatus = (ZapiTestCaseResultModel) iterator.next();
 			
 			if (searchedTestsAfterCreation.containsKey(testCaseWithStatus.getTestCaseName())) {
 				
@@ -137,14 +136,14 @@ public class TestCaseUtil implements RestBase {
 	}
 
 	private static void createTests(ZephyrConfigModel zephyrData, JSONObject bulkIssues,
-			Map<Long, Map<String, Boolean>> testCaseResultMap, List<TestCaseResultModel> testCases) {
+			Map<Long, Map<String, Boolean>> testCaseResultMap, List<ZapiTestCaseResultModel> testCases) {
 		String createURL = URL_CREATE_TESTS.replace("{SERVER}", zephyrData.getRestClient().getUrl());
 		HttpPost httpPost = new HttpPost(createURL);
 		httpPost.addHeader("Content-Type", "application/json");
 		
 		CloseableHttpResponse issueCreateResponse = null;
 		try {
-			StringEntity se = new StringEntity(bulkIssues.toString());
+			StringEntity se = new StringEntity(bulkIssues.toString(),"UTF-8");
 			httpPost.setEntity(se);
 			
 			issueCreateResponse = zephyrData.getRestClient().getHttpclient().execute(httpPost, zephyrData.getRestClient().getContext());
@@ -157,27 +156,17 @@ public class TestCaseUtil implements RestBase {
 		}
 		
 		int statusCode1 = issueCreateResponse.getStatusLine().getStatusCode();
+		String responseString = null;
+		try {
+			responseString = EntityUtils.toString(issueCreateResponse.getEntity(), "UTF-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(responseString);
+
 
 		if (statusCode1 >= 200 && statusCode1 < 300) {
-			
-//			Map<String, Map<Long, String>> searchedTestsAfterCreation = searchIssues(zephyrData);
-//			
-//			for (Iterator<TestCaseResultModel> iterator = testCases.iterator(); iterator.hasNext();) {
-//				TestCaseResultModel testCaseWithStatus = (TestCaseResultModel) iterator.next();
-//				
-//				if (searchedTestsAfterCreation.containsKey(testCaseWithStatus.getTestCaseName())) {
-//					
-//					Map<Long, String> tempTestIdTestKeyMap = searchedTestsAfterCreation.get(testCaseWithStatus.getTestCaseName());
-//					Set<Entry<Long, String>> entrySet = tempTestIdTestKeyMap.entrySet();
-//					Entry<Long, String> entry = entrySet.iterator().next();
-//					
-//					
-//					Map<String, Boolean> map = new HashMap<String, Boolean>();
-//					map.put(entry.getValue(), testCaseWithStatus.getPassed());
-//					testCaseResultMap.put(entry.getKey(), map);
-//				}
-//							
-//		}
+			//TODO Login response here or do something
 		}
 		
 		if (issueCreateResponse != null)
@@ -1052,30 +1041,6 @@ else {
 		issueKeyExecutionIdMap.putAll(map);
 		return totalCount;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	private static void executeTestsZFJC(ZephyrConfigModel zephyrData, List<String> passList, List<String> failList) {
 

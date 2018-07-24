@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import io.appium.java_client.MobileElement;
 import org.apache.commons.lang.RandomStringUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
@@ -168,5 +169,9 @@ public class Utils {
           
          System.out.println("Deletion successful.");
      }
+
+    public static boolean isTextFieldEmpty(MobileElement element, String placeholder){
+        return element.getText().equals(placeholder);
+    }
     
 }

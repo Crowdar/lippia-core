@@ -15,8 +15,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.thed.zephyr.cloud.rest.ZFJCloudRestClient;
-import com.thed.zephyr.cloud.rest.client.JwtGenerator;
+import com.crowdar.zapi.cloud.rest.ZFJCloudRestClient;
+import com.crowdar.zapi.cloud.rest.client.JwtGenerator;
 
 public class ServerInfo {
 	

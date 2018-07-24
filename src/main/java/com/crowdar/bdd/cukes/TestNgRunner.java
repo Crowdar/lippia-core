@@ -4,9 +4,12 @@ package com.crowdar.bdd.cukes;
 import com.crowdar.zapi.collaborator.ZapiBuilder;
 import com.crowdar.zapi.jenkins.reporter.ZfjConstants;
 import com.crowdar.zapi.jenkins.reporter.ZfjReporter;
+import com.crowdar.zapi.model.ZapiTestCase;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterSuite;
 
@@ -37,9 +40,17 @@ public class TestNgRunner extends AbstractTestNGCucumberTests {
     public void before(Scenario s) {
         if(s != null) {
           scenaries.add(s);
-        }else{
-            System.out.println("---Scenario is null ---");
         }
+    }
+
+    @After("@browser")
+    public void tearDown(Scenario scenario) {
+        if (scenario.isFailed()) {
+            final byte[] screenshot = ((TakesScreenshot) driver)
+                    .getScreenshotAs(OutputType.BYTES);
+            scenario.embed(screenshot, "image/png"); //stick it in the report
+        }
+        driver.close();
     }
 
 
@@ -51,10 +62,13 @@ public class TestNgRunner extends AbstractTestNGCucumberTests {
         reporter.perform(1,getScenarioStatusMap(scenaries));
     }
 
-    public Map<String,Boolean> getScenarioStatusMap(List<Scenario> scenaries){
-           Map<String,Boolean> mapScenaries = new HashMap<String,Boolean>();
+    public Map<ZapiTestCase,Boolean> getScenarioStatusMap(List<Scenario> scenaries){
+           Map<ZapiTestCase,Boolean> mapScenaries = new HashMap<ZapiTestCase,Boolean>();
+
             for(Scenario s : scenaries){
-                mapScenaries.put(s.getName(),!s.isFailed());
+                ZapiTestCase test = new ZapiTestCase();
+                test.setSummary(s.getName());
+                mapScenaries.put(test,!s.isFailed());
             }
             return mapScenaries;
     }
