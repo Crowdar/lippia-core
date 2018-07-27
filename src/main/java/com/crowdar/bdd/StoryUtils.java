@@ -1,5 +1,6 @@
 package com.crowdar.bdd;
 
+import java.io.File;
 import java.util.List;
 
 import org.jbehave.core.io.CodeLocations;
@@ -31,7 +32,7 @@ public abstract class StoryUtils {
 
 	private static List<String> getPath(String path){
 		StoryFinder finder = new StoryFinder();
-		String codeLocation = CodeLocations.codeLocationFromClass(StoryUtils.class).getFile();
+		String codeLocation = CodeLocations.codeLocationFromPath(System.getProperty("user.dir") + File.separator + "target" + File.separator + "classes").getFile();
 		String testLocation = codeLocation.replaceAll("classes", "test-classes");
 		return finder.findPaths(testLocation, path, "");
 	}
