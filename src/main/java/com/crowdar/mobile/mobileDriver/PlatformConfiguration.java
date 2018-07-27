@@ -101,6 +101,7 @@ public enum PlatformConfiguration {
                 return current;
             }
         }
+
         return null;
     }
 

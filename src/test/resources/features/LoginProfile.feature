@@ -8,6 +8,7 @@ Feature: Login Profile
     Given I am on the "Company home" page on URL "www.mycomany.com"
     Then I should see "Log In as Employee" message
 
+  @Dario @Tag1 @JIRA_12345
   Scenario: Successful login
     When I fill in "Username" with "Test"
     And I fill in "Password" with "123"
@@ -16,6 +17,7 @@ Feature: Login Profile
     And I should see "Welcome to your profile" message
     And I should see the "Log out" button
 
+  @Dario @Tag1 @JIRA_12346
   Scenario Outline: Failed login using wrong credentials
     When I fill in "Username" with "<username>"
     And I fill in "Password" with "<password>"

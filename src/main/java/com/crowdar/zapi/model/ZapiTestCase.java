@@ -16,6 +16,11 @@ public class ZapiTestCase extends ZapiModel {
     @JsonProperty("description")
     private String description;
 
+    private String jiraTicket;
+
+    private ZapiExecution execution;
+
+
 
 
     public ZapiTestCase() {
@@ -57,4 +62,26 @@ public class ZapiTestCase extends ZapiModel {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getJiraTicket() {
+        return jiraTicket;
+    }
+
+    public void setJiraTicket(String jiraTicket) {
+        this.jiraTicket = jiraTicket;
+    }
+
+    public ZapiExecution getExecution() {
+        if(execution == null){
+            execution = new ZapiExecution();
+        }
+        return execution;
+    }
+
+    public void setExecution(ZapiExecution execution) {
+        this.execution = execution;
+    }
+
+
 }
+
