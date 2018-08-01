@@ -34,7 +34,7 @@ public abstract class BaseTest {
 		System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
 		setRunInstanceProperty();
 		setFrameworkRootProperty();
-		WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(System.getProperty("browser")));
+		WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));
 	}
 
 	@BeforeTest

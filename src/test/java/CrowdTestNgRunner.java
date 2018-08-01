@@ -7,10 +7,4 @@ import java.io.File;
 public class CrowdTestNgRunner extends TestNgRunner {
 
 
-
-    @AfterSuite
-    public static void writeExtentReport() {
-        //Reporter.loadXMLConfig(new File("extent-config.xml"));
-    }
-
 }

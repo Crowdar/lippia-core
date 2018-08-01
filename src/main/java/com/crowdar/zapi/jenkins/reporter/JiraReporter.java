@@ -83,7 +83,7 @@ public class JiraReporter implements Reporter,Formatter {
         String tag = scenario.getSourceTagNames().stream().filter(t -> t.contains("JIRA_")).findFirst().orElse(null);
         if(tag != null)
             MonitorReport.getCurrentTest().setJiraTicket(tag);
-        MonitorReport.addTest(scenario.isFailed());
+        MonitorReport.addTest(!scenario.isFailed());
 
     }
 
@@ -123,9 +123,9 @@ public class JiraReporter implements Reporter,Formatter {
     @Override
     public void result(Result result) {
 
-
-
-
+        if(result != null && !result.getStatus().equalsIgnoreCase("Passed")){
+            MonitorReport.getCurrentTest().setResult(result);
+        }
 
     }
 

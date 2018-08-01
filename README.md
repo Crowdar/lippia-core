@@ -1,6 +1,6 @@
 **CrowdarCoreFramework**
 
-Here you can find all artifacts to be user in any cucumber, jbehave, testng, mobile,
+Here you can find all artifacts to be used in any cucumber, jbehave, testng, mobile project
 ---
 
 ## Cucumber and TestNG integration

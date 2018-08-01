@@ -29,5 +29,4 @@ Feature: Login Profile
       | Tset        | 123        | Incorrect credentials. Try again! |
       | Tset        | !23        | Incorrect credentials. Try again! |
       | Test        |            | Please enter password.            |
-      |             | 123        | Please enter username.            |
-      |             |            | Please enter your credentials.    |
+

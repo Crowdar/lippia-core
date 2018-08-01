@@ -1,7 +1,12 @@
 package com.crowdar.zapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import gherkin.formatter.model.Result;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -16,14 +21,30 @@ public class ZapiTestCase extends ZapiModel {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("customfield_10064")
+    private SelectList customfield_10064;
+    @JsonProperty("customfield_10065")
+    private SelectList customfield_10065;
+    @JsonProperty("labels")
+    private List<String> labels;
+
+    @JsonIgnore
     private String jiraTicket;
 
+    @JsonIgnore
     private ZapiExecution execution;
+
+    @JsonIgnore
+    Result result;
 
 
 
 
     public ZapiTestCase() {
+        customfield_10064 = new SelectList("SI");
+        customfield_10065 = new SelectList("SI");
+        labels = new ArrayList<String>();
+        labels.add("Automation");
 
     }
 
@@ -82,6 +103,54 @@ public class ZapiTestCase extends ZapiModel {
         this.execution = execution;
     }
 
+    public SelectList getCustomfield_10064() {
+        return customfield_10064;
+    }
 
+    public void setCustomfield_10064(SelectList customfield_10064) {
+        this.customfield_10064 = customfield_10064;
+    }
+
+    public SelectList getCustomfield_10065() {
+        return customfield_10065;
+    }
+
+    public void setCustomfield_10065(SelectList customfield_10065) {
+        this.customfield_10065 = customfield_10065;
+    }
+
+    public List<String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
 }
 
+
+class SelectList{
+
+
+    private String value;
+
+    public SelectList(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+}
