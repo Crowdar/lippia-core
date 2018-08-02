@@ -1,8 +1,10 @@
 package com.crowdar.bdd;
 
 import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 
+import com.crowdar.core.PropertyManager;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.embedder.Embedder;
@@ -51,22 +53,23 @@ public class EmbedderBase extends Embedder {
 		return new MostUsefulConfiguration()
 				.useStoryControls(new StoryControls().doResetStateBeforeScenario(false))
 				.useStoryLoader(new LoadFromClasspath(embedderClass.getClassLoader()))
-				.useStoryReporterBuilder(new StoryReporterBuilder()
-						.withCodeLocation(CodeLocations.codeLocationFromClass(embedderClass))
-						.withFormats(Format.STATS, Format.CONSOLE, Format.TXT, CustomHTMLReport.WEB_DRIVER_HTML).withFailureTrace(true)
-						.withFailureTraceCompression(true)
-						.withCrossReference(new CrossReference())
-						.withRelativeDirectory(
-								"..".concat(File.separator).concat("..").concat(File.separator)
-										.concat(ReportManager.REPORTS_CONTAINER_FOLDER_NAME).concat(File.separator).concat(ReportManager.getReportDirName()).concat(File.separator)
-										.concat("jbehave").concat(File.separator).concat("view")))
-
-//Examples parameters
+				.useStoryReporterBuilder(getStoryBuilder(embedderClass))
 				.useStoryParser(new RegexStoryParser(new CustomExampleTableFactory(new LoadFromClasspath(this.getClass()))))
 				.useParameterConverters(new ParameterConverters()
 						.addConverters(new DateConverter(new SimpleDateFormat("yyyy-MM-dd")))) // use custom date pattern
-
 				.useStepMonitor(new SilentStepMonitor());
 	}
+
+	public StoryReporterBuilder getStoryBuilder(Class<? extends EmbedderBase> embedderClass){
+
+		return new StoryReporterBuilder()
+				.withCodeLocation(CodeLocations.codeLocationFromPath(ReportManager.getReportPath()))
+				.withFormats(Format.STATS, Format.CONSOLE, Format.TXT, CustomHTMLReport.WEB_DRIVER_HTML).withFailureTrace(true)
+				.withFailureTraceCompression(true)
+				.withCrossReference(new CrossReference())
+				.withRelativeDirectory(ReportManager.getReportDirName()+File.separator+"jbehave"+File.separator+"view");
+	}
+
+
 
 }

@@ -2,7 +2,7 @@ package com.crowdar.bdd;
 
 import com.crowdar.core.Context;
 import com.crowdar.core.MyThreadLocal;
-import com.crowdar.core.ScreenshotCapture;
+import com.crowdar.report.ScreenshotCapture;
 import com.crowdar.web.WebDriverManager;
 import com.google.common.collect.Lists;
 import org.jbehave.core.embedder.Embedder;

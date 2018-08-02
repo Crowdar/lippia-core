@@ -69,7 +69,7 @@ public class JiraReporter implements Reporter,Formatter {
 
     @Override
     public void step(Step step) {
-        System.out.println("###################STEP");
+       // System.out.println("###################STEP");
         MonitorReport.getCurrentTest().getExecution().addStepExecution(new ZapiStepExecution(step.getName()));
     }
 
@@ -95,14 +95,14 @@ public class JiraReporter implements Reporter,Formatter {
 
     @Override
     public void done() {
-        System.out.println("###################done");
+        //System.out.println("###################done");
      }
 
 
 
     @Override
     public void close() {
-        System.out.println("###################Close");
+       // System.out.println("###################Close");
         MonitorReport.doReportToJira();
 
     }
@@ -131,7 +131,7 @@ public class JiraReporter implements Reporter,Formatter {
 
     @Override
     public void after(Match match, Result result) {
-        System.out.println("###################After");
+        //System.out.println("###################After");
         MonitorReport.getCurrentTest().getExecution().addMatchResult(match,result);
     }
 

@@ -3,8 +3,8 @@ package com.crowdar.bdd;
 import java.io.PrintStream;
 import java.util.Properties;
 
-import com.crowdar.core.ReportManager;
-import com.crowdar.core.ScreenshotCapture;
+import com.crowdar.report.ReportManager;
+import com.crowdar.report.ScreenshotCapture;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.HtmlOutput;
