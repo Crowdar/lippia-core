@@ -79,7 +79,7 @@ public abstract class ReportManager {
 	}
 	
 	private static String getReportName() {
-		return "SodimacReport";
+		return PropertyManager.getProperty("crowdar.report.name");
 	}
 	
 	/**
