@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.crowdar.bdd.cukes.SharedDriver;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -42,11 +43,14 @@ abstract public class PageBase{
 
 	public static  String BASE_URL; // this is the Base url for all system to be tested
 	protected String url;// this is the url that corespond to this child page and should be initialized in  child contructor child page
+
 	
 	protected WebDriver driver;	
 	private NgWebDriver ngWebDriver;
 	private WebDriverWait wait;
 	private Wait<WebDriver> fluentWait;
+
+	private Logger logger;
 
 	public PageBase(WebDriver driver) {
 		this.driver = driver;
@@ -55,7 +59,6 @@ abstract public class PageBase{
 		this.fluentWait = new FluentWait<WebDriver>(driver).withTimeout(30, TimeUnit.SECONDS)
 				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 	}
-
 
 	public PageBase(SharedDriver driver) {
 		this((WebDriver)driver);
@@ -538,7 +541,7 @@ abstract public class PageBase{
 	 */
 	public void systemOpenFileDialog(String filepath, String windowsOpenFileName) {
 		HWND hwnd = User32.INSTANCE.FindWindow(null, windowsOpenFileName);
-		;
+
 		if (hwnd != null) {
 			User32.INSTANCE.SetForegroundWindow(hwnd);
 
@@ -666,5 +669,9 @@ abstract public class PageBase{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public Logger getLogger() {
+		return logger;
 	}
 }
