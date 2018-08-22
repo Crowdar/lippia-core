@@ -1,8 +1,17 @@
 package com.crowdar.web;
 
+import com.crowdar.core.PropertyManager;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.Proxy;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.stqa.selenium.factory.SingleWebDriverPool;
 
@@ -46,6 +55,31 @@ public enum BrowserConfiguration {
 			return capabilities;
 		}
 	},
+	CHROMEDYNAMIC{
+
+		@Override
+		public void localSetup() {
+			ChromeDriverManager.getInstance().setup();
+		}
+		public WebDriver getDynamicWebDriver(){
+			return new ChromeDriver(getDesiredCapabilities());
+		}
+
+		@Override
+		public DesiredCapabilities getDesiredCapabilities() {
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			//BrowserMobProxy proxy = new BrowserMobProxyServer();
+			//proxy.start(0);
+			// get the Selenium proxy object
+			//Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
+		//	capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
+			capabilities.setBrowserName(capabilities.getBrowserName());
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("disable-infobars");
+			options.addArguments("start-maximized");
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			return capabilities;
+		}},
 	EDGE {
 		@Override
 		public void localSetup() {
@@ -111,6 +145,11 @@ public enum BrowserConfiguration {
 	public abstract void localSetup();
 	public abstract DesiredCapabilities getDesiredCapabilities();
 
+	public WebDriver getDynamicWebDriver(){
+		return null;
+	}
+
+
 	public org.openqa.selenium.WebDriver getDriver() {
 		org.openqa.selenium.WebDriver driver = null;
 
@@ -122,7 +161,12 @@ public enum BrowserConfiguration {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
-		} else {
+		} else if (isDynamic()){
+			System.out.println("############################################ WebDriver mode: Dynamic");
+			localSetup();
+			driver = getDynamicWebDriver();
+
+		}else{
 			System.out.println("############################################ WebDriver mode: Default");
 			localSetup();
 			driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
@@ -134,6 +178,10 @@ public enum BrowserConfiguration {
 	private boolean isGridConfiguration() {
 		String driverHub = System.getProperty(DRIVER_GRID_HUB_KEY);
 		return driverHub != null && !driverHub.isEmpty();
+	}
+
+	private boolean isDynamic(){
+			return PropertyManager.getProperty("crowdar.dinamic.browser") != null ;
 	}
 
 	private static String getWebDriverPath() {

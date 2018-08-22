@@ -1,14 +1,13 @@
 package com.crowdar.bdd.cukes;
 
+import com.crowdar.core.PropertyManager;
+import com.crowdar.web.BrowserConfiguration;
+import com.crowdar.web.WebDriverManager;
 import cucumber.api.Scenario;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 
 /**
  * <p>
@@ -35,13 +34,8 @@ public class SharedDriver extends EventFiringWebDriver {
 
     static {
 
-        ChromeDriverManager.getInstance().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("disable-infobars");
-        options.addArguments("start-maximized");
-        DesiredCapabilities customCapabilities = DesiredCapabilities.chrome();
-        customCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
-        REAL_DRIVER = new ChromeDriver(customCapabilities);
+        WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
+        REAL_DRIVER = WebDriverManager.getDriverInstance();
 
 
     }
