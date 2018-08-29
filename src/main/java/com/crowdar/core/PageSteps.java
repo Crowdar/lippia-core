@@ -2,11 +2,13 @@ package com.crowdar.core;
 
 import com.crowdar.bdd.cukes.SharedDriver;
 
+import org.apache.log4j.Logger;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
+
 
 /**
  *
@@ -17,6 +19,7 @@ public abstract class PageSteps{
 	
 	private WebDriver driver;
 	private NgWebDriver ngWebDriver;
+	protected Logger logger;
 	
 	public PageSteps(WebDriver driver){
 	    if (driver != null) {
@@ -26,10 +29,8 @@ public abstract class PageSteps{
 	}
 
 	public PageSteps(SharedDriver driver){
-		if (driver != null) {
-			this.driver = driver;
-			ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
-		}
+		this((WebDriver) driver);
+		logger = Logger.getLogger(this.getClass());
 	}
 
 	public WebDriver getDriver() {

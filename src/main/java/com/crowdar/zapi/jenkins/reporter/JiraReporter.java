@@ -8,14 +8,14 @@ import cucumber.api.java.Before;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
 import gherkin.formatter.model.*;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JiraReporter implements Reporter,Formatter {
-
-
+    private Logger logger = Logger.getLogger(JiraReporter.class);
 
     @Override
     public void syntaxError(String s, String s1, List<String> list, String s2, Integer integer) {
@@ -30,7 +30,7 @@ public class JiraReporter implements Reporter,Formatter {
 
     @Override
     public void feature(Feature feature) {
-        System.out.println("-------- Report Jira starting for : "+ feature.getName());
+        logger.info("-------- Report Jira starting for : "+ feature.getName());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class JiraReporter implements Reporter,Formatter {
 
     @Override
     public void step(Step step) {
-       // System.out.println("###################STEP");
+       logger.debug(" JiraReport ###################STEP");
         MonitorReport.getCurrentTest().getExecution().addStepExecution(new ZapiStepExecution(step.getName()));
     }
 
@@ -77,8 +77,7 @@ public class JiraReporter implements Reporter,Formatter {
 
     @After
     public void getScenarioData(cucumber.api.Scenario scenario){
-        System.out.println("###################AFTER CUCUMBER");
-
+        logger.debug(" JiraReport ###################AFTER CUCUMBER");
         MonitorReport.getCurrentTest().setSummary(scenario.getName());
         String tag = scenario.getSourceTagNames().stream().filter(t -> t.contains("JIRA_")).findFirst().orElse(null);
         if(tag != null)
@@ -89,22 +88,16 @@ public class JiraReporter implements Reporter,Formatter {
 
     @Override
     public void endOfScenarioLifeCycle(Scenario scenario) {
-        System.out.println("###################ENDOFScenarioLife");
+        logger.debug("###################ENDOFScenarioLife");
 
     }
 
     @Override
     public void done() {
-        //System.out.println("###################done");
-     }
-
-
-
+    }
     @Override
     public void close() {
-       // System.out.println("###################Close");
         MonitorReport.doReportToJira();
-
     }
 
     @Override
@@ -154,6 +147,7 @@ public class JiraReporter implements Reporter,Formatter {
         private static ZfjReporter reporter = ZapiBuilder.buildZapiReporterWithNewCycleForEachBuild();
         private static ZapiTestCase testCase;
         private static Map<ZapiTestCase,Boolean> testResult = new HashMap<>();
+        private static Logger logger = Logger.getLogger(MonitorReport.class);
 
         synchronized static void addTest(Boolean status){
             testResult.put(testCase,status);
@@ -168,10 +162,10 @@ public class JiraReporter implements Reporter,Formatter {
         }
 
         synchronized static void doReportToJira(){
-            System.out.println("---------------------Sending report to Jira ---------------------");
-            System.out.println(String.format("---------------------Tests to send : %d ---------------------",testResult.size()));
+            logger.info("---------------------Sending report to Jira ---------------------");
+            logger.info(String.format("---------------------Tests to send : %d ---------------------",testResult.size()));
             reporter.perform(1,testResult);
-            System.out.println("--------------------- Done  Sending report to Jira ---------------------");
+            logger.info("--------------------- Done  Sending report to Jira ---------------------");
         }
 
     }

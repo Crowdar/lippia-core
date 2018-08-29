@@ -39,7 +39,7 @@ public class PropertyManager {
 	private static void loadProperties() throws IOException {
 		StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
 		properties = new EncryptableProperties(encryptor);
-		InputStream inputStream = new FileInputStream("src/main/resources/config.properties");
+		InputStream inputStream = PropertyManager.class.getClassLoader().getResourceAsStream(PROPERTY_FILE_NAME);
 		properties.load(inputStream);
 	}
 }

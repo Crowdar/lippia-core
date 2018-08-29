@@ -50,9 +50,10 @@ abstract public class PageBase{
 	private WebDriverWait wait;
 	private Wait<WebDriver> fluentWait;
 
-	private Logger logger;
+	protected Logger logger;
 
 	public PageBase(WebDriver driver) {
+		logger = Logger.getLogger(this.getClass());
 		this.driver = driver;
 		this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
 		this.wait = new WebDriverWait(driver, Constants.WAIT_FOR_ELEMENT);

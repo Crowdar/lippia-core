@@ -5,6 +5,7 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
@@ -18,6 +19,7 @@ import ru.stqa.selenium.factory.SingleWebDriverPool;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 public enum BrowserConfiguration {
 	FIREFOX {
@@ -80,6 +82,27 @@ public enum BrowserConfiguration {
 			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 			return capabilities;
 		}},
+	  CHROMEEXTENCION{
+
+		@Override
+		public void localSetup() {
+			ChromeDriverManager.getInstance().setup();
+		}
+		public WebDriver getDynamicWebDriver(){
+			return new ChromeDriver(getDesiredCapabilities());
+		}
+
+		@Override
+		public DesiredCapabilities getDesiredCapabilities() {
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			capabilities.setBrowserName(capabilities.getBrowserName());
+			ChromeOptions options = new ChromeOptions();
+			//ChromeUtils.insertHeadersExtension(options);
+			options.addArguments("disable-infobars");
+			options.addArguments("start-maximized");
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			return capabilities;
+		}},
 	EDGE {
 		@Override
 		public void localSetup() {
@@ -128,6 +151,8 @@ public enum BrowserConfiguration {
 		}
 	};
 
+	private Logger logger = Logger.getLogger(BrowserConfiguration.class);
+
 	public static final String BROWSER_KEY = "browser";
 
 	public static BrowserConfiguration getBrowserConfiguration(String key) {
@@ -155,19 +180,19 @@ public enum BrowserConfiguration {
 
 		if (isGridConfiguration()) {
 			try {
-				System.out.println("############################################ WebDriver mode: Grid");
+				logger.info("############################################ WebDriver mode: Grid");
 				driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(System.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
 				driver.manage().window().setSize(new Dimension(1280, 1024));
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 		} else if (isDynamic()){
-			System.out.println("############################################ WebDriver mode: Dynamic");
+			logger.info("############################################ WebDriver mode: Dynamic");
 			localSetup();
 			driver = getDynamicWebDriver();
 
 		}else{
-			System.out.println("############################################ WebDriver mode: Default");
+			logger.info("############################################ WebDriver mode: Default");
 			localSetup();
 			driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
 		}

@@ -23,6 +23,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,8 @@ import com.crowdar.zapi.model.ZapiTestCaseResultModel;
 import com.crowdar.zapi.jenkins.model.ZephyrConfigModel;
 
 public class TestCaseUtil implements RestBase {
-	
+
+	private static Logger logger = Logger.getLogger(TestCaseUtil.class);
     public static final Long NEW_CYCLE_KEY_IDENTIFIER = 1000000000L;
     private static final int MAX_BULK_OPERATION_COUNT = 50;
     private static final int MAX_BULK_ISSUE_CREATE_COUNT = 50;
@@ -417,9 +419,6 @@ else {
 
 		return jobCompleted;
 }
-
-	
-
 	
 	public static Map<String, Long> fetchExecutionIds(ZephyrConfigModel zephyrData, JSONObject jsonObject) {
 
@@ -540,20 +539,6 @@ else {
 		}
 
 		int statusCode = response.getStatusLine().getStatusCode();
-		//HttpEntity entity1 = response.getEntity();
-		//String token = null;
-		
-				//try{
-				//	String tokenObject = EntityUtils.toString(entity1);
-					//token = new JSONObject(tokenObject).getString("jobProgressToken");
-
-		//		}catch (ParseException e){
-			//		e.printStackTrace();
-				//}catch(IOException e){
-					//e.printStackTrace();
-				//}
-		//checkJobProgressexecute(zephyrData,token);
-
 		if (statusCode >= 200 && statusCode < 300) { } else {
 			try {
 				throw new ClientProtocolException("Unexpected response status: " + statusCode);
@@ -570,12 +555,13 @@ else {
 			}
 		}
 	}
+
 	public static void processTestCaseDetails(ZephyrConfigModel zephyrData) {
 		Map<Long, Map<String, Boolean>> testCaseDetails = getTestCaseDetails(zephyrData);
 
-		System.out.println("----------------------------TestCaseDetails ---------------------------------");
-		System.out.println(testCaseDetails.toString());
-		System.out.println("----------------------------TestCaseDetails ---------------------------------");
+		logger.info("----------------------------TestCaseDetails ---------------------------------");
+		logger.info(testCaseDetails.toString());
+		logger.info("----------------------------TestCaseDetails ---------------------------------");
 
 
 		JSONObject jsonObject = new JSONObject();
@@ -707,8 +693,6 @@ else {
 			executeTestsZFJC(zephyrData, passList, failList);
 		}
 	}
-	
-	
 
 	private static Map<String, Map<Long, String>> searchIssues(ZephyrConfigModel zephyrData) {
 		long searchIssueStartcount = -1L;
@@ -820,7 +804,6 @@ else {
 		}
 		return customReturnTypeBean;
 	}
-
 	
 	static class CustomReturnTypeBean {
 		
@@ -843,13 +826,6 @@ else {
 			this.searchedIssuesCount = searchedIssuesCount;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	public static void assignTestsZFJC(ZephyrConfigModel zephyrData, JSONObject jsonObject) {
 

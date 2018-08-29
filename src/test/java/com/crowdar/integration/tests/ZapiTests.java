@@ -1,4 +1,4 @@
-package com.crowdar.examples.testng;
+package com.crowdar.integration.tests;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -12,18 +12,11 @@ import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class newtTestCycleTest {
+public class ZapiTests {
 
 	@Test
 	public void testPerformReport() throws JSONException, URISyntaxException, JsonProcessingException {
 
-		//ZapiUser zapiUser = ZapiBuilder.getZapiUser();
-		//ZapiTestCycle zapiTestCycle = ZapiBuilder.getCycleObject();
-
-		//ZapiConnector connector = new ZapiConnectorImpl();
-		//connector.getExecutionByStatuses(zapiUser, "ZEP");
-		//ZfjReporter reporter = new ZfjReporter("https://crowdar.atlassian.net","ZEP","ZephyrTestProject","Cycle1","1 days","");
-		//ZfjReporter reporter = new ZfjReporter("https://crowdar.atlassian.net","ZEP","-1",ZfjConstants.NEW_CYCLE_KEY,ZfjConstants.CYCLE_DURATION_1_DAY,"");
 		ZfjReporter reporter = ZapiBuilder.buildZapiReporterWithNewCycleForEachBuild();
 		Map<ZapiTestCase,Boolean> scenarios = new HashMap<ZapiTestCase, Boolean>();
 

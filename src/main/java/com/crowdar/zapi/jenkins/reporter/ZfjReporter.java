@@ -4,11 +4,8 @@ package com.crowdar.zapi.jenkins.reporter;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import com.crowdar.core.PropertyManager;
 import com.crowdar.zapi.jenkins.utils.rest.*;
 import com.crowdar.zapi.model.ZapiIssueType;
@@ -73,19 +70,19 @@ public class ZfjReporter {
 			return false;
 		}
 
-		System.out.println("----------------------------MapTestResults : ---------------------------------");
-		System.out.println(zephyrTestCaseMap.toString());
-		System.out.println("----------------------------MapTestResults  ---------------------------------");
+		logger.debug("----------------------------MapTestResults : ---------------------------------");
+		logger.debug(zephyrTestCaseMap.toString());
+		logger.debug("----------------------------MapTestResults  ---------------------------------");
 
 
 		ZephyrConfigModel zephyrConfig = initializeZephyrData();
 
-		System.out.println("----------------------------ZapiConfig Initialized: ---------------------------------");
-		System.out.println(zephyrTestCaseMap.toString());
-		System.out.println("----------------------------ZapiConfig Initialized ---------------------------------");
+		logger.debug("----------------------------ZapiConfig Initialized: ---------------------------------");
+		logger.debug(zephyrTestCaseMap.toString());
+		logger.debug("----------------------------ZapiConfig Initialized ---------------------------------");
 		zephyrConfig.setBuilNumber(buildNumber);
 
-        	boolean prepareZephyrTests = prepareZephyrTests(zephyrConfig,zephyrTestCaseMap);
+        boolean prepareZephyrTests = prepareZephyrTests(zephyrConfig,zephyrTestCaseMap);
         	
         	if(!prepareZephyrTests) {
     			logger.error("Error parsing surefire reports.");
@@ -146,7 +143,7 @@ public class ZfjReporter {
 				|| ADD_ZEPHYR_GLOBAL_CONFIG.equals(versionKey.trim())
 				|| ADD_ZEPHYR_GLOBAL_CONFIG.equals(cycleName.trim()))	{
 
-			logger.error("Cannot Proceed validation build config is not correct");
+			logger.error("Cannot Proceed validation in ZfjReporter build config is not correct");
 			valid = false;
 		}
 		return valid;
