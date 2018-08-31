@@ -46,9 +46,9 @@ abstract public class PageBase{
 
 	
 	protected WebDriver driver;	
-	private NgWebDriver ngWebDriver;
-	private WebDriverWait wait;
-	private Wait<WebDriver> fluentWait;
+	protected NgWebDriver ngWebDriver;
+	protected WebDriverWait wait;
+	protected Wait<WebDriver> fluentWait;
 
 	protected Logger logger;
 
@@ -61,10 +61,9 @@ abstract public class PageBase{
 				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 	}
 
-	public PageBase(SharedDriver driver) {
-		this((WebDriver)driver);
-	}
+	public PageBase(){
 
+	}
 	/**
 	 * Method that returns the complet url to  the page
 	 *  BASE_URL + url

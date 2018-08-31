@@ -109,8 +109,6 @@ public class JiraReporter implements Reporter,Formatter {
     @Override
     public void before(Match match, Result result) {
 
-
-
     }
 
     @Override

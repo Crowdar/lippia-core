@@ -17,8 +17,8 @@ import com.paulhammant.ngwebdriver.NgWebDriver;
  */
 public abstract class PageSteps{
 	
-	private WebDriver driver;
-	private NgWebDriver ngWebDriver;
+	protected WebDriver driver;
+	protected NgWebDriver ngWebDriver;
 	protected Logger logger;
 	
 	public PageSteps(WebDriver driver){
@@ -31,6 +31,10 @@ public abstract class PageSteps{
 	public PageSteps(SharedDriver driver){
 		this((WebDriver) driver);
 		logger = Logger.getLogger(this.getClass());
+	}
+
+	public PageSteps(){
+
 	}
 
 	public WebDriver getDriver() {

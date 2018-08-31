@@ -1,6 +1,7 @@
 package com.crowdar.web;
 
 
+import com.crowdar.core.PropertyManager;
 import com.crowdar.util.FileUtils;
 import com.crowdar.util.ZipUtils;
 import org.apache.http.HeaderElement;
@@ -36,7 +37,7 @@ public class ChromeUtils {
         String unpackedExtensionPath = System.getProperty("user.dir") + "/src/main/resources/chrome_extension";
         File f = new File(unpackedExtensionPath + "/background.js");
         List<String> lines = FileUtils.readLines(f, "UTF-8");
-        String user = System.getProperty(System.getProperty("CURRENT_USER_TYPE"));
+        String user = PropertyManager.getProperty(System.getProperty("CURRENT_USER_TYPE"));
         FileUtils.modifyLine(lines, 0, String.format("var username = \"%s\";", user));
         FileUtils.writeLines(f, "UTF-8", lines);
         String crxExtensionPath = ZipUtils.packZipWithNameOfFolder(unpackedExtensionPath, "crx");
