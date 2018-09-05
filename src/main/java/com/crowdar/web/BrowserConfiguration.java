@@ -2,24 +2,18 @@ package com.crowdar.web;
 
 import com.crowdar.core.PropertyManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.BrowserMobProxyServer;
-import net.lightbody.bmp.client.ClientUtil;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.stqa.selenium.factory.SingleWebDriverPool;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 public enum BrowserConfiguration {
 	FIREFOX {
@@ -70,7 +64,7 @@ public enum BrowserConfiguration {
 		@Override
 		public DesiredCapabilities getDesiredCapabilities() {
 			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			//BrowserMobProxy proxy = new BrowserMobProxyServer();
+			//BrowserMobProxy proxy = new BrowserMobProxyServer(); TODO configure proxy to re-write http headers and cookies
 			//proxy.start(0);
 			// get the Selenium proxy object
 			//Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
