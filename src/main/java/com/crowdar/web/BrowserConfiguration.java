@@ -186,12 +186,7 @@ public enum BrowserConfiguration {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
-		} else if (isDynamic()){
-			logger.info("############################################ WebDriver mode: Dynamic");
-			localSetup();
-			driver = getDynamicWebDriver();
-
-		}else{
+		} else{
 			logger.info("############################################ WebDriver mode: Default");
 			localSetup();
 			driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
