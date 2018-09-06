@@ -175,7 +175,7 @@ public enum BrowserConfiguration {
 		if (isGridConfiguration()) {
 			try {
 				logger.info("############################################ WebDriver mode: Grid");
-				driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(System.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
+				driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(PropertyManager.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
 				driver.manage().window().setSize(new Dimension(1280, 1024));
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -190,7 +190,7 @@ public enum BrowserConfiguration {
 
 
 	private boolean isGridConfiguration() {
-		String driverHub = System.getProperty(DRIVER_GRID_HUB_KEY);
+		String driverHub = PropertyManager.getProperty(DRIVER_GRID_HUB_KEY);
 		return driverHub != null && !driverHub.isEmpty();
 	}
 
