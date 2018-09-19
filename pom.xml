@@ -19,5 +19,11 @@
     <packaging>jar</packaging>
     <name>CrowCoreFramework</name>
     <version>1.0.0</version>
-    
+    <repositories>
+        <repository>
+            <id>crowdarRepo</id>
+            <name>crowdar-repository</name>
+            <url>http://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
 </project>
