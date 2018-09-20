@@ -67,7 +67,7 @@ public class CucumberExtentReport extends CucumberReport {
         }
     }
 
-    public void eof() {
+    public void close() {
         if(extent!=null){
             extent.close();
         }
