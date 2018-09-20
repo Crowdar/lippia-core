@@ -64,6 +64,11 @@ public class CucumberExtentReport extends CucumberReport {
     public synchronized static void closeReporter() {
         if(extent!=null){
             extent.flush();
+        }
+    }
+
+    public void eof() {
+        if(extent!=null){
             extent.close();
         }
     }
