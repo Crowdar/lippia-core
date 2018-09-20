@@ -1,12 +1,10 @@
 package com.crowdar.zapi.jenkins.reporter;
 
+import com.crowdar.report.CucumberReport;
 import com.crowdar.zapi.collaborator.ZapiBuilder;
 import com.crowdar.zapi.model.ZapiStepExecution;
 import com.crowdar.zapi.model.ZapiTestCase;
 import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import gherkin.formatter.Formatter;
-import gherkin.formatter.Reporter;
 import gherkin.formatter.model.*;
 import org.apache.log4j.Logger;
 
@@ -14,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JiraReporter implements Reporter,Formatter {
+public class JiraReporter extends CucumberReport {
     private Logger logger = Logger.getLogger(JiraReporter.class);
 
     @Override
@@ -24,47 +22,8 @@ public class JiraReporter implements Reporter,Formatter {
     }
 
     @Override
-    public void uri(String s) {
-
-    }
-
-    @Override
     public void feature(Feature feature) {
         logger.info("-------- Report Jira starting for : "+ feature.getName());
-    }
-
-    @Override
-    public void scenarioOutline(ScenarioOutline scenarioOutline) {
-
-    }
-
-    @Override
-    public void examples(Examples examples) {
-
-    }
-
-    @Override
-    public void startOfScenarioLifeCycle(Scenario scenario) {
-
-
-    }
-
-    @Override
-    public void background(Background background) {
-
-
-    }
-    @Before
-    public void beforeScenario(cucumber.api.Scenario scenario){
-
-
-    }
-
-    @Override
-    public void scenario(Scenario scenario) {
-
-
-
     }
 
     @Override
@@ -72,8 +31,6 @@ public class JiraReporter implements Reporter,Formatter {
        logger.debug(" JiraReport ###################STEP");
         MonitorReport.getCurrentTest().getExecution().addStepExecution(new ZapiStepExecution(step.getName()));
     }
-
-
 
     @After
     public void getScenarioData(cucumber.api.Scenario scenario){
@@ -83,32 +40,16 @@ public class JiraReporter implements Reporter,Formatter {
         if(tag != null)
             MonitorReport.getCurrentTest().setJiraTicket(tag);
         MonitorReport.addTest(!scenario.isFailed());
-
     }
 
     @Override
     public void endOfScenarioLifeCycle(Scenario scenario) {
         logger.debug("###################ENDOFScenarioLife");
-
     }
 
-    @Override
-    public void done() {
-    }
     @Override
     public void close() {
         MonitorReport.doReportToJira();
-    }
-
-    @Override
-    public void eof() {
-
-
-    }
-
-    @Override
-    public void before(Match match, Result result) {
-
     }
 
     @Override
@@ -126,20 +67,6 @@ public class JiraReporter implements Reporter,Formatter {
         MonitorReport.getCurrentTest().getExecution().addMatchResult(match,result);
     }
 
-    @Override
-    public void match(Match match) {
-
-    }
-
-    @Override
-    public void embedding(String s, byte[] bytes) {
-
-    }
-
-    @Override
-    public void write(String s) {
-
-    }
 
     static class MonitorReport{
         private static ZfjReporter reporter = ZapiBuilder.buildZapiReporterWithNewCycleForEachBuild();
