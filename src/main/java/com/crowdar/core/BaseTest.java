@@ -29,7 +29,7 @@ public abstract class BaseTest {
 		super();
 	}
 
-	@BeforeSuite
+	@BeforeSuite(alwaysRun=true)
 	public void beforeSuite() {
 		System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
 		setRunInstanceProperty();
@@ -37,7 +37,7 @@ public abstract class BaseTest {
 		WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));
 	}
 
-	@BeforeTest
+	@BeforeTest(alwaysRun=true)
 	public void startTest(final ITestContext testContext) {
 		GUIStoryRunnerV2.setTestContextProperties(testContext.getName());
 		testContext.setAttribute(STATUS_TEST_CONTEXT_KEY, null);
@@ -46,23 +46,23 @@ public abstract class BaseTest {
 		ReportManager.startParentTest(reportDescription);
 	}
 
-	@BeforeMethod
-	@Parameters({ "spiraDescription" })
+	@BeforeMethod(alwaysRun=true)
+	@Parameters({ "testDescription" })
 	public void beforeMethod(final ITestContext testContext, Method method, ITestResult result,
-                             @Optional String spiraDescription) {
+                             @Optional String testDescription) {
 
 		ReportManager.startChildTest(method.getName());
 
-		this.logSpiraDescription(spiraDescription);
+		this.logSpiraDescription(testDescription);
 	}
 
-	private void logSpiraDescription(String spiraDescription) {
-		if (spiraDescription != null && !spiraDescription.isEmpty()) {
-			ReportManager.writeResult(LogStatus.INFO, spiraDescription);
+	private void logSpiraDescription(String testDescription) {
+		if (testDescription != null && !testDescription.isEmpty()) {
+			ReportManager.writeResult(LogStatus.INFO, testDescription);
 		}
 	}
 
-	@AfterMethod
+	@AfterMethod(alwaysRun=true)
 	public void afterMethod(final ITestContext testContext, Method method, ITestResult result) {
 		switch (result.getStatus()) {
 		case ITestResult.FAILURE:
@@ -91,12 +91,12 @@ public abstract class BaseTest {
 		ReportManager.endTest();
 	}
 
-	@AfterTest
+	@AfterTest(alwaysRun=true)
 	public void afterTest() {
 		WebDriverManager.dismissAll();
 	}
 
-	@AfterSuite
+	@AfterSuite(alwaysRun=true)
 	public void afterSuite() {
 		ReportManager.endReport();
 		if (Boolean.valueOf(PropertyManager.getProperty("report.mail.available"))) {
