@@ -17,6 +17,7 @@ public class StepDefinitions extends PageSteps {
      @Given("^I am on the \"([^\"]*)\" page on URL \"([^\"]*)\"$")
     public void i_am_on_the_page_on_URL(String arg1, String arg2) throws Throwable {
        getDriver().get("http://www.google.com");
+       Thread.sleep(10000l);
     }
 
     @When("^I fill in \"([^\"]*)\" with \"([^\"]*)\"$")
