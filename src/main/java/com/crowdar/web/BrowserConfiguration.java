@@ -45,6 +45,7 @@ public enum BrowserConfiguration {
 			ChromeOptions options = new ChromeOptions();
 			options.addArguments("disable-infobars");
 			options.addArguments("start-maximized");
+			options.addArguments("--ignore-certificate-errors");
 //			options.addArguments("screenshot");
 			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
