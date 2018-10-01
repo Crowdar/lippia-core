@@ -33,9 +33,7 @@ public abstract class BaseTest {
 	public void beforeSuite(ITestContext context) {
 		setRunInstanceProperty();
 		setFrameworkRootProperty();
-		for (ITestNGMethod method : context.getAllTestMethods()) {
-			method.setRetryAnalyzer(new RetryAnalyzerImpl());
-		}
+		RetryManager.setRetryTests(context);
 		System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
 		WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));
 	}
