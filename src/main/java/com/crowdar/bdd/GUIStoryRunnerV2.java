@@ -67,6 +67,9 @@ public final class GUIStoryRunnerV2 {
 		MyThreadLocal.get().setData(Context.CONTEXT_TEST_NAME_KEY, testName);
 	}
 
+	public static void setMethodContextProperties(String methodName){
+		MyThreadLocal.get().setData(Context.CONTEXT_METHOD_NAME_KEY, methodName);
+	}
 
 	public static String getStoryLogFileName(){
 		return (String)MyThreadLocal.get().getData(Context.CONTEXT_STORY_NAME_KEY);
