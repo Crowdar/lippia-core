@@ -36,6 +36,10 @@ public class PropertyManager {
 		return getProperties().getProperty(propertyKey);
 	}
 
+	public static boolean isPropertyPresentAndNotEmpty(String propertyKey){
+		return getProperties().containsKey(propertyKey) && !getProperties().getProperty(propertyKey).isEmpty();
+	}
+
 	private static void loadProperties() throws IOException {
 		StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
 		properties = new EncryptableProperties(encryptor);
