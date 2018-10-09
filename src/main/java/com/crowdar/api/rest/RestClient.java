@@ -1,11 +1,5 @@
 package com.crowdar.api.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -14,13 +8,18 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RestClient {
 
@@ -45,10 +44,35 @@ public class RestClient {
     public HTTPResponse get(String url, Class<?> type) {
         URI uri = this.getURIWithURLQueryParameters(url);
         HttpEntity<String> entity = new HttpEntity<String>(this.headers);
-        initWithKapschProxy();
+
         @SuppressWarnings("unchecked")
         ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, HttpMethod.GET,
                 entity, type);
+        HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
+        return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    }
+
+    public HTTPResponse post(String url, Class<?> type, Map<String, String> body) {
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, this.headers);
+
+        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.postForEntity( url, request , type );
+        HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
+        return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    }
+
+    public HTTPResponse patch(String url, Class<?> type, Map<String, String> body) {
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, this.headers);
+
+        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.patchForObject( url, request , type );
+        HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
+        return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    }
+
+    public HTTPResponse delete(String url, Class<?> type, Map<String, String> body) {
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, this.headers);
+
+        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(url, HttpMethod.DELETE,
+                request, type);
         HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
     }
@@ -87,8 +111,8 @@ public class RestClient {
             return null;
         }
     }
-    
-    
+
+
     public void initWithKapschProxy() {
         this.restTemplate = new RestTemplate();
 
@@ -96,7 +120,7 @@ public class RestClient {
         final String proxyHost = "148.198.148.50";
         final String proxyUser = "KAPSCH\\spoleti";
         final String proxyPassword = "Kapsch2018";
-        
+
         final CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(new AuthScope(proxyHost, proxyPortNum), new UsernamePasswordCredentials(proxyUser, proxyPassword));
 
