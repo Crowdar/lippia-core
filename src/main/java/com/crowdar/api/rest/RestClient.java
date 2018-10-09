@@ -8,10 +8,11 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -52,24 +53,24 @@ public class RestClient {
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
     }
 
-    public HTTPResponse post(String url, Class<?> type, Map<String, String> body) {
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, this.headers);
+    public HTTPResponse post(String url, Class<?> type, HashMap<String, Object> body) {
+        HttpEntity<HashMap<String, Object>> request = new HttpEntity<>(body, this.headers);
 
-        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.postForEntity( url, request , type );
+        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.postForEntity(url, request, type);
         HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
     }
 
-    public HTTPResponse patch(String url, Class<?> type, Map<String, String> body) {
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, this.headers);
+    public HTTPResponse patch(String url, Class<?> type, HashMap<String, Object> body) {
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, this.headers);
 
-        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.patchForObject( url, request , type );
+        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.patchForObject(url, request, type);
         HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
     }
 
-    public HTTPResponse delete(String url, Class<?> type, Map<String, String> body) {
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, this.headers);
+    public HTTPResponse delete(String url, Class<?> type, HashMap<String, Object> body) {
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, this.headers);
 
         ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(url, HttpMethod.DELETE,
                 request, type);
