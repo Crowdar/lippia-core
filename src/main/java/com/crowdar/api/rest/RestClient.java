@@ -1,5 +1,6 @@
 package com.crowdar.api.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -16,6 +17,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -28,33 +30,40 @@ public class RestClient {
     private RestTemplate restTemplate;
 
     public RestClient() {
-        this.headers = new HttpHeaders();
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     }
 
-    public void setHeader(String field, String value) {
-        this.headers.set(field, value);
+    public HttpHeaders setHeaders(String jsonHeaders) {
+        this.headers = new HttpHeaders();
+        try {
+            HashMap<String, String> result =
+                    new ObjectMapper().readValue(jsonHeaders, HashMap.class);
+            this.headers.setAll(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return headers;
     }
 
-    public HTTPResponse get(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
-        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.GET);
+    public HTTPResponse get(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.GET);
     }
 
-    public HTTPResponse post(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
-        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.POST);
+    public HTTPResponse post(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.POST);
     }
 
-    public HTTPResponse patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
-        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.PATCH);
+    public HTTPResponse patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PATCH);
     }
 
-    public HTTPResponse delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
-        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.DELETE);
+    public HTTPResponse delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.DELETE);
     }
 
-    private HTTPResponse createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, HttpMethod httpMethod) {
+    private HTTPResponse createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
-        HttpEntity<String> request = this.createRequest(body, this.headers);
+        HttpEntity<String> request = this.createRequest(body, this.setHeaders(headers));
 
         ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
                 request, type);
@@ -73,7 +82,7 @@ public class RestClient {
     }
 
     private Map<String, List<String>> getHeaders(HttpHeaders headers) {
-        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        Map<String, List<String>> map = new HashMap<>();
         for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
             map.put(entry.getKey(), entry.getValue());
         }
