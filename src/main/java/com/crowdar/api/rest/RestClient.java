@@ -24,13 +24,11 @@ import java.util.Map;
 
 public class RestClient {
 
-    private Map<String, String> urlParameters;
     private HttpHeaders headers;
     private RestTemplate restTemplate;
 
     public RestClient() {
         this.headers = new HttpHeaders();
-        this.urlParameters = new HashMap<String, String>();
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     }
 
@@ -38,44 +36,36 @@ public class RestClient {
         this.headers.set(field, value);
     }
 
-    public void addURLQueryParameter(String field, String value) {
-        this.urlParameters.put(field, value);
+    public HTTPResponse get(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
+        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.GET);
     }
 
-    public HTTPResponse get(String url, Class<?> type) {
-        URI uri = this.getURIWithURLQueryParameters(url);
-        HttpEntity<String> entity = new HttpEntity<String>(this.headers);
-
-        @SuppressWarnings("unchecked")
-        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, HttpMethod.GET,
-                entity, type);
-        HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
-        return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    public HTTPResponse post(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
+        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.POST);
     }
 
-    public HTTPResponse post(String url, Class<?> type, HashMap<String, Object> body) {
-        HttpEntity<HashMap<String, Object>> request = new HttpEntity<>(body, this.headers);
-
-        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.postForEntity(url, request, type);
-        HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
-        return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    public HTTPResponse patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
+        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.PATCH);
     }
 
-    public HTTPResponse patch(String url, Class<?> type, HashMap<String, Object> body) {
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, this.headers);
-
-        ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.patchForObject(url, request, type);
-        HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
-        return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    public HTTPResponse delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters) {
+        return createHTTPMethod(url, type, body, urlParameters, HttpMethod.DELETE);
     }
 
-    public HTTPResponse delete(String url, Class<?> type, HashMap<String, Object> body) {
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, this.headers);
+    private HTTPResponse createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, HttpMethod httpMethod) {
+        URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
+        HttpEntity<String> request = this.createRequest(body, this.headers);
 
-        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(url, HttpMethod.DELETE,
+        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
                 request, type);
         HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    }
+
+    private HttpEntity<String> createRequest(String body, HttpHeaders headers) {
+        if (body.isEmpty())
+            return new HttpEntity<>(headers);
+        return new HttpEntity<>(body, headers);
     }
 
     private HTTPResponse createResponse(int statusCode, String message, Object response, HTTPHeaders headers) {
@@ -90,12 +80,12 @@ public class RestClient {
         return map;
     }
 
-    private URI getURIWithURLQueryParameters(String url) {
-        if (this.urlParameters.isEmpty())
+    private URI getURIWithURLQueryParameters(String url, HashMap<String, String> urlParameters) {
+        if (urlParameters.isEmpty())
             return this.getUriFromUrl(url);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-        for (Map.Entry<String, String> entry : this.urlParameters.entrySet()) {
+        for (Map.Entry<String, String> entry : urlParameters.entrySet()) {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
@@ -103,7 +93,7 @@ public class RestClient {
     }
 
     private URI getUriFromUrl(String url) {
-        URI uri = null;
+        URI uri;
         try {
             uri = new URI(url);
             return uri;
