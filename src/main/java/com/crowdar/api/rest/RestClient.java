@@ -1,11 +1,6 @@
 package com.crowdar.api.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -22,35 +17,64 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class RestClient {
 
-    private Map<String, String> urlParameters;
     private HttpHeaders headers;
     private RestTemplate restTemplate;
 
     public RestClient() {
-        this.headers = new HttpHeaders();
-        this.urlParameters = new HashMap<String, String>();
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     }
 
-    public void setHeader(String field, String value) {
-        this.headers.set(field, value);
+    public HttpHeaders setHeaders(String jsonHeaders) {
+        this.headers = new HttpHeaders();
+        try {
+            HashMap<String, String> result =
+                    new ObjectMapper().readValue(jsonHeaders, HashMap.class);
+            this.headers.setAll(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return headers;
     }
 
-    public void addURLQueryParameter(String field, String value) {
-        this.urlParameters.put(field, value);
+    public HTTPResponse get(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.GET);
     }
 
-    public HTTPResponse get(String url, Class<?> type) {
-        URI uri = this.getURIWithURLQueryParameters(url);
-        HttpEntity<String> entity = new HttpEntity<String>(this.headers);
-        initWithKapschProxy();
-        @SuppressWarnings("unchecked")
-        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, HttpMethod.GET,
-                entity, type);
+    public HTTPResponse post(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.POST);
+    }
+
+    public HTTPResponse patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PATCH);
+    }
+
+    public HTTPResponse delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.DELETE);
+    }
+
+    private HTTPResponse createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
+        URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
+        HttpEntity<String> request = this.createRequest(body, this.setHeaders(headers));
+
+        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
+                request, type);
         HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    }
+
+    private HttpEntity<String> createRequest(String body, HttpHeaders headers) {
+        if (body.isEmpty())
+            return new HttpEntity<>(headers);
+        return new HttpEntity<>(body, headers);
     }
 
     private HTTPResponse createResponse(int statusCode, String message, Object response, HTTPHeaders headers) {
@@ -58,19 +82,19 @@ public class RestClient {
     }
 
     private Map<String, List<String>> getHeaders(HttpHeaders headers) {
-        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        Map<String, List<String>> map = new HashMap<>();
         for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
             map.put(entry.getKey(), entry.getValue());
         }
         return map;
     }
 
-    private URI getURIWithURLQueryParameters(String url) {
-        if (this.urlParameters.isEmpty())
+    private URI getURIWithURLQueryParameters(String url, HashMap<String, String> urlParameters) {
+        if (urlParameters.isEmpty())
             return this.getUriFromUrl(url);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-        for (Map.Entry<String, String> entry : this.urlParameters.entrySet()) {
+        for (Map.Entry<String, String> entry : urlParameters.entrySet()) {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
@@ -78,7 +102,7 @@ public class RestClient {
     }
 
     private URI getUriFromUrl(String url) {
-        URI uri = null;
+        URI uri;
         try {
             uri = new URI(url);
             return uri;
@@ -87,8 +111,8 @@ public class RestClient {
             return null;
         }
     }
-    
-    
+
+
     public void initWithKapschProxy() {
         this.restTemplate = new RestTemplate();
 
@@ -96,7 +120,7 @@ public class RestClient {
         final String proxyHost = "148.198.148.50";
         final String proxyUser = "KAPSCH\\spoleti";
         final String proxyPassword = "Kapsch2018";
-        
+
         final CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(new AuthScope(proxyHost, proxyPortNum), new UsernamePasswordCredentials(proxyUser, proxyPassword));
 

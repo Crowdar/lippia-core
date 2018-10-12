@@ -12,8 +12,9 @@ public class Context {
 	public static final String CONTEXT_TEST_ID_KEY = "testid";
 	public static final String CONTEXT_TEST_NAME_KEY = "testName";
 	public static final String CONTEXT_STORY_NAME_KEY = "storyName";
-	
-	private Context(){
+    public static final String CONTEXT_METHOD_NAME_KEY = "CONTEXT_METHOD_NAME_KEY";
+
+    private Context(){
 	}
 	
 	private static Context instance;

@@ -1,6 +1,7 @@
 package com.crowdar.core;
 
 import com.crowdar.bdd.GUIStoryRunnerV2;
+import com.crowdar.bdd.RetryAnalyzerImpl;
 import com.crowdar.email.EmailUtil;
 import com.crowdar.report.ReportManager;
 import com.crowdar.report.ScreenshotCapture;
@@ -8,6 +9,7 @@ import com.crowdar.web.BrowserConfiguration;
 import com.crowdar.web.WebDriverManager;
 import com.relevantcodes.extentreports.LogStatus;
 import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
@@ -17,9 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- *
  * @author jCarames
- *
  */
 public abstract class BaseTest {
 
@@ -29,15 +29,16 @@ public abstract class BaseTest {
 		super();
 	}
 
-	@BeforeSuite(alwaysRun=true)
-	public void beforeSuite() {
-		System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
+	@BeforeSuite(alwaysRun = true)
+	public void beforeSuite(ITestContext context) {
 		setRunInstanceProperty();
 		setFrameworkRootProperty();
+		RetryManager.setRetryTests(context);
+		System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
 		WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));
 	}
 
-	@BeforeTest(alwaysRun=true)
+	@BeforeTest(alwaysRun = true)
 	public void startTest(final ITestContext testContext) {
 		GUIStoryRunnerV2.setTestContextProperties(testContext.getName());
 		testContext.setAttribute(STATUS_TEST_CONTEXT_KEY, null);
@@ -46,61 +47,69 @@ public abstract class BaseTest {
 		ReportManager.startParentTest(reportDescription);
 	}
 
-	@BeforeMethod(alwaysRun=true)
-	@Parameters({ "testDescription" })
-	public void beforeMethod(final ITestContext testContext, Method method, ITestResult result,
-                             @Optional String testDescription) {
-
-		ReportManager.startChildTest(method.getName());
-
-		this.logSpiraDescription(testDescription);
+	@BeforeMethod(alwaysRun = true)
+	public void beforeMethod(Method method) {
+		GUIStoryRunnerV2.setMethodContextProperties(method.getName());
 	}
 
-	private void logSpiraDescription(String testDescription) {
+	private void logTestDescription(String testDescription) {
 		if (testDescription != null && !testDescription.isEmpty()) {
 			ReportManager.writeResult(LogStatus.INFO, testDescription);
 		}
 	}
 
-	@AfterMethod(alwaysRun=true)
-	public void afterMethod(final ITestContext testContext, Method method, ITestResult result) {
-		switch (result.getStatus()) {
-		case ITestResult.FAILURE:
-			ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getName());
-			ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
-
-			String img = ReportManager.addScreenCapture(
-					"../" + ReportManager.getRelativeHtmlPath(ScreenshotCapture.getScreenCaptureFileName()));
-			ReportManager.writeResult(LogStatus.FAIL, "Screenshot" + img);
-			ReportManager.writeParentResult(LogStatus.FAIL, method.getName());
-
-			// Al fallar debe skipear los restantes dentro del test.
-			MyThreadLocal.get().setData(STATUS_TEST_CONTEXT_KEY, ITestResult.SKIP);
-			break;
-
-		case ITestResult.SKIP:
-			ReportManager.writeResult(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
-			break;
-
-		case ITestResult.SUCCESS:
-			ReportManager.writeResult(LogStatus.PASS, method.getName() + " pass successful");
-			break;
+	@AfterMethod(alwaysRun = true)
+	@Parameters({"testDescription"})
+	public void afterMethod(final ITestContext testContext, Method method, ITestResult result, @Optional String testDescription) {
+		if (result.getStatus() == ITestResult.SUCCESS || result.getStatus() == ITestResult.SKIP || Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
+			if (testDescription != null && !testDescription.isEmpty()) {
+				ReportManager.startChildTest(testDescription);
+			} else {
+				ReportManager.startChildTest(method.getName());
+				this.logTestDescription(testDescription);
+			}
 		}
+		switch (result.getStatus()) {
+			case ITestResult.FAILURE:
+				if (Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
+					ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getName());
+					ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
 
-		ReportManager.writeResult(LogStatus.INFO, "<a href='" + ReportManager.getScenariosHtmlRelativePath(GUIStoryRunnerV2.getStoryLogFileName()) + "'>Scenarios</a>");
-		ReportManager.endTest();
+					String img = ReportManager.addScreenCapture("../" + ReportManager.getRelativeHtmlPath(ScreenshotCapture.getScreenCaptureFileName()));
+					ReportManager.writeResult(LogStatus.FAIL, "Screenshot" + img);
+				}
+				break;
+
+			case ITestResult.SKIP:
+				ReportManager.writeResult(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
+				break;
+
+			case ITestResult.SUCCESS:
+				ReportManager.writeResult(LogStatus.PASS, method.getName() + " pass successful");
+				break;
+		}
+		if (result.getStatus() == ITestResult.SUCCESS || Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
+			ReportManager.writeResult(LogStatus.INFO, "<a href='" + ReportManager.getScenariosHtmlRelativePath(GUIStoryRunnerV2.getStoryLogFileName()) + "'>Scenarios</a>");
+			ReportManager.writeResult(LogStatus.INFO, "Times test ejecuted" +
+					": " + (RetryAnalyzerImpl.RETRY_COUNT + 1));
+			ReportManager.endTest();
+			RetryAnalyzerImpl.RETRY_COUNT = 0;
+		} else if (result.getStatus() == ITestResult.SKIP) {
+			ReportManager.endTest();
+			RetryAnalyzerImpl.RETRY_COUNT = 0;
+		}
 	}
 
-	@AfterTest(alwaysRun=true)
+	@AfterTest(alwaysRun = true)
 	public void afterTest() {
 		WebDriverManager.dismissAll();
 	}
 
-	@AfterSuite(alwaysRun=true)
+	@AfterSuite(alwaysRun = true)
 	public void afterSuite() {
 		ReportManager.endReport();
 		if (Boolean.valueOf(PropertyManager.getProperty("report.mail.available"))) {
-			EmailUtil.sendReportEmail();;
+			EmailUtil.sendReportEmail();
 		}
 	}
 
