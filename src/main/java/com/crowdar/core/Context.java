@@ -13,6 +13,7 @@ public class Context {
 	public static final String CONTEXT_TEST_NAME_KEY = "testName";
 	public static final String CONTEXT_STORY_NAME_KEY = "storyName";
     public static final String CONTEXT_METHOD_NAME_KEY = "CONTEXT_METHOD_NAME_KEY";
+    public static String RETRY_COUNT = "RETRY_COUNT";
 
     private Context(){
 	}

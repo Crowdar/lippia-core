@@ -52,7 +52,6 @@ public final class GUIStoryRunnerV2 {
 		}catch (Exception e) {
 			testResult = false;
 			failMessage = e.getMessage();
-			ScreenshotCapture.createScreenCapture(WebDriverManager.getDriverInstance());
 		} finally {
 			Assert.assertTrue(testResult, failMessage);
 		}
