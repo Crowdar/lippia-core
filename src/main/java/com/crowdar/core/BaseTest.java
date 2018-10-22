@@ -29,14 +29,6 @@ public abstract class BaseTest {
 		super();
 	}
 
-	@BeforeSuite(alwaysRun = true)
-	public void beforeSuite(ITestContext context) {
-		setRunInstanceProperty();
-		setFrameworkRootProperty();
-		RetryManager.setRetryTests(context);
-		System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
-		WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));
-	}
 
 	@BeforeTest(alwaysRun = true)
 	public void startTest(final ITestContext testContext) {
@@ -58,71 +50,11 @@ public abstract class BaseTest {
 		}
 	}
 
-	@AfterMethod(alwaysRun = true)
-	@Parameters({"testDescription"})
-	public void afterMethod(final ITestContext testContext, Method method, ITestResult result, @Optional String testDescription) {
-		if (result.getStatus() == ITestResult.SUCCESS || result.getStatus() == ITestResult.SKIP || Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
-			if (testDescription != null && !testDescription.isEmpty()) {
-				ReportManager.startChildTest(testDescription);
-			} else {
-				ReportManager.startChildTest(method.getName());
-				this.logTestDescription(testDescription);
-			}
-		}
-		switch (result.getStatus()) {
-			case ITestResult.FAILURE:
-				if (Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
-					ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getName());
-					ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
 
-					String img = ReportManager.addScreenCapture("../" + ReportManager.getRelativeHtmlPath(ScreenshotCapture.getScreenCaptureFileName()));
-					ReportManager.writeResult(LogStatus.FAIL, "Screenshot" + img);
-				}
-				break;
 
-			case ITestResult.SKIP:
-				ReportManager.writeResult(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
-				break;
 
-			case ITestResult.SUCCESS:
-				ReportManager.writeResult(LogStatus.PASS, method.getName() + " pass successful");
-				break;
-		}
-		if (result.getStatus() == ITestResult.SUCCESS || Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
-			ReportManager.writeResult(LogStatus.INFO, "<a href='" + ReportManager.getScenariosHtmlRelativePath(GUIStoryRunnerV2.getStoryLogFileName()) + "'>Scenarios</a>");
-			ReportManager.writeResult(LogStatus.INFO, "Times test ejecuted" +
-					": " + (RetryAnalyzerImpl.RETRY_COUNT + 1));
-			ReportManager.endTest();
-			RetryAnalyzerImpl.RETRY_COUNT = 0;
-		} else if (result.getStatus() == ITestResult.SKIP) {
-			ReportManager.endTest();
-			RetryAnalyzerImpl.RETRY_COUNT = 0;
-		}
-	}
 
-	@AfterTest(alwaysRun = true)
-	public void afterTest() {
-		WebDriverManager.dismissAll();
-	}
 
-	@AfterSuite(alwaysRun = true)
-	public void afterSuite() {
-		ReportManager.endReport();
-		if (Boolean.valueOf(PropertyManager.getProperty("report.mail.available"))) {
-			EmailUtil.sendReportEmail();
-		}
-	}
 
-	private void setRunInstanceProperty() {
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-		String runInstance = sdf.format(cal.getTime());
-		System.setProperty(Constants.SYSTEM_PROPERTY_RUN_INSTANCE, runInstance);
-	}
 
-	private void setFrameworkRootProperty() {
-		String userDir = System.getProperty("user.dir");
-		System.setProperty(Constants.SYSTEM_PROPERTY_FRAMEWORK_ROOT,
-				userDir.substring(0, userDir.lastIndexOf(File.separator)));
-	}
 }

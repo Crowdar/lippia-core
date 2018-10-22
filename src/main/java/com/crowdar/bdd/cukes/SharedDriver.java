@@ -33,11 +33,8 @@ public class SharedDriver extends EventFiringWebDriver {
     private static final WebDriver REAL_DRIVER ;
 
     static {
-
         WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
         REAL_DRIVER = WebDriverManager.getDriverInstance();
-
-
     }
 
     private static final Thread CLOSE_THREAD = new Thread() {

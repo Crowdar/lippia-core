@@ -7,7 +7,7 @@ import org.testng.ITestResult;
 public class RetryAnalyzerImpl implements IRetryAnalyzer {
 
     public static int RETRY_COUNT = 0;
-    private int maxRetryCount = Integer.valueOf(PropertyManager.getProperty("repeat.test.failure"));
+    private int maxRetryCount = Integer.valueOf(PropertyManager.getProperty("crowdar.repeat.test.failure"));
 
     public boolean retry(ITestResult result) {
         if (RETRY_COUNT < maxRetryCount) {

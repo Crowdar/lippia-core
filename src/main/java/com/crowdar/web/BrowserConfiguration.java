@@ -1,6 +1,8 @@
 package com.crowdar.web;
 
 import com.crowdar.core.PropertyManager;
+import com.crowdar.json.JsonUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
@@ -12,8 +14,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.stqa.selenium.factory.SingleWebDriverPool;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public enum BrowserConfiguration {
 	FIREFOX {
@@ -32,7 +36,7 @@ public enum BrowserConfiguration {
 	CHROME {
 		@Override
 		public void localSetup() {
-			System.setProperty("webdriver.chrome.driver",getWebDriverPath().concat("chromedriver2.37.exe"));
+			System.setProperty("webdriver.chrome.driver",getWebDriverPath().concat("chromedriver.exe"));
 		}
 
 		@Override
@@ -144,7 +148,39 @@ public enum BrowserConfiguration {
 			capabilities.setBrowserName("safari");
 			return capabilities;
 		}
+	},
+
+	CUSTOM_CHROME{
+		public void localSetup() {
+			ChromeDriverManager.getInstance().setup();
+		}
+
+		@Override
+		public DesiredCapabilities getDesiredCapabilities() {
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			capabilitiesFromJson(capabilities,"CUSTOM_CHROME");
+			return capabilities;
+
+		}
 	};
+
+	public  void capabilitiesFromJson(DesiredCapabilities capabilities,String driverName)  {
+        String path =  PropertyManager.getProperty("crowdar.driver.capabilities.json.path");
+        if(path == null || path.isEmpty()){
+        	String msg = String.format("Error creating %s driver -- Please define property crowdar.driver.capabilities.json.path in config.property properly ",driverName);
+        	logger.error(msg);
+        	throw new RuntimeException(msg);
+        }
+
+		try {
+			Map<String, String> map = JsonUtil.i().getMapper().readValue(new File(path),new TypeReference<Map<String,String>>(){});
+			map.keySet().stream().forEach(k->{capabilities.setCapability(k,map.get(k));});
+		} catch (IOException e) {
+        	logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
 
 	private Logger logger = Logger.getLogger(BrowserConfiguration.class);
 

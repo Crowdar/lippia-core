@@ -53,16 +53,16 @@ public class EmbedderBase extends Embedder {
 		return new MostUsefulConfiguration()
 				.useStoryControls(new StoryControls().doResetStateBeforeScenario(false))
 				.useStoryLoader(new LoadFromClasspath(embedderClass.getClassLoader()))
-				.useStoryReporterBuilder(getStoryBuilder(embedderClass))
+				.useStoryReporterBuilder(getStoryBuilder())
 				.useStoryParser(new RegexStoryParser(new CustomExampleTableFactory(new LoadFromClasspath(this.getClass()))))
 				.useParameterConverters(new ParameterConverters()
 						.addConverters(new DateConverter(new SimpleDateFormat("yyyy-MM-dd")))) // use custom date pattern
 				.useStepMonitor(new SilentStepMonitor());
 	}
 
-	public StoryReporterBuilder getStoryBuilder(Class<? extends EmbedderBase> embedderClass){
+	public StoryReporterBuilder getStoryBuilder(){
 
-		return new StoryReporterBuilder()
+		return new ExtentStoryReporterBuilder()
 				.withCodeLocation(CodeLocations.codeLocationFromPath(ReportManager.getReportPath()))
 				.withFormats(Format.STATS, Format.CONSOLE, Format.TXT, CustomHTMLReport.WEB_DRIVER_HTML).withFailureTrace(true)
 				.withFailureTraceCompression(true)
