@@ -1,10 +1,11 @@
 package com.crowdar.mobile;
 
+import java.util.concurrent.TimeUnit;
+
 import com.crowdar.core.Constants;
-import io.appium.java_client.AppiumDriver;
 import com.crowdar.mobile.mobileDriver.PlatformConfiguration;
 
-import java.util.concurrent.TimeUnit;
+import io.appium.java_client.AppiumDriver;
 
 public final class AppiumDriverManager {
 
@@ -32,7 +33,7 @@ public final class AppiumDriverManager {
 
     private static AppiumDriver getDriver() {
         driver = ((PlatformConfiguration) platformConfiguration).getDriver();
-        driver.manage().timeouts().implicitlyWait(Constants.WAIT_IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
         return driver;
     }
 

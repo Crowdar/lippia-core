@@ -1,12 +1,7 @@
 package com.crowdar.mobile.core;
 
-import com.crowdar.core.Constants;
-import com.crowdar.core.Utils;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidKeyCode;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
@@ -16,7 +11,14 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.concurrent.TimeUnit;
+import com.crowdar.core.Constants;
+import com.crowdar.core.Utils;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidKeyCode;
 
 /**
  * This class represents the things in common between the other classes of
@@ -32,9 +34,9 @@ abstract public class PageBase {
 
     public PageBase(AppiumDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver,Constants.WAIT_FOR_ELEMENT);
-        this.fluentWait = new FluentWait<>(driver).withTimeout(Constants.FLUENT_WAIT_SECONDS_TIMEOUT, TimeUnit.SECONDS)
-                .pollingEvery(Constants.FLUENT_WAIT_REQUEST_FREQUENCY_IN_MILLIS, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
+        this.wait = new WebDriverWait(driver,Constants.getWaitForElementTimeout());
+        this.fluentWait = new FluentWait<>(driver).withTimeout(Constants.getFluentWaitTimeoutInSeconds(), TimeUnit.SECONDS)
+                .pollingEvery(Constants.getFluentWaitRequestFrequencyInMillis(), TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
     }
 
     /**
@@ -245,7 +247,7 @@ abstract public class PageBase {
             System.out.println(e.getMessage());
             return false;
         } finally {
-            driver.manage().timeouts().implicitlyWait(Constants.WAIT_IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
         }
     }
 
@@ -265,7 +267,7 @@ abstract public class PageBase {
             System.out.println(e.getMessage());
             return false;
         } finally {
-            driver.manage().timeouts().implicitlyWait(Constants.WAIT_IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
         }
     }
 
@@ -340,7 +342,7 @@ abstract public class PageBase {
             interval++;
             sleep(500);
             isEnabled = element.isEnabled();
-            if (Constants.WAIT_FOR_ELEMENT < interval) {
+            if (Constants.getWaitForElementTimeout() < interval) {
                 System.out.println("Element " + element.getText() + " is not enabled");
             }
         }
