@@ -61,7 +61,7 @@ public abstract class BaseTest {
 	@AfterMethod(alwaysRun = true)
 	@Parameters({"testDescription"})
 	public void afterMethod(final ITestContext testContext, Method method, ITestResult result, @Optional String testDescription) {
-		if (result.getStatus() == ITestResult.SUCCESS || result.getStatus() == ITestResult.SKIP || Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
+		if (result.getStatus() == ITestResult.SUCCESS || Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) == MyThreadLocal.get().getData(Context.RETRY_COUNT)) {
 			if (testDescription != null && !testDescription.isEmpty()) {
 				ReportManager.startChildTest(testDescription);
 			} else {
@@ -71,32 +71,38 @@ public abstract class BaseTest {
 		}
 		switch (result.getStatus()) {
 			case ITestResult.FAILURE:
-				if (Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
+				if (Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) == MyThreadLocal.get().getData(Context.RETRY_COUNT)) {
 					ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getName());
 					ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
-
+					ScreenshotCapture.createScreenCapture(WebDriverManager.getDriverInstance());
 					String img = ReportManager.addScreenCapture("../" + ReportManager.getRelativeHtmlPath(ScreenshotCapture.getScreenCaptureFileName()));
 					ReportManager.writeResult(LogStatus.FAIL, "Screenshot" + img);
 				}
 				break;
 
 			case ITestResult.SKIP:
-				ReportManager.writeResult(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
+				if (Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) == MyThreadLocal.get().getData(Context.RETRY_COUNT)) {
+					ReportManager.writeResult(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
+				}
 				break;
 
 			case ITestResult.SUCCESS:
 				ReportManager.writeResult(LogStatus.PASS, method.getName() + " pass successful");
 				break;
 		}
-		if (result.getStatus() == ITestResult.SUCCESS || Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) <= RetryAnalyzerImpl.RETRY_COUNT) {
+		if ((result.getStatus() == ITestResult.SUCCESS) || (Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) == MyThreadLocal.get().getData(Context.RETRY_COUNT))) {
 			ReportManager.writeResult(LogStatus.INFO, "<a href='" + ReportManager.getScenariosHtmlRelativePath(GUIStoryRunnerV2.getStoryLogFileName()) + "'>Scenarios</a>");
 			ReportManager.writeResult(LogStatus.INFO, "Times test ejecuted" +
-					": " + (RetryAnalyzerImpl.RETRY_COUNT + 1));
+					": " + ((Integer) MyThreadLocal.get().getData(Context.RETRY_COUNT)+ 1));
 			ReportManager.endTest();
-			RetryAnalyzerImpl.RETRY_COUNT = 0;
-		} else if (result.getStatus() == ITestResult.SKIP) {
+			MyThreadLocal.get().setData(Context.RETRY_COUNT, 0);
+		} else if (result.getStatus() == ITestResult.SKIP && Integer.valueOf(PropertyManager.getProperty("repeat.test.failure")) == MyThreadLocal.get().getData(Context.RETRY_COUNT)) {
 			ReportManager.endTest();
-			RetryAnalyzerImpl.RETRY_COUNT = 0;
+			MyThreadLocal.get().setData(Context.RETRY_COUNT, 0);
+		} else{
+			int retryCount = (Integer) MyThreadLocal.get().getData(Context.RETRY_COUNT);
+			retryCount++;
+			MyThreadLocal.get().setData(Context.RETRY_COUNT, retryCount);
 		}
 	}
 
