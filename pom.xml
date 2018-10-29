@@ -11,14 +11,14 @@
     <parent>
         <groupId>com.crowdar</groupId>
         <artifactId>Crowd-Root-Framework</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </parent>
     <groupId>com.crowdar</groupId>
     <artifactId>Crowd-Core-Framework</artifactId>
     <url>http://maven.apache.org</url>
     <packaging>jar</packaging>
     <name>CrowCoreFramework</name>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <repositories>
         <repository>
             <id>crowdarRepo</id>

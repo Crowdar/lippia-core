@@ -1,7 +1,10 @@
 package com.crowdar.web;
 
 import com.crowdar.core.PropertyManager;
+
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
@@ -56,10 +59,7 @@ public enum BrowserConfiguration {
 
 		@Override
 		public void localSetup() {
-			ChromeDriverManager.getInstance().setup();
-		}
-		public WebDriver getDynamicWebDriver(){
-			return new ChromeDriver(getDesiredCapabilities());
+			ChromeDriverManager.chromedriver().setup();
 		}
 
 		@Override
@@ -81,10 +81,7 @@ public enum BrowserConfiguration {
 
 		@Override
 		public void localSetup() {
-			ChromeDriverManager.getInstance().setup();
-		}
-		public WebDriver getDynamicWebDriver(){
-			return new ChromeDriver(getDesiredCapabilities());
+			ChromeDriverManager.chromedriver().setup();
 		}
 
 		@Override
@@ -132,6 +129,20 @@ public enum BrowserConfiguration {
 			return capabilities;
 		}
 	},
+	IEDYNAMIC {
+		@Override
+		public void localSetup() {
+			InternetExplorerDriverManager.iedriver().setup();
+		}
+
+		@Override
+		public DesiredCapabilities getDesiredCapabilities() {
+			DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+			capabilities.setPlatform(Platform.WINDOWS);
+			capabilities.setBrowserName(capabilities.getBrowserName());
+			return capabilities;
+		}
+	},
 	SAFARI {
 		@Override
 		public void localSetup() {
@@ -142,6 +153,19 @@ public enum BrowserConfiguration {
 			DesiredCapabilities capabilities = DesiredCapabilities.safari();
 			capabilities.setPlatform(Platform.MAC);
 			capabilities.setBrowserName("safari");
+			return capabilities;
+		}
+	},
+
+	PHANTOMJS{
+		@Override
+		public void localSetup() {
+			PhantomJsDriverManager.phantomjs().setup();
+		}
+
+		@Override
+		public DesiredCapabilities getDesiredCapabilities() {
+			DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
 			return capabilities;
 		}
 	};
@@ -195,9 +219,6 @@ public enum BrowserConfiguration {
 		return driverHub != null && !driverHub.isEmpty();
 	}
 
-	private boolean isDynamic(){
-			return PropertyManager.getProperty("crowdar.dinamic.browser") != null ;
-	}
 
 	private static String getWebDriverPath() {
 		return System.getProperty("user.dir").concat(File.separator).concat("webDrivers").concat(File.separator);
