@@ -2,6 +2,7 @@ package com.crowdar.bdd;
 
 import com.crowdar.core.Context;
 import com.crowdar.core.MyThreadLocal;
+import com.crowdar.mobile.AppiumDriverManager;
 import com.crowdar.web.WebDriverManager;
 import com.google.common.collect.Lists;
 import org.jbehave.core.embedder.Embedder;
@@ -23,7 +24,7 @@ public class StoryRunner {
     public StoryRunner() {
     }
 
-    private static void runGUIStories(String storyPath) {
+    public static void runGUIStories(String storyPath) {
         storyPath = storyPath.replace("/", File.separator);
         List<String> storyPaths = Lists.newArrayList(storyPath);
 
@@ -38,6 +39,35 @@ public class StoryRunner {
             setStoryRunnerProperties(storyPaths);
 
             Embedder embedder = new GUIStories(WebDriverManager.getDriverInstance());
+            embedder.useMetaFilters(asList("-skip"));
+            embedder.runStoriesAsPaths(StoryUtils.storyPaths(storyPaths));
+
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+
+        } catch (Exception e) {
+            testResult = false;
+            failMessage = e.getMessage();
+        } finally {
+            Assert.assertTrue(testResult, failMessage);
+        }
+    }
+
+    public static void runAppiumGUIStories(String storyPath) {
+        storyPath = storyPath.replace("/", File.separator);
+        List<String> storyPaths = Lists.newArrayList(storyPath);
+
+        boolean testResult = true;
+        String failMessage = null;
+
+        if (MyThreadLocal.get().getData("status") != null && ((Integer) MyThreadLocal.get().getData("status")).intValue() == ITestResult.SKIP) {
+            throw new SkipException("");
+        }
+
+        try {
+            setStoryRunnerProperties(storyPaths);
+
+            Embedder embedder = new AppiumGUIStories(AppiumDriverManager.getDriverInstance());
             embedder.useMetaFilters(asList("-skip"));
             embedder.runStoriesAsPaths(StoryUtils.storyPaths(storyPaths));
 

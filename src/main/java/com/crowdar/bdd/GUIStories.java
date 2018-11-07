@@ -3,6 +3,7 @@ package com.crowdar.bdd;
 import com.crowdar.core.PageSteps;
 import com.crowdar.core.PropertyManager;
 import com.google.common.collect.Lists;
+import io.appium.java_client.AppiumDriver;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 import org.openqa.selenium.WebDriver;

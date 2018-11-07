@@ -1,11 +1,11 @@
 package com.crowdar.bdd;
 
-import com.crowdar.core.PageSteps;
 import com.crowdar.core.PropertyManager;
+import com.crowdar.mobile.core.PageSteps;
 import com.google.common.collect.Lists;
+import io.appium.java_client.AppiumDriver;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
-import org.openqa.selenium.WebDriver;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -13,10 +13,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 
-public class ApiStories extends EmbedderBase {
+public class AppiumGUIStories extends EmbedderBase {
 
-    public ApiStories() {
+    private AppiumDriver driver;
 
+    public AppiumGUIStories(AppiumDriver driver) {
+        this.driver = driver;
     }
 
     @Override
@@ -34,8 +36,8 @@ public class ApiStories extends EmbedderBase {
             Constructor<?> constructor = null;
 
             try {
-                constructor = currentClass.getDeclaredConstructor();
-                pageStepsImplementations.add((PageSteps)constructor.newInstance());
+                constructor = currentClass.getDeclaredConstructor(AppiumDriver.class);
+                pageStepsImplementations.add((PageSteps)constructor.newInstance(driver));
 
             } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException e) {

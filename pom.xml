@@ -18,7 +18,7 @@
     <url>http://maven.apache.org</url>
     <packaging>jar</packaging>
     <name>CrowCoreFramework</name>
-    <version>1.0.4</version>
+    <version>1.0.4.appium</version>
     <repositories>
         <repository>
             <id>crowdarRepo</id>
