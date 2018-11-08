@@ -1,11 +1,11 @@
 package com.crowdar.report;
 
-import com.crowdar.mobile.core.GUIStoryRunner;
+import com.crowdar.bdd.StoryRunner;
+import com.crowdar.core.Constants;
+import com.crowdar.core.PropertyManager;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import com.crowdar.core.Constants;
-import com.crowdar.core.PropertyManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
@@ -101,7 +101,7 @@ public abstract class ReportManager {
 	}
 	
 	public static String getScenariosHtmlRelativePath(String methodName){
-		String absoluteFilePath =getPathFromStory(GUIStoryRunner.getStoryLogFileName()); 
+		String absoluteFilePath =getPathFromStory(StoryRunner.getStoryLogFileName());
 		return ".." + (absoluteFilePath.split(ReportManager.REPORTS_CONTAINER_FOLDER_NAME)[1]).replaceAll(Matcher.quoteReplacement(File.separator), "/"); 
 		
 	}

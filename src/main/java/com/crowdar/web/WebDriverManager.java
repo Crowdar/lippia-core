@@ -1,18 +1,20 @@
 package com.crowdar.web;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import com.crowdar.core.Constants;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import ru.stqa.selenium.factory.WebDriverPool;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import ru.stqa.selenium.factory.WebDriverPool;
 
 public final class WebDriverManager {
 
@@ -41,8 +43,8 @@ public final class WebDriverManager {
     private static WebDriver getDriver() {
         driver = ((BrowserConfiguration) browserConfiguration).getDriver();
 
-        driver.manage().timeouts().setScriptTimeout(Constants.WAIT_SCRIPT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(Constants.WAIT_IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
+        driver.manage().timeouts().setScriptTimeout(Constants.getWaitScriptTimeout(), TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
 
         return driver;
     }

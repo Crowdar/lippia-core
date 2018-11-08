@@ -11,7 +11,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.crowdar.bdd.cukes.SharedDriver;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -26,7 +25,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
 import com.sun.jna.platform.win32.User32;
@@ -56,7 +54,7 @@ abstract public class PageBase{
 		logger = Logger.getLogger(this.getClass());
 		this.driver = driver;
 		this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
-		this.wait = new WebDriverWait(driver, Constants.WAIT_FOR_ELEMENT);
+		this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
 		this.fluentWait = new FluentWait<WebDriver>(driver).withTimeout(30, TimeUnit.SECONDS)
 				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 	}
@@ -301,7 +299,7 @@ abstract public class PageBase{
 		} catch (NoSuchElementException e) {
 			return false;
 		} finally {
-			driver.manage().timeouts().implicitlyWait(Constants.WAIT_IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
 		}
 	}
 	
@@ -341,7 +339,7 @@ abstract public class PageBase{
 			// && elements.get(0).isEnabled();
 		} finally {
 			// Return to the original implicit timeout value
-			driver.manage().timeouts().implicitlyWait(Constants.WAIT_IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
 		}
 
 		return isPresent;
@@ -362,7 +360,7 @@ abstract public class PageBase{
 		} catch (NoSuchElementException e) {
 			return false;
 		} finally {
-			driver.manage().timeouts().implicitlyWait(Constants.WAIT_IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
 		}
 	}
 
