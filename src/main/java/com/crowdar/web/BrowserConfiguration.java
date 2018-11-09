@@ -1,7 +1,10 @@
 package com.crowdar.web;
 
 import com.crowdar.core.PropertyManager;
+import com.crowdar.json.JsonUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
@@ -12,10 +15,13 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.stqa.selenium.factory.SingleWebDriverPool;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public enum BrowserConfiguration {
+
     FIREFOX {
         @Override
         public void localSetup() {
@@ -55,7 +61,7 @@ public enum BrowserConfiguration {
     CHROMEDYNAMIC {
         @Override
         public void localSetup() {
-            ChromeDriverManager.getInstance().setup();
+            ChromeDriverManager.chromedriver().setup();
         }
 
         public WebDriver getDynamicWebDriver() {
@@ -81,7 +87,7 @@ public enum BrowserConfiguration {
     CHROMEEXTENCION {
         @Override
         public void localSetup() {
-            ChromeDriverManager.getInstance().setup();
+            ChromeDriverManager.chromedriver().setup();
         }
 
         public WebDriver getDynamicWebDriver() {
@@ -156,19 +162,10 @@ public enum BrowserConfiguration {
         public DesiredCapabilities getDesiredCapabilities() {
             return null;
         }
-    };
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			DesiredCapabilities capabilities = DesiredCapabilities.safari();
-			capabilities.setPlatform(Platform.MAC);
-			capabilities.setBrowserName("safari");
-			return capabilities;
-		}
-	},
-
+    },
 	CUSTOM_CHROME{
 		public void localSetup() {
-			ChromeDriverManager.getInstance().setup();
+			ChromeDriverManager.chromedriver().setup();
 		}
 
 		@Override
@@ -228,14 +225,16 @@ public enum BrowserConfiguration {
         if (!this.equals(this.NONE)) {
             if (isGridConfiguration()) {
                 try {
-                    logger.info("############################################ WebDriver mode: Grid");
+                    logger.info("############################################ WebDriver mode: Grid ############################################");
+                    logger.info(String.format("############################################ Driver : %s ############################################",name()));
                     driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(PropertyManager.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
                     driver.manage().window().setSize(new Dimension(1280, 1024));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             } else {
-                logger.info("############################################ WebDriver mode: Default");
+                logger.info("############################################ WebDriver mode: Default ############################################");
+                logger.info(String.format("############################################ Driver : %s ############################################",name()));
                 localSetup();
                 driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
             }
@@ -247,10 +246,6 @@ public enum BrowserConfiguration {
     private boolean isGridConfiguration() {
         String driverHub = PropertyManager.getProperty(DRIVER_GRID_HUB_KEY);
         return driverHub != null && !driverHub.isEmpty();
-    }
-
-    private boolean isDynamic() {
-        return PropertyManager.getProperty("crowdar.dinamic.browser") != null;
     }
 
     private static String getWebDriverPath() {

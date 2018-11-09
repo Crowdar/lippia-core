@@ -27,7 +27,7 @@ public class GUIStories extends EmbedderBase {
         List<PageSteps> pageStepsImplementations = Lists.newArrayList();
 
 
-        Reflections reflections = new Reflections(PropertyManager.getProperty("stepsClass.location"));
+        Reflections reflections = new Reflections(PropertyManager.getProperty("crowdar.jbehave.steps.location"));
 
         Set<Class<? extends PageSteps>> subTypes = reflections.getSubTypesOf(PageSteps.class);
 
