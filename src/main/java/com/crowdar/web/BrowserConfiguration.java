@@ -19,208 +19,216 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum BrowserConfiguration {
-	FIREFOX {
-		@Override
-		public void localSetup() {
-			System.setProperty("webdriver.gecko.driver",getWebDriverPath().concat("geckodriver.exe"));
-		}
+    FIREFOX {
+        @Override
+        public void localSetup() {
+            System.setProperty("webdriver.gecko.driver", getWebDriverPath().concat("geckodriver.exe"));
+        }
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-			capabilities.setBrowserName("firefox");
-			return capabilities;
-		}
-	},
-	CHROME {
-		@Override
-		public void localSetup() {
-			System.setProperty("webdriver.chrome.driver",getWebDriverPath().concat("chromedriver2.37.exe"));
-		}
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+            capabilities.setBrowserName("firefox");
+            return capabilities;
+        }
+    },
+    CHROME {
+        @Override
+        public void localSetup() {
+            System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver2.37.exe"));
+        }
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
 
-			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			capabilities.setPlatform(Platform.LINUX);
-			capabilities.setBrowserName(capabilities.getBrowserName());
+            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+            capabilities.setPlatform(Platform.LINUX);
+            capabilities.setBrowserName(capabilities.getBrowserName());
 
-			ChromeOptions options = new ChromeOptions();
-			options.addArguments("disable-infobars");
-			options.addArguments("start-maximized");
-			options.addArguments("--ignore-certificate-errors");
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("disable-infobars");
+            options.addArguments("start-maximized");
+            options.addArguments("--ignore-certificate-errors");
 //			options.addArguments("screenshot");
-			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-			return capabilities;
-		}
-	},
-	CHROMEDYNAMIC{
+            return capabilities;
+        }
+    },
+    CHROMEDYNAMIC {
+        @Override
+        public void localSetup() {
+            ChromeDriverManager.getInstance().setup();
+        }
 
-		@Override
-		public void localSetup() {
-			ChromeDriverManager.chromedriver().setup();
-		}
+        public WebDriver getDynamicWebDriver() {
+            return new ChromeDriver(getDesiredCapabilities());
+        }
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			//BrowserMobProxy proxy = new BrowserMobProxyServer(); TODO configure proxy to re-write http headers and cookies
-			//proxy.start(0);
-			// get the Selenium proxy object
-			//Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
-		//	capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
-			capabilities.setBrowserName(capabilities.getBrowserName());
-			ChromeOptions options = new ChromeOptions();
-			options.addArguments("disable-infobars");
-			options.addArguments("start-maximized");
-			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-			return capabilities;
-		}},
-	  CHROMEEXTENCION{
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+            //BrowserMobProxy proxy = new BrowserMobProxyServer(); TODO configure proxy to re-write http headers and cookies
+            //proxy.start(0);
+            // get the Selenium proxy object
+            //Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
+            //	capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
+            capabilities.setBrowserName(capabilities.getBrowserName());
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("disable-infobars");
+            options.addArguments("start-maximized");
+            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+            return capabilities;
+        }
+    },
+    CHROMEEXTENCION {
+        @Override
+        public void localSetup() {
+            ChromeDriverManager.getInstance().setup();
+        }
 
-		@Override
-		public void localSetup() {
-			ChromeDriverManager.chromedriver().setup();
-		}
+        public WebDriver getDynamicWebDriver() {
+            return new ChromeDriver(getDesiredCapabilities());
+        }
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			capabilities.setBrowserName(capabilities.getBrowserName());
-			ChromeOptions options = new ChromeOptions();
-			ChromeUtils.insertHeadersExtension(options);
-			options.addArguments("disable-infobars");
-			options.addArguments("start-maximized");
-			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-			return capabilities;
-		}},
-	EDGE {
-		@Override
-		public void localSetup() {
-			System.setProperty("webdriver.edge.driver",getWebDriverPath().concat("MicrosoftWebDriver.exe"));
-		}
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+            capabilities.setBrowserName(capabilities.getBrowserName());
+            ChromeOptions options = new ChromeOptions();
+            ChromeUtils.insertHeadersExtension(options);
+            options.addArguments("disable-infobars");
+            options.addArguments("start-maximized");
+            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+            return capabilities;
+        }
+    },
+    EDGE {
+        @Override
+        public void localSetup() {
+            System.setProperty("webdriver.edge.driver", getWebDriverPath().concat("MicrosoftWebDriver.exe"));
+        }
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-
-//			System.setProperty("webdriver.ie.driver.loglevel","DEBUG");
-
-			DesiredCapabilities edgeCapabilities = DesiredCapabilities.edge();
-			edgeCapabilities.setPlatform(Platform.WIN10);
-			edgeCapabilities.setBrowserName(edgeCapabilities.getBrowserName());
-			return edgeCapabilities;
-		}
-	},
-	IE {
-		@Override
-		public void localSetup() {
-			System.setProperty("webdriver.ie.driver",getWebDriverPath().concat("IEDriverServer.exe"));
-		}
-
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
 
 //			System.setProperty("webdriver.ie.driver.loglevel","DEBUG");
 
-			DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-			capabilities.setPlatform(Platform.VISTA);
-			capabilities.setBrowserName(capabilities.getBrowserName());
-			return capabilities;
-		}
-	},
-	IEDYNAMIC {
-		@Override
-		public void localSetup() {
-			InternetExplorerDriverManager.iedriver().setup();
-		}
+            DesiredCapabilities edgeCapabilities = DesiredCapabilities.edge();
+            edgeCapabilities.setPlatform(Platform.WIN10);
+            edgeCapabilities.setBrowserName(edgeCapabilities.getBrowserName());
+            return edgeCapabilities;
+        }
+    },
+    IE {
+        @Override
+        public void localSetup() {
+            System.setProperty("webdriver.ie.driver", getWebDriverPath().concat("IEDriverServer.exe"));
+        }
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-			capabilities.setPlatform(Platform.WINDOWS);
-			capabilities.setBrowserName(capabilities.getBrowserName());
-			return capabilities;
-		}
-	},
-	SAFARI {
-		@Override
-		public void localSetup() {
-		}
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			DesiredCapabilities capabilities = DesiredCapabilities.safari();
-			capabilities.setPlatform(Platform.MAC);
-			capabilities.setBrowserName("safari");
-			return capabilities;
-		}
-	},
+//			System.setProperty("webdriver.ie.driver.loglevel","DEBUG");
 
-	PHANTOMJS{
-		@Override
-		public void localSetup() {
-			PhantomJsDriverManager.phantomjs().setup();
-		}
+            DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+            capabilities.setPlatform(Platform.VISTA);
+            capabilities.setBrowserName(capabilities.getBrowserName());
+            return capabilities;
+        }
+    },
+    SAFARI {
+        @Override
+        public void localSetup() {
+        }
 
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
-			return capabilities;
-		}
-	};
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            DesiredCapabilities capabilities = DesiredCapabilities.safari();
+            capabilities.setPlatform(Platform.MAC);
+            capabilities.setBrowserName("safari");
+            return capabilities;
+        }
+    },
+    PHANTOMJS{
+        @Override
+        public void localSetup() {
+            PhantomJsDriverManager.phantomjs().setup();
+        }
 
-	private Logger logger = Logger.getLogger(BrowserConfiguration.class);
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
+            return capabilities;
+        }
+    },
+    NONE {
+        @Override
+        public void localSetup() {
+        }
 
-	public static final String BROWSER_KEY = "browser";
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            return null;
+        }
+    };
 
-	public static BrowserConfiguration getBrowserConfiguration(String key) {
+    private Logger logger = Logger.getLogger(BrowserConfiguration.class);
 
-		for (BrowserConfiguration current : values()) {
-			if (current.name().equalsIgnoreCase(key)) {
-				return current;
-			}
-		}
-		return null;
-	}
+    public static final String BROWSER_KEY = "browser";
 
-	private final String DRIVER_GRID_HUB_KEY = "gridHub";
+    public static BrowserConfiguration getBrowserConfiguration(String key) {
 
-	public abstract void localSetup();
-	public abstract DesiredCapabilities getDesiredCapabilities();
+        for (BrowserConfiguration current : values()) {
+            if (current.name().equalsIgnoreCase(key)) {
+                return current;
+            }
+        }
+        return null;
+    }
 
-	public WebDriver getDynamicWebDriver(){
-		return null;
-	}
+    private final String DRIVER_GRID_HUB_KEY = "gridHub";
 
+    public abstract void localSetup();
 
-	public org.openqa.selenium.WebDriver getDriver() {
-		org.openqa.selenium.WebDriver driver = null;
+    public abstract DesiredCapabilities getDesiredCapabilities();
 
-		if (isGridConfiguration()) {
-			try {
-				logger.info("############################################ WebDriver mode: Grid");
-				driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(PropertyManager.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
-				driver.manage().window().setSize(new Dimension(1280, 1024));
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-		} else{
-			logger.info("############################################ WebDriver mode: Default");
-			localSetup();
-			driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
-		}
-		return driver;
-	}
+    public WebDriver getDynamicWebDriver() {
+        return null;
+    }
 
 
-	private boolean isGridConfiguration() {
-		String driverHub = PropertyManager.getProperty(DRIVER_GRID_HUB_KEY);
-		return driverHub != null && !driverHub.isEmpty();
-	}
+    public org.openqa.selenium.WebDriver getDriver() {
+        org.openqa.selenium.WebDriver driver = null;
+        if (!this.equals(this.NONE)) {
+            if (isGridConfiguration()) {
+                try {
+                    logger.info("############################################ WebDriver mode: Grid");
+                    driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(PropertyManager.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
+                    driver.manage().window().setSize(new Dimension(1280, 1024));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                logger.info("############################################ WebDriver mode: Default");
+                localSetup();
+                driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
+            }
+        }
+        return driver;
+    }
 
 
-	private static String getWebDriverPath() {
-		return System.getProperty("user.dir").concat(File.separator).concat("webDrivers").concat(File.separator);
-	}
+    private boolean isGridConfiguration() {
+        String driverHub = PropertyManager.getProperty(DRIVER_GRID_HUB_KEY);
+        return driverHub != null && !driverHub.isEmpty();
+    }
+
+    private boolean isDynamic() {
+        return PropertyManager.getProperty("crowdar.dinamic.browser") != null;
+    }
+
+    private static String getWebDriverPath() {
+        return System.getProperty("user.dir").concat(File.separator).concat("webDrivers").concat(File.separator);
+    }
 }
