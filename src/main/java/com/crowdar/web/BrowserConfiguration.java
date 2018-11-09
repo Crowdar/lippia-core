@@ -35,7 +35,7 @@ public enum BrowserConfiguration {
     CHROME {
         @Override
         public void localSetup() {
-            System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver2.37.exe"));
+            System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver.exe"));
         }
 
         @Override
@@ -58,7 +58,7 @@ public enum BrowserConfiguration {
     CHROMEDYNAMIC {
         @Override
         public void localSetup() {
-            ChromeDriverManager.getInstance().setup();
+            ChromeDriverManager.chromedriver().setup();
         }
 
         public WebDriver getDynamicWebDriver() {
@@ -84,7 +84,7 @@ public enum BrowserConfiguration {
     CHROMEEXTENCION {
         @Override
         public void localSetup() {
-            ChromeDriverManager.getInstance().setup();
+            ChromeDriverManager.chromedriver().setup();
         }
 
         public WebDriver getDynamicWebDriver() {
@@ -161,16 +161,6 @@ public enum BrowserConfiguration {
             DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
             return capabilities;
         }
-    },
-    NONE {
-        @Override
-        public void localSetup() {
-        }
-
-        @Override
-        public DesiredCapabilities getDesiredCapabilities() {
-            return null;
-        }
     };
 
     private Logger logger = Logger.getLogger(BrowserConfiguration.class);
@@ -200,21 +190,24 @@ public enum BrowserConfiguration {
 
     public org.openqa.selenium.WebDriver getDriver() {
         org.openqa.selenium.WebDriver driver = null;
-        if (!this.equals(this.NONE)) {
+
+
+            logger.info(String.format("############################################ DRIVER: %s ############################################",name()));
+
             if (isGridConfiguration()) {
+                logger.info("############################################ MODE: Grid ############################################");
                 try {
-                    logger.info("############################################ WebDriver mode: Grid");
                     driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(PropertyManager.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
                     driver.manage().window().setSize(new Dimension(1280, 1024));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             } else {
-                logger.info("############################################ WebDriver mode: Default");
+                logger.info("############################################ MODE: Default ############################################");
                 localSetup();
                 driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
             }
-        }
+
         return driver;
     }
 
