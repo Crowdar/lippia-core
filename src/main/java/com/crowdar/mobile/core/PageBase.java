@@ -2,10 +2,7 @@ package com.crowdar.mobile.core;
 
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.Platform;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -252,6 +249,25 @@ abstract public class PageBase {
     }
 
     /**
+     * Verifies if the element specific is present in the window
+     *
+     * @param locator of the element node
+     * @return <b>true</b> if the element is present, <b>false</b> otherwise
+     */
+    public boolean isElementPresent(By locator) {
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        try {
+            MobileElement element = (MobileElement) getDriver().findElement(locator);
+            return true;
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+        }
+    }
+
+    /**
      * Wait a little time and verifies if the element specific is present in the window
      *
      * @param locator    of the element node
@@ -277,7 +293,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementVisibility(By locator) {
-        getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+       MobileElement element = (MobileElement) getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public boolean isElementVisible(By locator) {

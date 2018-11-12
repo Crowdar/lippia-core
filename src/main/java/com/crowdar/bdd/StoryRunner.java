@@ -60,10 +60,6 @@ public class StoryRunner {
         boolean testResult = true;
         String failMessage = null;
 
-        if (MyThreadLocal.get().getData("status") != null && ((Integer) MyThreadLocal.get().getData("status")).intValue() == ITestResult.SKIP) {
-            throw new SkipException("");
-        }
-
         try {
             setStoryRunnerProperties(storyPaths);
 

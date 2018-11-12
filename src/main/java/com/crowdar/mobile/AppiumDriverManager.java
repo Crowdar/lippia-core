@@ -40,6 +40,9 @@ public final class AppiumDriverManager {
     public static void dismissDriver() {
         driver.closeApp();
         driver.quit();
-        //driver.resetApp();
+    }
+
+    public static void resetDriver() {
+        driver.resetApp();
     }
 }

@@ -1,15 +1,18 @@
 package com.crowdar.mobile.core;
 
-import com.crowdar.core.*;
-import com.relevantcodes.extentreports.LogStatus;
+import com.crowdar.bdd.StoryRunner;
+import com.crowdar.core.Constants;
+import com.crowdar.core.MyThreadLocal;
+import com.crowdar.core.PropertyManager;
 import com.crowdar.email.EmailUtil;
 import com.crowdar.mobile.AppiumDriverManager;
 import com.crowdar.mobile.mobileDriver.PlatformConfiguration;
+import com.crowdar.report.ReportManager;
+import com.crowdar.report.ScreenshotCapture;
+import com.relevantcodes.extentreports.LogStatus;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-import com.crowdar.report.ReportManager;
-import com.crowdar.report.ScreenshotCapture;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -27,25 +30,25 @@ public abstract class BaseTest {
         super();
     }
 
-    @BeforeSuite
+    @BeforeSuite(alwaysRun = true)
     public void beforeSuite() {
         System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
         setRunInstanceProperty();
         setFrameworkRootProperty();
-        AppiumDriverManager.build(PlatformConfiguration.getPlatformConfiguration(System.getProperty("platform")));
+        AppiumDriverManager.build(PlatformConfiguration.getPlatformConfiguration(PropertyManager.getProperty("app.platform")));
 
     }
 
-    @BeforeTest
+    @BeforeTest(alwaysRun = true)
     public void startTest(final ITestContext testContext) {
-        GUIStoryRunner.setTestContextProperties(testContext.getName());
+        StoryRunner.setTestContextProperties(testContext.getName());
         testContext.setAttribute(STATUS_TEST_CONTEXT_KEY, null);
         MyThreadLocal.get().setData(STATUS_TEST_CONTEXT_KEY, null);
         String flowDescription = testContext.getCurrentXmlTest().getParameter("flowDescription");
         ReportManager.startParentTest(flowDescription);
     }
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     @Parameters({"testDescription"})
     public void beforeMethod(final ITestContext testContext, Method method, ITestResult result,
                              @Optional String testDescription) {
@@ -61,19 +64,20 @@ public abstract class BaseTest {
         }
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void afterMethod(final ITestContext testContext, Method method, ITestResult result) {
         switch (result.getStatus()) {
             case ITestResult.FAILURE:
                 ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getName());
                 ReportManager.writeResult(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
 
+                ScreenshotCapture.createScreenCapture(AppiumDriverManager.getDriverInstance());
+
                 String img = ReportManager.addScreenCapture(
                         "../" + ReportManager.getRelativeHtmlPath(ScreenshotCapture.getScreenCaptureFileName()));
                 ReportManager.writeResult(LogStatus.FAIL, "Screenshot" + img);
                 ReportManager.writeParentResult(LogStatus.FAIL, method.getName());
 
-                MyThreadLocal.get().setData(STATUS_TEST_CONTEXT_KEY, ITestResult.SKIP);
                 break;
 
             case ITestResult.SKIP:
@@ -85,16 +89,17 @@ public abstract class BaseTest {
                 break;
         }
 
-        ReportManager.writeResult(LogStatus.INFO, "<a href='" + ReportManager.getScenariosHtmlRelativePath(GUIStoryRunner.getStoryLogFileName()) + "'>Scenarios</a>");
+        ReportManager.writeResult(LogStatus.INFO, "<a href='" + ReportManager.getScenariosHtmlRelativePath(StoryRunner.getStoryLogFileName()) + "'>Scenarios</a>");
         ReportManager.endTest();
+        AppiumDriverManager.resetDriver();
     }
 
-    @AfterTest
+    @AfterTest(alwaysRun = true)
     public void afterTest() {
         AppiumDriverManager.dismissDriver();
     }
 
-    @AfterSuite
+    @AfterSuite(alwaysRun = true)
     public void afterSuite() {
         ReportManager.endReport();
         if (Boolean.valueOf(PropertyManager.getProperty("report.mail.available"))) {
