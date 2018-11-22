@@ -23,7 +23,7 @@ public class StoryRunner {
     public StoryRunner() {
     }
 
-    private static void runGUIStories(String storyPath) {
+    public static void runGUIStories(String storyPath) {
         storyPath = storyPath.replace("/", File.separator);
         List<String> storyPaths = Lists.newArrayList(storyPath);
 

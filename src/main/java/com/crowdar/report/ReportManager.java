@@ -12,6 +12,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import java.io.File;
 import java.util.regex.Matcher;
 
+@Deprecated
 public abstract class ReportManager {
 
 	public static final String REPORTS_CONTAINER_FOLDER_NAME = "reports";

@@ -1,10 +1,10 @@
 package com.crowdar.web;
 
 import com.crowdar.core.PropertyManager;
-
+import com.crowdar.json.JsonUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
-import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
@@ -15,10 +15,13 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.stqa.selenium.factory.SingleWebDriverPool;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public enum BrowserConfiguration {
+
     FIREFOX {
         @Override
         public void localSetup() {
@@ -35,23 +38,22 @@ public enum BrowserConfiguration {
     CHROME {
         @Override
         public void localSetup() {
-            System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver.exe"));
+            System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver2.37.exe"));
         }
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
 
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-            capabilities.setPlatform(Platform.LINUX);
             capabilities.setBrowserName(capabilities.getBrowserName());
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("disable-infobars");
-            options.addArguments("start-maximized");
             options.addArguments("--ignore-certificate-errors");
 //			options.addArguments("screenshot");
+            
+            //options.addArguments("no-sandbox", "disable-gpu");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-
             return capabilities;
         }
     },
@@ -150,18 +152,47 @@ public enum BrowserConfiguration {
             return capabilities;
         }
     },
-    PHANTOMJS{
+    NONE {
         @Override
         public void localSetup() {
-            PhantomJsDriverManager.phantomjs().setup();
         }
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
-            DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
-            return capabilities;
+            return null;
         }
-    };
+    },
+	CUSTOM_CHROME{
+		public void localSetup() {
+			ChromeDriverManager.chromedriver().setup();
+		}
+
+		@Override
+		public DesiredCapabilities getDesiredCapabilities() {
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			capabilitiesFromJson(capabilities,"CUSTOM_CHROME");
+			return capabilities;
+
+		}
+	};
+
+	public  void capabilitiesFromJson(DesiredCapabilities capabilities,String driverName)  {
+        String path =  PropertyManager.getProperty("crowdar.driver.capabilities.json.path");
+        if(path == null || path.isEmpty()){
+        	String msg = String.format("Error creating %s driver -- Please define property crowdar.driver.capabilities.json.path in config.property properly ",driverName);
+        	logger.error(msg);
+        	throw new RuntimeException(msg);
+        }
+
+		try {
+			Map<String, String> map = JsonUtil.i().getMapper().readValue(new File(path),new TypeReference<Map<String,String>>(){});
+			map.keySet().stream().forEach(k->{capabilities.setCapability(k,map.get(k));});
+		} catch (IOException e) {
+        	logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
 
     private Logger logger = Logger.getLogger(BrowserConfiguration.class);
 
@@ -190,24 +221,23 @@ public enum BrowserConfiguration {
 
     public org.openqa.selenium.WebDriver getDriver() {
         org.openqa.selenium.WebDriver driver = null;
-
-
-            logger.info(String.format("############################################ DRIVER: %s ############################################",name()));
-
+        if (!this.equals(this.NONE)) {
             if (isGridConfiguration()) {
-                logger.info("############################################ MODE: Grid ############################################");
                 try {
+                    logger.info("############################################ WebDriver mode: Grid ############################################");
+                    logger.info(String.format("############################################ Driver : %s ############################################",name()));
                     driver = SingleWebDriverPool.DEFAULT.getDriver(new URL(PropertyManager.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
                     driver.manage().window().setSize(new Dimension(1280, 1024));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             } else {
-                logger.info("############################################ MODE: Default ############################################");
+                logger.info("############################################ WebDriver mode: Default ############################################");
+                logger.info(String.format("############################################ Driver : %s ############################################",name()));
                 localSetup();
                 driver = SingleWebDriverPool.DEFAULT.getDriver(getDesiredCapabilities());
             }
-
+        }
         return driver;
     }
 
@@ -215,10 +245,6 @@ public enum BrowserConfiguration {
     private boolean isGridConfiguration() {
         String driverHub = PropertyManager.getProperty(DRIVER_GRID_HUB_KEY);
         return driverHub != null && !driverHub.isEmpty();
-    }
-
-    private boolean isDynamic() {
-        return PropertyManager.getProperty("crowdar.dinamic.browser") != null;
     }
 
     private static String getWebDriverPath() {

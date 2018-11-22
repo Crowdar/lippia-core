@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 
 public class TestNgRunner extends AbstractTestNGCucumberTests {
     protected WebDriver driver;
-    protected String BASE_URL = "https://www.kayak.com/cars";
+    protected String BASE_URL = "http://crowdar.co.uk/";
 
 
 }
