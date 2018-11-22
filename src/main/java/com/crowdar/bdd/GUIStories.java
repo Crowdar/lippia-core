@@ -27,7 +27,7 @@ public class GUIStories extends EmbedderBase {
         List<PageSteps> pageStepsImplementations = Lists.newArrayList();
 
 
-        Reflections reflections = new Reflections("com.gire.steps");
+        Reflections reflections = new Reflections(PropertyManager.getProperty("stepsClass.location"));
 
         Set<Class<? extends PageSteps>> subTypes = reflections.getSubTypesOf(PageSteps.class);
 
