@@ -19,21 +19,13 @@ import java.util.Calendar;
 /**
  * @author jCarames
  */
+@Listeners({ com.crowdar.core.listeners.SuiteTestngListener.class })
 public abstract class BaseTest {
 
     private static final String STATUS_TEST_CONTEXT_KEY = "status";
 
     public BaseTest() {
         super();
-    }
-
-    @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext context) {
-        setRunInstanceProperty();
-        setFrameworkRootProperty();
-        RetryManager.setRetryTests(context);
-        System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
-        WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));
     }
 
     @BeforeTest(alwaysRun = true)
@@ -62,16 +54,4 @@ public abstract class BaseTest {
 
 
 
-    private void setRunInstanceProperty() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-        String runInstance = sdf.format(cal.getTime());
-        System.setProperty(Constants.SYSTEM_PROPERTY_RUN_INSTANCE, runInstance);
-    }
-
-    private void setFrameworkRootProperty() {
-        String userDir = System.getProperty("user.dir");
-        System.setProperty(Constants.SYSTEM_PROPERTY_FRAMEWORK_ROOT,
-                userDir.substring(0, userDir.lastIndexOf(File.separator)));
-    }
 }

@@ -17,6 +17,8 @@ import org.jbehave.core.steps.ParameterConverters.DateConverter;
 import org.jbehave.core.steps.SilentStepMonitor;
 import org.openqa.selenium.WebDriver;
 
+import com.crowdar.report.JbehaveStoryReporterBuilder;
+
 /**
  * @author Agustin Mascheroni
  */
@@ -48,7 +50,7 @@ public abstract class EmbedderBase extends Embedder {
 		Class<? extends EmbedderBase> embedderClass = this.getClass();
 		return new MostUsefulConfiguration().useStoryControls(new StoryControls().doResetStateBeforeScenario(false))
                 .useStoryLoader(new LoadFromClasspath(embedderClass.getClassLoader()))
-                .useStoryReporterBuilder(new CustomStoryReporterBuilder(getDriver())
+                .useStoryReporterBuilder(new JbehaveStoryReporterBuilder(getDriver())
                         //.useStoryReporterBuilder(new StoryReporterBuilder()
                         .withCodeLocation(CodeLocations.codeLocationFromPath("target"+File.separator+"jbehave"))
                         .withFormats(Format.STATS, Format.CONSOLE, Format.TXT, Format.HTML, CustomHTMLReport.WEB_DRIVER_HTML).withFailureTrace(true)
