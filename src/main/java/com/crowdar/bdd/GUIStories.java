@@ -27,7 +27,7 @@ public class GUIStories extends EmbedderBase {
         List<PageSteps> pageStepsImplementations = Lists.newArrayList();
 
 
-        Reflections reflections = new Reflections(PropertyManager.getProperty("crowdar.jbehave.steps.location"));
+        Reflections reflections = new Reflections("com.gire.steps");
 
         Set<Class<? extends PageSteps>> subTypes = reflections.getSubTypesOf(PageSteps.class);
 
@@ -47,4 +47,9 @@ public class GUIStories extends EmbedderBase {
 
         return new InstanceStepsFactory(configuration(), pageStepsImplementations);
     }
+
+	@Override
+	protected WebDriver getDriver() {
+		return driver;
+	}
 }

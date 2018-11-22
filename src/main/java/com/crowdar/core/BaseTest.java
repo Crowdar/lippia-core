@@ -41,8 +41,8 @@ public abstract class BaseTest {
         StoryRunner.setTestContextProperties(testContext.getName());
         testContext.setAttribute(STATUS_TEST_CONTEXT_KEY, null);
         MyThreadLocal.get().setData(STATUS_TEST_CONTEXT_KEY, null);
-        String reportDescription = testContext.getCurrentXmlTest().getParameter("reportDescription");
-        ReportManager.startParentTest(reportDescription);
+//        String reportDescription = testContext.getCurrentXmlTest().getParameter("reportDescription");
+//        ReportManager.startParentTest(reportDescription);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -50,11 +50,11 @@ public abstract class BaseTest {
         StoryRunner.setMethodContextProperties(method.getName());
     }
 
-    private void logTestDescription(String testDescription) {
-        if (testDescription != null && !testDescription.isEmpty()) {
-            ReportManager.writeResult(LogStatus.INFO, testDescription);
-        }
-    }
+//    private void logTestDescription(String testDescription) {
+//        if (testDescription != null && !testDescription.isEmpty()) {
+//            ReportManager.writeResult(LogStatus.INFO, testDescription);
+//        }
+//    }
 
 
 

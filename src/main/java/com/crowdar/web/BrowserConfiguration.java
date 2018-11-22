@@ -45,16 +45,16 @@ public enum BrowserConfiguration {
         public DesiredCapabilities getDesiredCapabilities() {
 
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-            capabilities.setPlatform(Platform.LINUX);
             capabilities.setBrowserName(capabilities.getBrowserName());
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("disable-infobars");
-            options.addArguments("start-maximized");
+//            options.addArguments("start-maximized");
             options.addArguments("--ignore-certificate-errors");
 //			options.addArguments("screenshot");
+            
+            //options.addArguments("no-sandbox", "disable-gpu");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-
             return capabilities;
         }
     },

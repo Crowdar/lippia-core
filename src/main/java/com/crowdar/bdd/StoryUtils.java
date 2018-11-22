@@ -30,7 +30,7 @@ public abstract class StoryUtils {
 		return completePaths;
 	}
 
-	private static List<String> getPath(String path){
+	public static List<String> getPath(String path){
 		StoryFinder finder = new StoryFinder();
 		String codeLocation = CodeLocations.codeLocationFromPath(System.getProperty("user.dir") + File.separator + "target" + File.separator + "classes").getFile();
 		String testLocation = codeLocation.replaceAll("classes", "test-classes");
