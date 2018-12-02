@@ -1,5 +1,6 @@
 package com.crowdar.api.rest;
 
+import com.crowdar.core.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -69,7 +70,7 @@ public class RestClient {
             response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
                     request, type);
         } catch (HttpClientErrorException var11) {
-            response = ((ResponseEntity.BodyBuilder) ResponseEntity.status(var11.getRawStatusCode()).headers(var11.getResponseHeaders())).body(var11.getResponseBodyAsString());
+            response = ((ResponseEntity.BodyBuilder) ResponseEntity.status(var11.getRawStatusCode()).headers(var11.getResponseHeaders())).body(JsonUtils.deserialize("[" + var11.getResponseBodyAsString() + "]", type).iterator().next());
         }
         HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
