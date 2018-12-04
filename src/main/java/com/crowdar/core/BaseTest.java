@@ -2,7 +2,6 @@ package com.crowdar.core;
 
 import com.crowdar.bdd.StoryRunner;
 import com.crowdar.email.EmailUtil;
-import com.crowdar.report.ReportManager;
 import com.crowdar.report.ScreenshotCapture;
 import com.crowdar.web.BrowserConfiguration;
 import com.crowdar.web.WebDriverManager;
@@ -33,25 +32,12 @@ public abstract class BaseTest {
         StoryRunner.setTestContextProperties(testContext.getName());
         testContext.setAttribute(STATUS_TEST_CONTEXT_KEY, null);
         MyThreadLocal.get().setData(STATUS_TEST_CONTEXT_KEY, null);
-//        String reportDescription = testContext.getCurrentXmlTest().getParameter("reportDescription");
-//        ReportManager.startParentTest(reportDescription);
     }
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
         StoryRunner.setMethodContextProperties(method.getName());
     }
-
-//    private void logTestDescription(String testDescription) {
-//        if (testDescription != null && !testDescription.isEmpty()) {
-//            ReportManager.writeResult(LogStatus.INFO, testDescription);
-//        }
-//    }
-
-
-
-
-
 
 
 }

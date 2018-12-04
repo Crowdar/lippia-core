@@ -26,23 +26,17 @@ public final class ScreenshotCapture {
 	}
 
 	public static void createScreenCapture(WebDriver driver){
-//		BufferedImage image;
 		try {
-
 			File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(scrFile, new File(getScreenCaptureFileLocation()));
-
-//			image = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-//			ImageIO.write(image, "png", new File(getScreenCaptureFileLocation()));
 
 		}catch(IOException ioe){
 			logger.error(ioe);
 		}
 	}
-
 	
 	public static String getScreenCaptureFileLocation(){
-		return ReportManager.getReportPath().concat("img").concat(File.separator) + getScreenCaptureFileName();
+		return "target" + File.separator + getScreenCaptureFileName();
 	}
 	
 	public static String getScreenCaptureFileName(){

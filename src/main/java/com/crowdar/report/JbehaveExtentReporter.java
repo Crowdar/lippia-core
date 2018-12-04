@@ -336,9 +336,7 @@ public class JbehaveExtentReporter extends JbehaveReport {
 	}
 
 	private Object logScreenshot(String step) {
-		
-//		return this.childLogger.addScreenCapture(ReportManager.getImageRelativeHtmlPath(ScreenshotCapture.getScreenCaptureFileName()));
-		return null;
+		return this.childLogger.addScreenCapture(ScreenshotCapture.getScreenCaptureFileName());
 	}
 
 	@Override
