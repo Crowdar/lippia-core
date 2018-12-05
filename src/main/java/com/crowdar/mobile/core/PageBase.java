@@ -31,7 +31,7 @@ abstract public class PageBase {
 
     public PageBase(AppiumDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver,Constants.getWaitForElementTimeout());
+        this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Constants.getFluentWaitTimeoutInSeconds(), TimeUnit.SECONDS)
                 .pollingEvery(Constants.getFluentWaitRequestFrequencyInMillis(), TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
     }
@@ -171,12 +171,22 @@ abstract public class PageBase {
      * @param value   to write in the field
      */
     public void completeField(MobileElement element, String value) {
-        element.click();
         if (!element.getText().isEmpty()) {
             element.clear();
         }
         element.sendKeys(value);
-        //  driver.hideKeyboard();
+        driver.hideKeyboard();
+
+    }
+
+    public void completeFieldWithoutClear(By locator, String value) {
+        MobileElement element = getMobileElement(locator);
+        this.completeFieldWithoutClear(element, value);
+    }
+
+    public void completeFieldWithoutClear(MobileElement element, String value) {
+        element.setValue(value);
+        driver.hideKeyboard();
     }
 
     /**
@@ -293,7 +303,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementVisibility(By locator) {
-       MobileElement element = (MobileElement) getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+        MobileElement element = (MobileElement) getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public boolean isElementVisible(By locator) {
@@ -383,7 +393,7 @@ abstract public class PageBase {
         sleep(1000);
     }
 
-    public void selectOptionSpinner(String option){
+    public void selectOptionSpinner(String option) {
         String uiSelector = "new UiSelector().textContains(\"" + option
                 + "\")";
 
