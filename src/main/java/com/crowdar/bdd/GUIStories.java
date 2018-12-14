@@ -47,4 +47,9 @@ public class GUIStories extends EmbedderBase {
 
         return new InstanceStepsFactory(configuration(), pageStepsImplementations);
     }
+
+	@Override
+	protected WebDriver getDriver() {
+		return driver;
+	}
 }

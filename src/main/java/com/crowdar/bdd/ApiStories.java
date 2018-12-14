@@ -18,6 +18,8 @@ public class ApiStories extends EmbedderBase {
     public ApiStories() {
         ;
     }
+    
+    
 
     @Override
     public InjectableStepsFactory stepsFactory() {
@@ -45,4 +47,11 @@ public class ApiStories extends EmbedderBase {
 
         return new InstanceStepsFactory(configuration(), pageStepsImplementations);
     }
+
+
+
+	@Override
+	protected WebDriver getDriver() {
+		return null;
+	}
 }
