@@ -9,6 +9,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>
  * Example of a WebDriver implementation that has delegates all methods to a static instance (REAL_DRIVER) that is only
@@ -30,36 +33,38 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
  * </p>
  */
 public class SharedDriver extends EventFiringWebDriver {
-    private static final WebDriver REAL_DRIVER ;
 
-    static {
-        WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
-        REAL_DRIVER = WebDriverManager.getDriverInstance();
+    private static final Map<Long, WebDriver> threadDriversMap = new HashMap<>();
+
+    private static WebDriver get(){
+
+        Long id = Thread.currentThread().getId();
+        if(threadDriversMap.containsKey(id)){
+            return  threadDriversMap.get(id);
+        }else{
+            WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
+            WebDriver webDriver =  WebDriverManager.getNewDriverInstance();
+            threadDriversMap.put(id,webDriver);
+            addShutDownHook(webDriver);
+            return webDriver;
+
+        }
+
     }
 
-    private static final Thread CLOSE_THREAD = new Thread() {
-        @Override
-        public void run() {
-            REAL_DRIVER.quit();
-        }
-    };
-
-    static {
-        Runtime.getRuntime().addShutdownHook(CLOSE_THREAD);
+    private static void addShutDownHook(WebDriver driver){
+        Thread close = new Thread(){
+            @Override
+            public void run() {
+                driver.quit();
+            }
+        };
+        Runtime.getRuntime().addShutdownHook(close);
     }
 
     public SharedDriver() {
-        super(REAL_DRIVER);
+        super(get());
     }
-
-    @Override
-    public void quit() {
-        if (Thread.currentThread() != CLOSE_THREAD) {
-            throw new UnsupportedOperationException("You shouldn't quit this WebDriver. It's shared and will quit when the JVM exits.");
-        }
-        super.quit();
-    }
-
 
     public void deleteAllCookies() {
         manage().deleteAllCookies();

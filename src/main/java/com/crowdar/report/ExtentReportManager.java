@@ -11,8 +11,13 @@ import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.crowdar.core.PropertyManager;
 import com.crowdar.web.WebDriverManager;
-import gherkin.formatter.model.Result;
-import gherkin.formatter.model.Step;
+import com.aventstack.extentreports.gherkin.model.Feature;
+import com.aventstack.extentreports.gherkin.model.Scenario;
+import com.aventstack.extentreports.gherkin.model.ScenarioOutline;
+import cucumber.api.PickleStepTestStep;
+import cucumber.api.Result;
+import gherkin.ast.*;
+import gherkin.pickles.PickleTag;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.OutputType;
@@ -20,17 +25,21 @@ import org.openqa.selenium.TakesScreenshot;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class ExtentReportManager {
 
     private static ExtentReports extent;
     private static ExtentHtmlReporter htmlReporter;
-    private static ThreadLocal<ExtentTest> featureTestThreadLocal = new InheritableThreadLocal<>();
-    private static ThreadLocal<ExtentTest> scenarioOutlineThreadLocal = new InheritableThreadLocal<>();
-    private static ThreadLocal<ExtentTest> scenarioThreadLocal = new InheritableThreadLocal<>();
-    private static ThreadLocal<LinkedList<Step>> stepListThreadLocal = new InheritableThreadLocal<>();
-    private static ThreadLocal<ExtentTest> stepTestThreadLocal = new InheritableThreadLocal<>();
+    private static ThreadLocal<ExtentTest> featureTest = new InheritableThreadLocal<>();
+    private static ThreadLocal<ExtentTest> scenarioOutline = new InheritableThreadLocal<>();
+    private static ThreadLocal<ExtentTest> scenario = new InheritableThreadLocal<>();
+    private static ThreadLocal<LinkedList<PickleStepTestStep>> stepList = new InheritableThreadLocal<>();
+    private static ThreadLocal<ExtentTest> stepTest = new InheritableThreadLocal<>();
+    private static Map<String,ExtentTest> mapFeature = new HashMap<>();
 
     private static Logger logger4j = Logger.getLogger(ExtentReportManager.class);
 
@@ -50,7 +59,6 @@ public class ExtentReportManager {
         htmlReporter = new ExtentHtmlReporter(file);
         logger4j.info("#####Extent xml configuration : "+ System.getProperty("user.dir").concat(File.separator).concat("extent-config.xml"));
         htmlReporter.loadConfig(System.getProperty("user.dir").concat(File.separator).concat("extent-config.xml"));
-        stepListThreadLocal.set(new LinkedList<>());
         return  htmlReporter;
     }
 
@@ -89,69 +97,130 @@ public class ExtentReportManager {
         htmlReporter.config().setCSS("css-string");
         // add custom javascript
         htmlReporter.config().setJS("js-string");
+        //appending existing report
+        logger4j.info("--------EXTENTREPORT   Setting Append Existing to true -------------------------------");
+        htmlReporter.setAppendExisting(true);
 
     }
 
-    private static ExtentReports getExtent(){
+    private static synchronized ExtentReports getExtent(){
         if(extent == null){
+            logger4j.info("------ creating extent report infor --------------------------------");
             extent = new ExtentReports();
             extent.setSystemInfo("Host Name", PropertyManager.getProperty("crowdar.extent.host.name"));
             extent.setSystemInfo("Environment", PropertyManager.getProperty("crowdar.extent.environment"));
             extent.setSystemInfo("User Name", PropertyManager.getProperty("crowdar.extent.user.name"));
             extent.attachReporter(getExtentHtmlReport());
-            //(htmlReporter.loadConfig(System.getProperty("user.dir").concat(File.separator).concat("extent-config.xml"));
             htmlReporSetup();
         }
 
+
         return extent;
     }
+    private static synchronized ExtentTest getFeature(String featurName,List<Tag> tags){
+        if(mapFeature.containsKey(featurName)){
+            featureTest.set(mapFeature.get(featurName));
+            return mapFeature.get(featurName);
+        }
+        ExtentTest feature = getExtent().createTest(Feature.class, featurName);
+        featureTest.set(feature);
+        for (Tag tag : tags) {
+            featureTest.get().assignCategory(tag.getName());
+        }
+        mapFeature.put(featurName,feature);
+        return feature;
+    }
 
-    public static void flush(){
+    public static  void flush(){
+        logger4j.info("------flushing Thread : "+ Thread.currentThread().getId());
         getExtent().flush();
     }
 
-    public static ExtentTest createTest(String storyFeatureName){
-        featureTestThreadLocal.set(getExtent().createTest(com.aventstack.extentreports.gherkin.model.Feature.class, storyFeatureName));
-        return featureTestThreadLocal.get();
+
+    public static void createFeature(String storyFeatureName , List<Tag> tags){
+        logger4j.info("------Creating Test Feature with Name : "+storyFeatureName+" "+ Thread.currentThread().getId());
+        getFeature(storyFeatureName,tags);
     }
 
     public static void createScenarioOutlineNode(String scenarioName){
-        ExtentTest node = featureTestThreadLocal.get()
-                .createNode(com.aventstack.extentreports.gherkin.model.ScenarioOutline.class, scenarioName);
-        scenarioOutlineThreadLocal.set(node);
+        logger4j.info("------Creating Scenario Outline Node : "+ Thread.currentThread().getId());
+        //if(firstFeature.get() != null && firstFeature.get()){
+            ExtentTest node = featureTest.get()
+                    .createNode(ScenarioOutline.class, scenarioName);
+            scenarioOutline.set(node);
+        //}
     }
 
-    public static ExtentTest getOutlineScenarioNode(){
-        return scenarioOutlineThreadLocal.get();
+    public static void createExampleCucumber(Examples examples){
+        logger4j.info("------Creating Scenario example cucumber : "+ Thread.currentThread().getId());
+        ExtentTest test = scenarioOutline.get();
+
+        String[][] data = null;
+        List<TableRow> rows = examples.getTableBody();
+        int rowSize = rows.size();
+        for (int i = 0; i < rowSize; i++) {
+            TableRow examplesTableRow = rows.get(i);
+            List<TableCell> cells = examplesTableRow.getCells();
+            int cellSize = cells.size();
+            if (data == null) {
+                data = new String[rowSize][cellSize];
+            }
+            for (int j = 0; j < cellSize; j++) {
+                data[i][j] = cells.get(j).getValue();
+            }
+        }
+        test.info(MarkupHelper.createTable(data));
+
+    }
+
+
+    public static  void createResult(Result result){
+        logger4j.info("------Creating Result cucumber : "+ Thread.currentThread().getId());
+        if (Result.Type.PASSED.equals(result.getStatus())) {
+            ExtentReportManager.addCucumberPassStep();
+        } else if (Result.Type.FAILED.equals(result.getStatus())) {
+            ExtentReportManager.addCucumberFailStep(result.getError());
+        } else if (Result.Type.SKIPPED.equals(result)) {
+            ExtentReportManager.addCucumberSkipStep();
+        } else if (Result.UNDEFINED.equals(result)) {
+            ExtentReportManager.addCucumberUndefinedStep();
+        }
     }
 
 
 
-    public static  ExtentTest createScenarioOutlineOrStandard(String scenarioName , String keyword){
+
+    public static  void createScenarioOutlineOrStandard(String scenarioName , String keyword ,List<PickleTag> tags){
+        logger4j.info("------ Create Scenario Outline Or Standard : "+ Thread.currentThread().getId());
         ExtentTest scenarioNode;
-        if (scenarioOutlineThreadLocal.get() != null && keyword.trim()
+        if (scenarioOutline.get() != null && keyword.trim()
                 .equalsIgnoreCase("Scenario Outline")) {
             scenarioNode =
-                    scenarioOutlineThreadLocal.get().createNode(com.aventstack.extentreports.gherkin.model.Scenario.class,scenarioName);
+                    scenarioOutline.get().createNode(Scenario.class,scenarioName);
         } else {
             scenarioNode =
-                    featureTestThreadLocal.get().createNode(com.aventstack.extentreports.gherkin.model.Scenario.class,scenarioName);
+                    featureTest.get().createNode(Scenario.class,scenarioName);
         }
-        scenarioThreadLocal.set(scenarioNode);
+        scenario.set(scenarioNode);
 
-        return scenarioNode;
+        for (PickleTag tag : tags) {
+            scenarioNode.assignCategory(tag.getName());
+        }
     }
 
-    public static void addCucumberStep(Step step){
-        stepListThreadLocal.get().add(step);
+    public static void addCucumberStep(PickleStepTestStep step){
+        if(stepList.get() == null){
+            stepList.set(new LinkedList<>());
+        }
+        stepList.get().add(step);
     }
 
     public static void addCucumberPassStep(){
-        stepTestThreadLocal.get().pass(Result.PASSED);
+        stepTest.get().pass(Result.Type.PASSED.toString());
         String screenShotOnSuccessStep = PropertyManager.getProperty("crowdar.extent.screenshotOnSuccess");
         if(screenShotOnSuccessStep != null && !screenShotOnSuccessStep.isEmpty()){
             try {
-                stepTestThreadLocal.get().addScreenCaptureFromPath(takeScreeshot());
+                stepTest.get().addScreenCaptureFromPath(takeScreeshot());
             }catch (IOException e){
                 logger4j.error(e.getStackTrace());
             }
@@ -159,41 +228,50 @@ public class ExtentReportManager {
     }
 
     public static void addCucumberFailStep(Throwable error){
-        stepTestThreadLocal.get().fail(error);
+        String stack = PropertyManager.getProperty("crowdar.extent.stacktrace.detail");
+        if(stack != null && !stack.isEmpty() && stack.equalsIgnoreCase("true")){
+            stepTest.get().fail(error);
+        }else{
+            stepTest.get().fail(error.getMessage());
+        }
         try {
-            stepTestThreadLocal.get().addScreenCaptureFromPath(takeScreeshot());
+            stepTest.get().addScreenCaptureFromPath(takeScreeshot());
         }catch (IOException e){
             logger4j.error(e.getStackTrace());
         }
     }
 
-    public static void addCucumberSkipStep(){
-        stepTestThreadLocal.get().skip(Result.SKIPPED.getStatus());
+    private static void addCucumberSkipStep(){
+        stepTest.get().skip(Result.Type.SKIPPED.toString());
     }
 
-    public static Step pollCucumberStep(){
-        return stepListThreadLocal.get().poll();
+    public static PickleStepTestStep pollCucumberStep(){
+        return stepList.get().poll();
     }
 
-    public static void addCucumberUndefinedStep(){
-        stepTestThreadLocal.get().skip(Result.UNDEFINED.getStatus());
+    private static void addCucumberUndefinedStep(){
+        stepTest.get().skip(Result.Type.UNDEFINED.toString());
     }
 
-    public static void matchCucumberStep(String data[][] , Step step){
-        ExtentTest scenarioTest = scenarioThreadLocal.get();
+    public static void matchCucumberStep(String keyword , String name){
+        ExtentTest scenarioTest = scenario.get();
         ExtentTest stepTest = null;
         try {
-            stepTest = scenarioTest.createNode(new GherkinKeyword(step.getKeyword()), step.getKeyword() + step.getName());
+            stepTest = scenarioTest.createNode(new GherkinKeyword(keyword), name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+
+        String data[][] = null;
+
 
         if (data != null) {
             Markup table = MarkupHelper.createTable(data);
             stepTest.info(table);
         }
 
-        stepTestThreadLocal.set(stepTest);
+        ExtentReportManager.stepTest.set(stepTest);
     }
 
     private static String takeScreeshot()throws IOException{

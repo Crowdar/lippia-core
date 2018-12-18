@@ -1,11 +1,9 @@
 package com.crowdar.mobile.core;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.Platform;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -73,7 +71,7 @@ abstract public class PageBase {
      * @return mobile element
      */
     public MobileElement getMobileElement(By locator) {
-        return (MobileElement) getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
+        return (MobileElement) getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     /**
@@ -277,7 +275,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementVisibility(By locator) {
-        getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public boolean isElementVisible(By locator) {
@@ -295,7 +293,7 @@ abstract public class PageBase {
      * @param accessibilityId
      */
     public void waitForElementsVisibility(String accessibilityId) {
-        getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
+        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.visibilityOfAllElementsLocatedBy(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
     }
 
     /**
@@ -304,7 +302,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementInvisibility(By locator) {
-        getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        getFluentWait().until((Function<? super AppiumDriver, ? extends Object>) ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     /**
@@ -313,7 +311,7 @@ abstract public class PageBase {
      * @param accessibilityId
      */
     public void waitForElementClickeable(String accessibilityId) {
-        getWait().until(ExpectedConditions.elementToBeClickable(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
+        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.elementToBeClickable(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
     }
 
     /**
@@ -322,7 +320,7 @@ abstract public class PageBase {
      * @param element
      */
     public void waitForElementClickeable(MobileElement element) {
-        getWait().until(ExpectedConditions.elementToBeClickable(element));
+        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.elementToBeClickable(element));
     }
 
     /**
@@ -331,7 +329,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementClickeable(By locator) {
-        getWait().until(ExpectedConditions.elementToBeClickable(locator));
+        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.elementToBeClickable(locator));
     }
 
     public void waitForElementEnabled(By locator) {
