@@ -386,7 +386,7 @@ abstract public class PageBase{
 	 * Method that produce a dynamic wait time waiting to finish an angular
 	 * request
 	 * 
-	 * @param WebDriver
+	 * @param SeleniumWebDriver
 	 *            for Angular
 	 */
 	public void angularWait(NgWebDriver ngDrv) {

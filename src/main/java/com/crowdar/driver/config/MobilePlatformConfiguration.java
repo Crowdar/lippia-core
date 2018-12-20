@@ -16,13 +16,6 @@ import java.net.URL;
 public enum MobilePlatformConfiguration implements AutomationConfiguration{
 
     ANDROID {
-        File app;
-
-        @Override
-        public void localSetup() {
-            File appDir = new File(System.getProperty("user.dir") + "/src/main/resources/apk/");
-            app = new File(appDir, PropertyManager.getProperty("app.apk.name"));
-        }
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
@@ -39,35 +32,17 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("autoGrantPermissions", true);
             capabilities.setCapability("unicodeKeyboard", true);
             capabilities.setCapability("resetKeyboard", true);
-            capabilities.setCapability("app", app.getAbsolutePath());
+            capabilities.setCapability("app", MOBILE_APP_PATH+ PropertyManager.getProperty("mobile.app.name"));
 
             return capabilities;
         }
-
-        @Override
-        public AppiumDriver initDriver(String url, DesiredCapabilities desiredCapabilities) {
-            try {
-                return new AndroidDriver(new URL(url), desiredCapabilities);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
     },
     IOS {
-        File app;
-
-        @Override
-        public void localSetup() {
-            File appDir = new File(System.getProperty("user.dir") + "/src/main/resources/app/");
-            app = new File(appDir, PropertyManager.getProperty("app.app.name"));
-        }
-
+        
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
 
             DesiredCapabilities capabilities = DesiredCapabilities.iphone();
-            //capabilities.setPlatform(Platform.ANDROID);
 
             capabilities.setCapability("device", PropertyManager.getProperty("app.platform"));
 
@@ -79,23 +54,16 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("unicodeKeyboard", true);
             capabilities.setCapability("resetKeyboard", true);
 
-            capabilities.setCapability("app", app.getAbsolutePath());
+            capabilities.setCapability("app", MOBILE_APP_PATH+ PropertyManager.getProperty("mobile.app.name"));
 
             return capabilities;
         }
 
-        @Override
-        public AppiumDriver initDriver(String url, DesiredCapabilities desiredCapabilities) {
-            try {
-                return new IOSDriver(new URL(url), desiredCapabilities);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
     };
 
-    public static MobilePlatformConfiguration getPlatformConfiguration(String key) {
+    private static final String MOBILE_APP_PATH = "/src/main/resources/mobile/app/";
+
+	public static MobilePlatformConfiguration getPlatformConfiguration(String key) {
 
         for (MobilePlatformConfiguration current : values()) {
             if (current.name().equalsIgnoreCase(key)) {
@@ -106,33 +74,5 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
         return null;
     }
 
-	private final String DRIVER_GRID_HUB_KEY = "gridHub";
-
-    public abstract DesiredCapabilities getDesiredCapabilities();
-
-    public abstract AppiumDriver initDriver(String url, DesiredCapabilities desiredCapabilities);
-
-    public AppiumDriver getDriver() {
-        AppiumDriver driver = null;
-        if (isGridConfiguration()) {
-            try {
-                System.out.println("############################################ AppiumDriver mode: Grid");
-                driver = (AppiumDriver) SingleWebDriverPool.DEFAULT.getDriver(new URL(System.getProperty(DRIVER_GRID_HUB_KEY)), getDesiredCapabilities());
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("############################################ AppiumDriver mode: Default");
-            localSetup();
-            driver = initDriver("http://127.0.0.1:4723/wd/hub", getDesiredCapabilities());
-        }
-        return driver;
-    }
-
-
-    private boolean isGridConfiguration() {
-        String driverHub = System.getProperty(DRIVER_GRID_HUB_KEY);
-        return driverHub != null && !driverHub.isEmpty();
-    }
 
 }

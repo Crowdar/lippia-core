@@ -3,9 +3,11 @@ package com.crowdar.bdd;
 import com.crowdar.core.PageSteps;
 import com.crowdar.core.PropertyManager;
 import com.google.common.collect.Lists;
+import io.appium.java_client.AppiumDriver;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -15,9 +17,9 @@ import java.util.Set;
 
 public class GUIStories extends EmbedderBase {
 
-    private WebDriver driver;
+    private RemoteWebDriver driver;
 
-    public GUIStories(WebDriver driver) {
+    public GUIStories(RemoteWebDriver driver) {
         this.driver = driver;
     }
 
@@ -26,11 +28,9 @@ public class GUIStories extends EmbedderBase {
 
         List<PageSteps> pageStepsImplementations = Lists.newArrayList();
 
-
         Reflections reflections = new Reflections(PropertyManager.getProperty("stepsClass.location"));
 
         Set<Class<? extends PageSteps>> subTypes = reflections.getSubTypesOf(PageSteps.class);
-
 
         for (Class<? extends PageSteps> currentClass : subTypes) {
             Constructor<?> constructor = null;
@@ -50,6 +50,7 @@ public class GUIStories extends EmbedderBase {
 
 	@Override
 	protected WebDriver getDriver() {
-		return driver;
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

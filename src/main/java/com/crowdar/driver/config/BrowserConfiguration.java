@@ -91,6 +91,7 @@ public enum BrowserConfiguration implements AutomationConfiguration{
 
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
             capabilities.setBrowserName(capabilities.getBrowserName());
+            
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("disable-infobars");
@@ -156,8 +157,6 @@ public enum BrowserConfiguration implements AutomationConfiguration{
 
     private Logger logger = Logger.getLogger(BrowserConfiguration.class);
 
-    public static final String BROWSER_KEY = "browser";
-
     public static BrowserConfiguration getBrowserConfiguration(String key) {
 
         for (BrowserConfiguration current : values()) {
@@ -167,12 +166,7 @@ public enum BrowserConfiguration implements AutomationConfiguration{
         }
         return null;
     }
-
     
     public abstract DriverManagerType getDriverManagerType();
 
-    public WebDriver getDynamicWebDriver() {
-        return null;
-    }
-   
 }
