@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.crowdar</groupId>
 		<artifactId>Crowd-Root-Framework</artifactId>
-		<version>1.0.2</version>
+		<version>1.3</version>
 	</parent>
 
 	<groupId>com.crowdar</groupId>
@@ -13,7 +13,7 @@
 	<url>http://maven.apache.org</url>
 	<packaging>jar</packaging>
 	<name>CrowCoreFramework</name>
-	<version>1.0.2</version>
+	<version>1.3</version>
 
 	<dependencies>
 		<dependency>
