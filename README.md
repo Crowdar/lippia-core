@@ -1,5 +1,4 @@
 **CrowdarCoreFramework**
-
 Here you can find all artifacts to be used in any cucumber, jbehave, testng, mobile project
 ---
 
@@ -19,6 +18,14 @@ cucumber.options = src/test/resources/features --glue com/crowdar/examples/testn
 
 
 ---
+
+## Properties necesarias para consumir el core
+
+crowdar.projectType=WEB_CHROME  
+crowdar.setupStrategy=web.LocalWebExecutionStrategy  
+crowdar.driverHub=http://localhost:4444/grid/hub  
+
+
 
 
 
