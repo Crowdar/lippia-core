@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
@@ -27,8 +28,7 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
-import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.WinDef.HWND;
+
 
 /**
  * This class represents the things in common between the other classes of
@@ -125,11 +125,11 @@ abstract public class PageBase{
 	 */
 	public WebElement getWebElement(By locator) {
 
-		return getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+		return getWait().until((Function<? super WebDriver, WebElement>) ExpectedConditions.visibilityOfElementLocated(locator));
 	}
 
 	public List<WebElement> getWebElements(By locator) {
-		return getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+		return getWait().until((Function<? super WebDriver, List<WebElement>>) ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
 	}
 
 	/**
@@ -139,7 +139,8 @@ abstract public class PageBase{
 	 *            of the element to be clickable
 	 */
 	public void clickElement(By locator) {
-		WebElement element = getWait().until(ExpectedConditions.elementToBeClickable(locator));
+
+		WebElement element = getWait().until((Function<? super WebDriver, WebElement>) ExpectedConditions.elementToBeClickable(locator));
 
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 
@@ -211,12 +212,12 @@ abstract public class PageBase{
 		getNgWebDriver().waitForAngularRequestsToFinish();
 
 		WebElement inputLocator = getWait()
-				.until(ExpectedConditions.presenceOfNestedElementLocatedBy(dropdownContainer, By.tagName("input")));
+				.until((Function<? super WebDriver, WebElement>) ExpectedConditions.presenceOfNestedElementLocatedBy(dropdownContainer, By.tagName("input")));
 		inputLocator.sendKeys(value);
 
 		getNgWebDriver().waitForAngularRequestsToFinish();
 
-		WebElement select = getWait().until(ExpectedConditions.presenceOfNestedElementLocatedBy(dropdownContainer,
+		WebElement select = getWait().until((Function<? super WebDriver, WebElement>) ExpectedConditions.presenceOfNestedElementLocatedBy(dropdownContainer,
 				By.cssSelector("div[role='option']")));
 		select.click();
 	}
@@ -312,7 +313,7 @@ abstract public class PageBase{
 	 */
 	public boolean waitAndCheckElementPresent(By locator) {
 		try {
-			getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
+			getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.presenceOfElementLocated(locator));
 			return true;
 		} catch (TimeoutException e) {
 			return false;
@@ -512,7 +513,7 @@ abstract public class PageBase{
 	 */
 	public void waitForElementDisappears(final By locator) {
 		if (isElementPresent(locator)) {
-			new WebDriverWait(driver, 20).until(ExpectedConditions.invisibilityOfElementLocated(locator));
+			new WebDriverWait(driver, 20).until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.invisibilityOfElementLocated(locator));
 		}
 	}
 
@@ -527,44 +528,7 @@ abstract public class PageBase{
 		clpbrd.setContents(stringSelection, null);
 	}
 
-	/**
-	 * On the windows system open file dialog, this function put a text a press
-	 * accept
-	 * 
-	 * @param filepath String of text that represent the file path that is
-	 * required to load
-	 * 
-	 * @param windowsOpenFileName String of text that represent the system
-	 * dialog windows name
-	 */
-	public void systemOpenFileDialog(String filepath, String windowsOpenFileName) {
-		HWND hwnd = User32.INSTANCE.FindWindow(null, windowsOpenFileName);
 
-		if (hwnd != null) {
-			User32.INSTANCE.SetForegroundWindow(hwnd);
-
-			setTexttoClipboard(filepath);
-
-			try {
-				Robot r = new Robot();
-
-				r.delay(40);
-				r.keyPress(KeyEvent.VK_CONTROL);
-				r.keyPress(KeyEvent.VK_V);
-				r.keyRelease(KeyEvent.VK_V);
-				r.keyRelease(KeyEvent.VK_CONTROL);
-
-				r.delay(40);
-				r.keyPress(KeyEvent.VK_ENTER);
-				r.keyRelease(KeyEvent.VK_ENTER);
-
-			} catch (AWTException e) {
-				e.printStackTrace();
-			}
-
-		}
-	}
-	
 	public void openFileDialogSystemAndSelectFile(String filePath, By selectFileId){
 		WebElement element = driver.findElement(selectFileId);
 		element.sendKeys(filePath);
@@ -588,7 +552,7 @@ abstract public class PageBase{
 	 */
 	public void waitUntilElementDissappear(By locator){
 		if(isElementPresent(locator)){
-			getWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
+			getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.invisibilityOfElementLocated(locator));
 		}
 	}
 	

@@ -1,7 +1,6 @@
 package com.crowdar.zapi.model;
 
-import gherkin.formatter.model.Match;
-import gherkin.formatter.model.Result;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +12,7 @@ public class ZapiExecution {
     private String duration;
     private Boolean isFailed;
     private List<ZapiStepExecution> zapiStepExecutionList;
-    private Map<Match,Result> matchResultMap;
+
 
 
     public String getDuration() {
@@ -40,14 +39,7 @@ public class ZapiExecution {
         zapiStepExecutionList.add(zapiStepExecution);
     }
 
-    public void addMatchResult(Match match, Result result){
-        if(matchResultMap == null){
-            matchResultMap = new HashMap<>();
-        }
-        matchResultMap.put(match,result);
 
-
-    }
 
 
 }

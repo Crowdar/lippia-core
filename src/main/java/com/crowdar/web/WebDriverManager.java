@@ -31,7 +31,7 @@ public final class WebDriverManager {
         return driver;
     }
 
-    @Deprecated
+
     public static WebDriver getNewDriverInstance() {
         return getDriver();
     }
