@@ -4,6 +4,8 @@ import com.crowdar.core.PropertyManager;
 import com.crowdar.json.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
@@ -26,6 +28,19 @@ public enum BrowserConfiguration {
         @Override
         public void localSetup() {
             System.setProperty("webdriver.gecko.driver", getWebDriverPath().concat("geckodriver.exe"));
+        }
+
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+            capabilities.setBrowserName("firefox");
+            return capabilities;
+        }
+    },
+    FIREFOXDYNAMIC {
+        @Override
+        public void localSetup() {
+            FirefoxDriverManager.firefoxdriver().setup();
         }
 
         @Override
@@ -61,10 +76,6 @@ public enum BrowserConfiguration {
         @Override
         public void localSetup() {
             ChromeDriverManager.chromedriver().setup();
-        }
-
-        public WebDriver getDynamicWebDriver() {
-            return new ChromeDriver(getDesiredCapabilities());
         }
 
         @Override
@@ -126,6 +137,23 @@ public enum BrowserConfiguration {
         @Override
         public void localSetup() {
             System.setProperty("webdriver.ie.driver", getWebDriverPath().concat("IEDriverServer.exe"));
+        }
+
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+
+//			System.setProperty("webdriver.ie.driver.loglevel","DEBUG");
+
+            DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+            capabilities.setPlatform(Platform.VISTA);
+            capabilities.setBrowserName(capabilities.getBrowserName());
+            return capabilities;
+        }
+    },
+    IEDYNAMIC {
+        @Override
+        public void localSetup() {
+            InternetExplorerDriverManager.iedriver().setup();
         }
 
         @Override

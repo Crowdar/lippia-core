@@ -97,6 +97,8 @@ public class ExtentReportManager {
         htmlReporter.config().setCSS("css-string");
         // add custom javascript
         htmlReporter.config().setJS("js-string");
+        //setting UTF8 encoding
+        htmlReporter.config().setEncoding("UTF-8");
         //appending existing report
         logger4j.info("--------EXTENTREPORT   Setting Append Existing to true -------------------------------");
         htmlReporter.setAppendExisting(true);
@@ -209,12 +211,18 @@ public class ExtentReportManager {
     }
 
     public static void addCucumberStep(PickleStepTestStep step){
+
+        stepList().get().add(step);
+    }
+
+    private static ThreadLocal<LinkedList<PickleStepTestStep>> stepList(){
+
         if(stepList.get() == null){
             stepList.set(new LinkedList<>());
         }
-        stepList.get().add(step);
-    }
+        return stepList;
 
+    }
     public static void addCucumberPassStep(){
         stepTest.get().pass(Result.Type.PASSED.toString());
         String screenShotOnSuccessStep = PropertyManager.getProperty("crowdar.extent.screenshotOnSuccess");
@@ -246,7 +254,7 @@ public class ExtentReportManager {
     }
 
     public static PickleStepTestStep pollCucumberStep(){
-        return stepList.get().poll();
+        return stepList().get().poll();
     }
 
     private static void addCucumberUndefinedStep(){
@@ -283,8 +291,5 @@ public class ExtentReportManager {
         FileUtils.copyFile(screenshot, new File(fileLocation));
         return name;
     }
-
-
-
 
 }

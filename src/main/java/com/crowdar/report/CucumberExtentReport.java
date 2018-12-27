@@ -47,11 +47,13 @@ public class CucumberExtentReport extends CucumberEventListener{
 
     @Override
     public void handleTestStepFinished(TestStepFinished event) {
-        System.out.println("TEST STEP FINISHED EN HILO :"+ Thread.currentThread().getId());
-        PickleStepTestStep pickleStepTestStep =  ExtentReportManager.pollCucumberStep();
-        String keyword = getStepKeyword(pickleStepTestStep);
-        ExtentReportManager.matchCucumberStep(keyword,pickleStepTestStep.getStepText());
-        ExtentReportManager.createResult(event.result);
+        if(event.testStep instanceof  PickleStepTestStep){
+            System.out.println("TEST STEP FINISHED EN HILO :"+ Thread.currentThread().getId());
+            PickleStepTestStep pickleStepTestStep =  ExtentReportManager.pollCucumberStep();
+            String keyword = getStepKeyword(pickleStepTestStep);
+            ExtentReportManager.matchCucumberStep(keyword,pickleStepTestStep.getStepText());
+            ExtentReportManager.createResult(event.result);
+        }
     }
 
     @Override
