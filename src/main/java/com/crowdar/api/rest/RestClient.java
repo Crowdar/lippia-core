@@ -1,5 +1,6 @@
 package com.crowdar.api.rest;
 
+import com.crowdar.core.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -14,7 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -64,9 +65,13 @@ public class RestClient {
     private HTTPResponse createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
         HttpEntity<String> request = this.createRequest(body, this.setHeaders(headers));
-
-        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
-                request, type);
+        ResponseEntity<Object> response = null;
+        try {
+            response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
+                    request, type);
+        } catch (HttpClientErrorException var11) {
+            response = ((ResponseEntity.BodyBuilder) ResponseEntity.status(var11.getRawStatusCode()).headers(var11.getResponseHeaders())).body(JsonUtils.deserialize("[" + var11.getResponseBodyAsString() + "]", type).iterator().next());
+        }
         HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
     }

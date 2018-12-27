@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 public enum BrowserConfiguration {
@@ -58,13 +60,18 @@ public enum BrowserConfiguration {
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
+            String downloadFilepath = System.getProperty("user.dir") + File.separator + PropertyManager.getProperty("crowdar.download.folder");
+            HashMap<String, Object> chromePrefs = new HashMap<>();
+            chromePrefs.put("profile.default_content_settings.popups", 0);
+            chromePrefs.put("download.default_directory", downloadFilepath);
 
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
             capabilities.setBrowserName(capabilities.getBrowserName());
-
             ChromeOptions options = new ChromeOptions();
+            options.setExperimentalOption("prefs", chromePrefs);
             options.addArguments("disable-infobars");
             options.addArguments("--ignore-certificate-errors");
+            options.addArguments("download.default_directory", downloadFilepath);
 //			options.addArguments("screenshot");
             
             //options.addArguments("no-sandbox", "disable-gpu");
