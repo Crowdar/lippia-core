@@ -2,7 +2,7 @@ package com.crowdar.bdd;
 
 import com.crowdar.core.Context;
 import com.crowdar.core.MyThreadLocal;
-import com.crowdar.driver.DriverFactory;
+import com.crowdar.driver.DriverManager;
 import com.crowdar.web.WebDriverManager;
 import com.google.common.collect.Lists;
 import org.jbehave.core.embedder.Embedder;
@@ -39,7 +39,7 @@ public class StoryRunner {
             setStoryRunnerProperties(storyPaths);
 
 //            Embedder embedder = new GUIStories(WebDriverManager.getDriverInstance());
-            Embedder embedder = new GUIStories(DriverFactory.getDriverInstance());
+            Embedder embedder = new GUIStories(DriverManager.getDriverInstance());
             embedder.useMetaFilters(asList("-skip"));
             embedder.runStoriesAsPaths(StoryUtils.storyPaths(storyPaths));
 

@@ -14,19 +14,13 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 import com.crowdar.core.PropertyManager;
 import com.crowdar.driver.setupStrategy.SetupStrategy;
 
-public class DriverFactory {
+class DriverFactory {
 	
 	private static Logger logger = Logger.getLogger(DriverFactory.class);
-	private static RemoteWebDriver driver;
-	
-	public static RemoteWebDriver getDriverInstance() {
-		if (driver == null || driver.getSessionId() == null) {
-			driver = createDriver();
-		}
-		return driver;
-	}
 
-	private static RemoteWebDriver createDriver() {
+	
+
+	protected static RemoteWebDriver createDriver() {
 		try {
 			
 			ProjectTypeEnum projectType = ProjectTypeEnum.get(PropertyManager.getProperty("crowdar.projectType"));
@@ -65,8 +59,6 @@ public class DriverFactory {
 		}
 	}
 
-	public static void dismissDriver() {
-		 driver.quit();
-	}
+
 
 }

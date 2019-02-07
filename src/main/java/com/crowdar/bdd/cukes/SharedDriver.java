@@ -1,12 +1,13 @@
 package com.crowdar.bdd.cukes;
 
 import com.crowdar.core.PropertyManager;
+import com.crowdar.driver.DriverManager;
 import com.crowdar.web.BrowserConfiguration;
 import com.crowdar.web.WebDriverManager;
 import cucumber.api.Scenario;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 /**
@@ -30,17 +31,18 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
  * </p>
  */
 public class SharedDriver extends EventFiringWebDriver {
-    private static final WebDriver REAL_DRIVER ;
+    private static final RemoteWebDriver REAL_DRIVER ;
 
     static {
         WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
-        REAL_DRIVER = WebDriverManager.getDriverInstance();
+        //REAL_DRIVER = WebDriverManager.getDriverInstance();
+        REAL_DRIVER = DriverManager.getDriverInstance();
     }
 
     private static final Thread CLOSE_THREAD = new Thread() {
         @Override
         public void run() {
-            REAL_DRIVER.quit();
+            DriverManager.dismissCurrentDriver();
         }
     };
 
