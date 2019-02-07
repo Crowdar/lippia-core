@@ -74,7 +74,7 @@ public enum BrowserConfiguration {
             options.addArguments("download.default_directory", downloadFilepath);
 //			options.addArguments("screenshot");
             
-            //options.addArguments("no-sandbox", "disable-gpu");
+            options.addArguments("no-sandbox", "disable-gpu");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
