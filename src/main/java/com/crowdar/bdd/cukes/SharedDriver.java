@@ -56,6 +56,7 @@ public class SharedDriver extends EventFiringWebDriver {
         Thread close = new Thread(){
             @Override
             public void run() {
+                System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DRIVERQUIT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
                 driver.quit();
             }
         };

@@ -96,7 +96,7 @@ public enum BrowserConfiguration {
             capabilities.setBrowserName(capabilities.getBrowserName());
             ChromeOptions options = new ChromeOptions();
             options.addArguments("disable-infobars");
-            options.addArguments("start-maximized");
+            //options.addArguments("start-maximized");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
@@ -118,7 +118,6 @@ public enum BrowserConfiguration {
             ChromeOptions options = new ChromeOptions();
             ChromeUtils.insertHeadersExtension(options);
             options.addArguments("disable-infobars");
-            options.addArguments("start-maximized");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
