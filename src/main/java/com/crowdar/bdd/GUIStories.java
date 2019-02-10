@@ -36,7 +36,7 @@ public class GUIStories extends EmbedderBase {
             Constructor<?> constructor = null;
 
             try {
-                constructor = currentClass.getDeclaredConstructor(WebDriver.class);// Gives constructor which takes in webDriver I assume
+                constructor = currentClass.getDeclaredConstructor(RemoteWebDriver.class);// Gives constructor which takes in webDriver I assume
                 pageStepsImplementations.add((PageSteps)constructor.newInstance(driver));
 
             } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -49,7 +49,7 @@ public class GUIStories extends EmbedderBase {
     }
 
 	@Override
-	protected WebDriver getDriver() {
+	protected RemoteWebDriver getDriver() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -2,6 +2,7 @@ package com.crowdar.driver.setupStrategy.mobile;
 
 import java.io.File;
 
+import com.crowdar.driver.config.MobilePlatformConfiguration;
 import org.apache.log4j.Logger;
 
 import com.crowdar.driver.config.AutomationConfiguration;
@@ -13,18 +14,13 @@ public class LocalMobileExecutionStrategy implements SetupStrategy{
 	@Override
 	public void beforeDriverStartSetup(AutomationConfiguration contextConfiguration) {
 		
-		switch ((BrowserConfiguration)contextConfiguration) {
-			case FIREFOX:
+		switch ((MobilePlatformConfiguration)contextConfiguration) {
+			case ANDROID:
 				System.setProperty("webdriver.gecko.driver", getWebDriverPath().concat("geckodriver.exe"));
 				break;
-			case CHROME:
+			case IOS:
 				System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver2.37.exe"));
 				break;
-			case EDGE:
-				System.setProperty("webdriver.edge.driver", getWebDriverPath().concat("MicrosoftWebDriver.exe"));
-				break;
-			case IE: 
-				System.setProperty("webdriver.ie.driver", getWebDriverPath().concat("IEDriverServer.exe"));
 		}
 		
 	}

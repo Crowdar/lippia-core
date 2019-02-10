@@ -3,7 +3,7 @@ package com.crowdar.bdd;
 import com.crowdar.core.Context;
 import com.crowdar.core.MyThreadLocal;
 import com.crowdar.driver.DriverManager;
-import com.crowdar.web.WebDriverManager;
+import com.crowdar.mobile.AppiumDriverManager;
 import com.google.common.collect.Lists;
 import org.jbehave.core.embedder.Embedder;
 import org.testng.Assert;

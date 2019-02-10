@@ -25,14 +25,14 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
 
             capabilities.setCapability("device", PropertyManager.getProperty("app.platform"));
 
-            capabilities.setCapability("deviceName", "Xperia XA1");
+            capabilities.setCapability("deviceName", PropertyManager.getProperty("mobile.phone.name"));
             capabilities.setCapability("platformName", PropertyManager.getProperty("app.platform"));
 
             capabilities.setCapability("appPackage", PropertyManager.getProperty("app.package"));
             capabilities.setCapability("autoGrantPermissions", true);
             capabilities.setCapability("unicodeKeyboard", true);
             capabilities.setCapability("resetKeyboard", true);
-            capabilities.setCapability("app", MOBILE_APP_PATH+ PropertyManager.getProperty("mobile.app.name"));
+            capabilities.setCapability("app", System.getProperty("user.dir").concat(File.separator).concat(MOBILE_APP_PATH).concat(File.separator).concat(PropertyManager.getProperty("mobile.apk.name")));
 
             return capabilities;
         }
@@ -54,14 +54,14 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("unicodeKeyboard", true);
             capabilities.setCapability("resetKeyboard", true);
 
-            capabilities.setCapability("app", MOBILE_APP_PATH+ PropertyManager.getProperty("mobile.app.name"));
+            capabilities.setCapability("app", System.getProperty("user.dir").concat(File.separator).concat(MOBILE_APP_PATH.concat(File.separator).concat(PropertyManager.getProperty("mobile.app.name"))));
 
             return capabilities;
         }
 
     };
 
-    private static final String MOBILE_APP_PATH = "/src/main/resources/mobile/app/";
+    private static final String MOBILE_APP_PATH = File.separator.concat("src").concat(File.separator).concat("main").concat(File.separator).concat("resources").concat(File.separator).concat("mobile").concat(File.separator).concat("app");
 
 	public static MobilePlatformConfiguration getPlatformConfiguration(String key) {
 

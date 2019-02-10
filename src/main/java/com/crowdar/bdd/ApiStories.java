@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -16,7 +17,7 @@ import java.util.Set;
 public class ApiStories extends EmbedderBase {
 
     public ApiStories() {
-        ;
+
     }
     
     
@@ -51,7 +52,7 @@ public class ApiStories extends EmbedderBase {
 
 
 	@Override
-	protected WebDriver getDriver() {
+	protected RemoteWebDriver getDriver() {
 		return null;
 	}
 }

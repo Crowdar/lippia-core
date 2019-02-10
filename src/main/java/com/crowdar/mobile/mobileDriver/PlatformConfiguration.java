@@ -19,7 +19,7 @@ public enum PlatformConfiguration {
 
         @Override
         public void localSetup() {
-            File appDir = new File(System.getProperty("user.dir") + "/src/main/resources/apk/");
+            File appDir = new File(System.getProperty("user.dir") + "/src/main/resources/mobile/app");
             app = new File(appDir, PropertyManager.getProperty("app.apk.name"));
         }
 

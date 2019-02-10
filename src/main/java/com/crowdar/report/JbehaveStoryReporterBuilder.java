@@ -4,12 +4,13 @@ import org.jbehave.core.reporters.NullStoryReporter;
 import org.jbehave.core.reporters.StoryReporter;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class JbehaveStoryReporterBuilder extends StoryReporterBuilder {
 
-	private WebDriver driverInstance;
+	private RemoteWebDriver driverInstance;
 	
-    public JbehaveStoryReporterBuilder(WebDriver driverInstance) {
+    public JbehaveStoryReporterBuilder(RemoteWebDriver driverInstance) {
     	this.driverInstance = driverInstance;
 	}
 

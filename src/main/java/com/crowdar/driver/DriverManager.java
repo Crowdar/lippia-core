@@ -1,7 +1,5 @@
 package com.crowdar.driver;
 
-import com.crowdar.driver.factory.RemoteDriverProvider;
-
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.HashMap;
@@ -22,7 +20,6 @@ public class DriverManager {
         }
         return driverPool.get(Thread.currentThread().getId());
     }
-
 
     public static void dismissAllDriver() {
 

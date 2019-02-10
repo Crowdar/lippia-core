@@ -1,6 +1,14 @@
 package com.crowdar.report;
 
 
+import com.crowdar.core.PropertyManager;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+import org.jbehave.core.model.*;
+import org.jbehave.core.reporters.StoryReporter;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,23 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.jbehave.core.model.ExamplesTable;
-import org.jbehave.core.model.GivenStories;
-import org.jbehave.core.model.Lifecycle;
-import org.jbehave.core.model.Meta;
-import org.jbehave.core.model.Narrative;
-import org.jbehave.core.model.OutcomesTable;
-import org.jbehave.core.model.Scenario;
-import org.jbehave.core.model.Story;
-import org.jbehave.core.model.StoryDuration;
-import org.jbehave.core.reporters.StoryReporter;
-import org.openqa.selenium.WebDriver;
-
-import com.crowdar.core.PropertyManager;
-import com.relevantcodes.extentreports.ExtentReports;
-import com.relevantcodes.extentreports.ExtentTest;
-import com.relevantcodes.extentreports.LogStatus;
 
 public class JbehaveExtentReporter extends JbehaveReport {
 
@@ -107,9 +98,9 @@ public class JbehaveExtentReporter extends JbehaveReport {
 	private final StoryReporter delegate;
 	private final boolean multiThreading;
 	private boolean invoked = false;
-	private WebDriver driverInstance;
+	private RemoteWebDriver driverInstance;
 
-	public JbehaveExtentReporter(WebDriver driverInstance, StoryReporter crossReferencing, StoryReporter delegate,
+	public JbehaveExtentReporter(RemoteWebDriver driverInstance, StoryReporter crossReferencing, StoryReporter delegate,
 			boolean multiThreading) {
 		this.driverInstance = driverInstance;
 		this.crossReferencing = crossReferencing;
