@@ -20,15 +20,13 @@ public final class WebDriverManager {
 
     private static WebDriver driver;
     private static Enum<BrowserConfiguration> browserConfiguration = null;
+    private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<>();
 
     private WebDriverManager() {
     }
 
     public static WebDriver getDriverInstance() {
-        if (driver == null || ((RemoteWebDriver) driver).getSessionId() == null) {
-            driver = getDriver();
-        }
-        return driver;
+        return localDriver.get();
     }
 
 
@@ -41,16 +39,40 @@ public final class WebDriverManager {
     }
 
     private static WebDriver getDriver() {
-        driver = ((BrowserConfiguration) browserConfiguration).getDriver();
 
-        driver.manage().timeouts().setScriptTimeout(Constants.getWaitScriptTimeout(), TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+        if( localDriver.get() != null && localDriver.get().getSessionId() == null){
+            localDriver.remove();
+        }
 
-        return driver;
+        if(localDriver.get() == null ){
+            WebDriver driver = ((BrowserConfiguration) browserConfiguration).getDriver();
+            driver.manage().timeouts().setScriptTimeout(Constants.getWaitScriptTimeout(), TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+            localDriver.set((RemoteWebDriver) driver);
+        }
+
+
+        return localDriver.get();
     }
 
     public static void dismissAll() {
         WebDriverPool.DEFAULT.dismissAll();
+    }
+
+    public static void dismissCurrentDriver(){
+        if(localDriver.get() != null){
+            localDriver.get().quit();
+            localDriver.remove();
+        }
+    }
+
+    public static void removeCurrentThreadDriver(){
+        if(localDriver.get() != null)
+        localDriver.remove();
+    }
+
+    public static WebDriver getCurrentDriver(){
+        return localDriver.get();
     }
 
     public static String getLocalStorageItemValue(String key, String item) {
