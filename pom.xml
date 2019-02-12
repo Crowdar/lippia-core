@@ -11,7 +11,7 @@
     <url>http://maven.apache.org</url>
     <packaging>jar</packaging>
     <name>CrowCoreFramework</name>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
     
     <dependencies>
         <dependency>
