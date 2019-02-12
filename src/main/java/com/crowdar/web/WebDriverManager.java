@@ -26,7 +26,7 @@ public final class WebDriverManager {
     }
 
     public static WebDriver getDriverInstance() {
-        return localDriver.get();
+        return getDriver();
     }
 
 
