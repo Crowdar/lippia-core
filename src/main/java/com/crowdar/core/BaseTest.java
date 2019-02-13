@@ -1,7 +1,9 @@
 package com.crowdar.core;
 
 import com.crowdar.bdd.StoryRunner;
+import com.crowdar.driver.DriverManager;
 import com.crowdar.email.EmailUtil;
+import com.crowdar.mobile.AppiumDriverManager;
 import com.crowdar.report.ScreenshotCapture;
 import com.crowdar.web.BrowserConfiguration;
 import com.crowdar.web.WebDriverManager;
@@ -18,7 +20,7 @@ import java.util.Calendar;
 /**
  * @author jCarames
  */
-@Listeners({ com.crowdar.core.listeners.SuiteTestngListener.class })
+@Listeners({com.crowdar.core.listeners.SuiteTestngListener.class})
 public abstract class BaseTest {
 
     private static final String STATUS_TEST_CONTEXT_KEY = "status";
@@ -39,5 +41,13 @@ public abstract class BaseTest {
         StoryRunner.setMethodContextProperties(method.getName());
     }
 
+    @AfterMethod(alwaysRun = true)
+    public void afterMethod() {
+        DriverManager.resetDriver();
+    }
 
+    @AfterTest(alwaysRun = true)
+    public void afterTest() {
+        DriverManager.dismissDriver();
+    }
 }

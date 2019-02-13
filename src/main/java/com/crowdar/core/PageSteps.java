@@ -1,8 +1,11 @@
 package com.crowdar.core;
 
 import com.crowdar.bdd.cukes.SharedDriver;
+import com.crowdar.driver.DriverManager;
+import com.crowdar.mobile.AppiumDriverManager;
 import io.appium.java_client.AppiumDriver;
 import org.apache.log4j.Logger;
+import org.jbehave.core.annotations.Given;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -34,5 +37,11 @@ public abstract class PageSteps{
 
     public RemoteWebDriver getDriver() {
         return driver;
+    }
+
+
+    @Given("reset the app")
+    public void resetDriver() {
+        DriverManager.resetDriver();
     }
 }
