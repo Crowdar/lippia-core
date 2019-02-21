@@ -38,10 +38,4 @@ public abstract class PageSteps{
     public RemoteWebDriver getDriver() {
         return driver;
     }
-
-
-    @Given("reset the app")
-    public void resetDriver() {
-        DriverManager.resetDriver();
-    }
 }
