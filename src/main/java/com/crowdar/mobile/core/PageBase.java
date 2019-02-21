@@ -24,13 +24,13 @@ import io.appium.java_client.android.AndroidKeyCode;
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class MobilePageBase {
+abstract public class PageBase extends com.crowdar.core.PageBase {
 
     protected RemoteWebDriver driver;
     private WebDriverWait wait;
     private FluentWait<RemoteWebDriver> fluentWait;
 
-    public MobilePageBase(RemoteWebDriver driver) {
+    public PageBase(RemoteWebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Constants.getFluentWaitTimeoutInSeconds(), TimeUnit.SECONDS)
@@ -53,15 +53,6 @@ abstract public class MobilePageBase {
      */
     public WebDriverWait getWait() {
         return wait;
-    }
-
-    /**
-     * Returns the default fluent wait in our framework
-     *
-     * @return wait
-     */
-    public Wait<RemoteWebDriver> getFluentWait() {
-        return fluentWait;
     }
 
     /**
