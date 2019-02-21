@@ -1,6 +1,7 @@
 package com.crowdar.driver;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileCommand;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class DriverManager {
     }
 
     public static void resetDriver() {
-        ((AppiumDriver) getDriverInstance()).resetApp();
+        dismissCurrentDriver();
     }
 
 
