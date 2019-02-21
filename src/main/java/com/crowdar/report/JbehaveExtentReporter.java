@@ -2,9 +2,11 @@ package com.crowdar.report;
 
 
 import com.crowdar.core.PropertyManager;
+import com.crowdar.driver.DriverManager;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
+import io.appium.java_client.AppiumDriver;
 import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -382,7 +384,7 @@ public class JbehaveExtentReporter extends JbehaveReport {
 			skippedReason = cause.getCause().getMessage();
 			logStep(step, LogStatus.SKIP);
 		} else {
-			ScreenshotCapture.createScreenCapture(driverInstance);
+			ScreenshotCapture.createScreenCapture(DriverManager.getDriverInstance());
 			failedReason = cause.getCause();
 			logStep(step, LogStatus.FAIL);
 		}
