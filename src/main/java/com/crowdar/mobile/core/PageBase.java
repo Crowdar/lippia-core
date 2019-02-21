@@ -3,6 +3,7 @@ package com.crowdar.mobile.core;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -23,13 +24,13 @@ import io.appium.java_client.android.AndroidKeyCode;
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBase {
+abstract public class MobilePageBase {
 
-    protected AppiumDriver driver;
+    protected RemoteWebDriver driver;
     private WebDriverWait wait;
-    private Wait<AppiumDriver> fluentWait;
+    private FluentWait<RemoteWebDriver> fluentWait;
 
-    public PageBase(AppiumDriver driver) {
+    public MobilePageBase(RemoteWebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Constants.getFluentWaitTimeoutInSeconds(), TimeUnit.SECONDS)
@@ -41,7 +42,7 @@ abstract public class PageBase {
      *
      * @return mobile driver
      */
-    public AppiumDriver getDriver() {
+    public RemoteWebDriver getDriver() {
         return driver;
     }
 
@@ -59,7 +60,7 @@ abstract public class PageBase {
      *
      * @return wait
      */
-    public Wait<AppiumDriver> getFluentWait() {
+    public Wait<RemoteWebDriver> getFluentWait() {
         return fluentWait;
     }
 
@@ -92,7 +93,7 @@ abstract public class PageBase {
      * @param y
      */
     public void clickElement(int x, int y) {
-        driver.tap(1, x, y, 0);
+        ((AppiumDriver) driver).tap(1, x, y, 0);
         sleep(1000);
     }
 
@@ -175,7 +176,7 @@ abstract public class PageBase {
             element.clear();
         }
         element.sendKeys(value);
-        driver.hideKeyboard();
+        ((AppiumDriver) driver).hideKeyboard();
 
     }
 
@@ -186,7 +187,7 @@ abstract public class PageBase {
 
     public void completeFieldWithoutClear(MobileElement element, String value) {
         element.setValue(value);
-        driver.hideKeyboard();
+        ((AppiumDriver) driver).hideKeyboard();
     }
 
     /**
@@ -202,7 +203,7 @@ abstract public class PageBase {
             element.clear();
         }
         element.setValue(value);
-        driver.hideKeyboard();
+        ((AppiumDriver) driver).hideKeyboard();
     }
 
     /**
@@ -212,7 +213,7 @@ abstract public class PageBase {
      * @throws RuntimeException if checkbox is not enabled to be operated
      */
     public void selectCheckbox(String accessibilityId) {
-        MobileElement checkbox = (MobileElement) driver.findElementByAccessibilityId(accessibilityId);
+        MobileElement checkbox = (MobileElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
         if (checkbox.isEnabled()) {
             if (!checkbox.isSelected()) {
                 checkbox.click();
@@ -229,7 +230,7 @@ abstract public class PageBase {
      * @throws RuntimeException if checkbox is not enabled to be operated
      */
     public void deselectCheckbox(String accessibilityId) {
-        MobileElement checkbox = (MobileElement) driver.findElementByAccessibilityId(accessibilityId);
+        MobileElement checkbox = (MobileElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
         if (checkbox.isEnabled()) {
             if (checkbox.isSelected()) {
                 checkbox.click();
@@ -248,7 +249,7 @@ abstract public class PageBase {
     public boolean isElementPresent(String accessibilityId) {
         driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         try {
-            getDriver().findElementByAccessibilityId(accessibilityId);
+            ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
             return true;
         } catch (NoSuchElementException e) {
             System.out.println(e.getMessage());
@@ -379,7 +380,7 @@ abstract public class PageBase {
         int y_start = (int) (size.height * 0.60);
         int y_end = (int) (size.height * 0.30);
         int x = size.width / 2;
-        driver.swipe(x, y_start, x, y_end, 4000);
+        ((AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
     }
 
     public void scroll(int timesToScroll) {
@@ -388,7 +389,7 @@ abstract public class PageBase {
             int y_start = (int) (size.height * 0.60);
             int y_end = (int) (size.height * 0.30);
             int x = size.width / 2;
-            driver.swipe(x, y_start, x, y_end, 4000);
+            ((AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
         }
         sleep(1000);
     }

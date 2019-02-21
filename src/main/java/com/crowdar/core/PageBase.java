@@ -36,7 +36,7 @@ import com.sun.jna.platform.win32.WinDef.HWND;
  * 
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBase{
+abstract public class WebPageBase {
     
 
 	public static  String BASE_URL; // this is the Base url for all system to be tested
@@ -50,7 +50,7 @@ abstract public class PageBase{
 
 	protected Logger logger;
 
-	public PageBase(WebDriver driver) {
+	public WebPageBase(WebDriver driver) {
 		logger = Logger.getLogger(this.getClass());
 		this.driver = driver;
 		this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
@@ -59,7 +59,7 @@ abstract public class PageBase{
 				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 	}
 
-	public PageBase(){
+	public WebPageBase(){
 
 	}
 	/**
