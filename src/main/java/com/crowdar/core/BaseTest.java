@@ -40,14 +40,4 @@ public abstract class BaseTest {
     public void beforeMethod(Method method) {
         StoryRunner.setMethodContextProperties(method.getName());
     }
-
-    @AfterMethod(alwaysRun = true)
-    public void afterMethod() {
-        DriverManager.resetDriver();
-    }
-
-    @AfterTest(alwaysRun = true)
-    public void afterTest() {
-        DriverManager.dismissDriver();
-    }
 }
