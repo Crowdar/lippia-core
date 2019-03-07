@@ -26,8 +26,6 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("app", System.getProperty("user.dir").concat(File.separator).concat(MOBILE_APP_PATH).concat(File.separator).concat(PropertyManager.getProperty("mobile.apk.name")));
             
             capabilities.setCapability("autoGrantPermissions", true);
-            capabilities.setCapability("unicodeKeyboard", true);
-            capabilities.setCapability("resetKeyboard", true);
         	
             return capabilities;
         }
@@ -46,8 +44,6 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
 
             capabilities.setCapability("appPackage", PropertyManager.getProperty("app.package"));
             capabilities.setCapability("autoGrantPermissions", true);
-            capabilities.setCapability("unicodeKeyboard", true);
-            capabilities.setCapability("resetKeyboard", true);
 
             capabilities.setCapability("app", System.getProperty("user.dir").concat(File.separator).concat(MOBILE_APP_PATH.concat(File.separator).concat(PropertyManager.getProperty("mobile.app.name"))));
 
