@@ -20,20 +20,15 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
 
-            DesiredCapabilities capabilities = DesiredCapabilities.android();
-            capabilities.setPlatform(Platform.ANDROID);
-
-            capabilities.setCapability("device", PropertyManager.getProperty("app.platform"));
-
-            capabilities.setCapability("deviceName", PropertyManager.getProperty("mobile.phone.name"));
-            capabilities.setCapability("platformName", PropertyManager.getProperty("app.platform"));
-
-            capabilities.setCapability("appPackage", PropertyManager.getProperty("app.package"));
+        	DesiredCapabilities capabilities = DesiredCapabilities.android();
+        	
+            capabilities.setCapability("deviceName", PropertyManager.getProperty("mobile.deviceName"));
+            capabilities.setCapability("app", System.getProperty("user.dir").concat(File.separator).concat(MOBILE_APP_PATH).concat(File.separator).concat(PropertyManager.getProperty("mobile.apk.name")));
+            
             capabilities.setCapability("autoGrantPermissions", true);
             capabilities.setCapability("unicodeKeyboard", true);
             capabilities.setCapability("resetKeyboard", true);
-            capabilities.setCapability("app", System.getProperty("user.dir").concat(File.separator).concat(MOBILE_APP_PATH).concat(File.separator).concat(PropertyManager.getProperty("mobile.apk.name")));
-
+        	
             return capabilities;
         }
     },

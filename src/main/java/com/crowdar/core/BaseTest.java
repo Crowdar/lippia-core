@@ -1,21 +1,13 @@
 package com.crowdar.core;
 
-import com.crowdar.bdd.StoryRunner;
-import com.crowdar.driver.DriverManager;
-import com.crowdar.email.EmailUtil;
-import com.crowdar.mobile.AppiumDriverManager;
-import com.crowdar.report.ScreenshotCapture;
-import com.crowdar.web.BrowserConfiguration;
-import com.crowdar.web.WebDriverManager;
-import com.relevantcodes.extentreports.LogStatus;
-import org.testng.ITestContext;
-import org.testng.ITestResult;
-import org.testng.annotations.*;
-
-import java.io.File;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+
+import org.testng.ITestContext;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Listeners;
+
+import com.crowdar.bdd.StoryRunner;
 
 /**
  * @author jCarames

@@ -1,19 +1,18 @@
 package com.crowdar.bdd;
 
-import com.crowdar.core.PageSteps;
-import com.crowdar.core.PropertyManager;
-import com.google.common.collect.Lists;
-import io.appium.java_client.AppiumDriver;
-import org.jbehave.core.steps.InjectableStepsFactory;
-import org.jbehave.core.steps.InstanceStepsFactory;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.reflections.Reflections;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
+
+import org.jbehave.core.steps.InjectableStepsFactory;
+import org.jbehave.core.steps.InstanceStepsFactory;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.reflections.Reflections;
+
+import com.crowdar.core.PageSteps;
+import com.crowdar.core.PropertyManager;
+import com.google.common.collect.Lists;
 
 public class GUIStories extends EmbedderBase {
 
@@ -50,7 +49,6 @@ public class GUIStories extends EmbedderBase {
 
 	@Override
 	protected RemoteWebDriver getDriver() {
-		// TODO Auto-generated method stub
-		return null;
+		return driver;
 	}
 }

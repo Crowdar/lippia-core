@@ -1,19 +1,19 @@
 package com.crowdar.bdd;
 
-import com.crowdar.core.Context;
-import com.crowdar.core.MyThreadLocal;
-import com.crowdar.driver.DriverManager;
-import com.crowdar.mobile.AppiumDriverManager;
-import com.google.common.collect.Lists;
+import static java.util.Arrays.asList;
+
+import java.io.File;
+import java.util.List;
+
 import org.jbehave.core.embedder.Embedder;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.SkipException;
 
-import java.io.File;
-import java.util.List;
-
-import static java.util.Arrays.asList;
+import com.crowdar.core.Context;
+import com.crowdar.core.MyThreadLocal;
+import com.crowdar.driver.DriverManager;
+import com.google.common.collect.Lists;
 
 /**
  * StoryRunner class This class is used to run Jbehave stories

@@ -1,13 +1,9 @@
 package com.crowdar.core;
 
-import com.crowdar.bdd.cukes.SharedDriver;
-import com.crowdar.driver.DriverManager;
-import com.crowdar.mobile.AppiumDriverManager;
-import io.appium.java_client.AppiumDriver;
 import org.apache.log4j.Logger;
-import org.jbehave.core.annotations.Given;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import com.crowdar.bdd.cukes.SharedDriver;
 
 
 /**
@@ -20,11 +16,9 @@ public abstract class PageSteps{
 	protected RemoteWebDriver driver;
 	protected Logger logger;
 
-
     public PageSteps(RemoteWebDriver driver){
-        if (driver != null) {
-            this.driver = driver;
-        }
+        this.driver = driver;
+        logger = Logger.getLogger(this.getClass());
     }
 	public PageSteps(SharedDriver driver){
 		//this((WebDriver) driver);
