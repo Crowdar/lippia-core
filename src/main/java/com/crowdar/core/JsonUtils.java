@@ -45,7 +45,7 @@ public class JsonUtils {
 		ObjectMapper mapper = new ObjectMapper();
 		String json = null;
 		try {
-			String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat(fileName).concat(".json");
+			String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat("jsons").concat(File.separator).concat(fileName).concat(".json");
 			FileInputStream fis = new FileInputStream(path);
 			JsonNode rootNode = mapper.readTree(fis);
 			json = rootNode.toString();
