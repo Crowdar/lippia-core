@@ -182,9 +182,9 @@ public class ExtentReportManager {
             ExtentReportManager.addCucumberPassStep();
         } else if (Result.Type.FAILED.equals(result.getStatus())) {
             ExtentReportManager.addCucumberFailStep(result.getError());
-        } else if (Result.Type.SKIPPED.equals(result)) {
+        } else if (Result.Type.SKIPPED.equals(result.getStatus())) {
             ExtentReportManager.addCucumberSkipStep();
-        } else if (Result.UNDEFINED.equals(result)) {
+        } else if (Result.UNDEFINED.equals(result.getStatus())) {
             ExtentReportManager.addCucumberUndefinedStep();
         }
     }
