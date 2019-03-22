@@ -28,7 +28,7 @@ public class SuiteTestngListener implements ISuiteListener {
 
     @Override
     public void onFinish(ISuite iSuite) {
-        DriverManager.dismissAllDriver();
+        DriverManager.dismissCurrentDriver();
         if (Boolean.valueOf(PropertyManager.getProperty("report.mail.available"))) {
             EmailUtil.sendReportEmail();
         }

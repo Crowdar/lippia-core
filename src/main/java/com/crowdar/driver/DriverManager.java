@@ -1,7 +1,6 @@
 package com.crowdar.driver;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileCommand;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.HashMap;
@@ -12,38 +11,34 @@ public class DriverManager {
 
     }
 
-    private static HashMap<Long, RemoteWebDriver> driverPool = new HashMap<>();
+    private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<RemoteWebDriver>();
 
 
     public static RemoteWebDriver getDriverInstance() {
 
         if (!isDriverCreated() || !isAValidDriver()) {
-            driverPool.put(Thread.currentThread().getId(), DriverFactory.createDriver());
+            if(localDriver.get() != null){
+                localDriver.remove();
+            }
+            localDriver.set(DriverFactory.createDriver());
         }
-        return driverPool.get(Thread.currentThread().getId());
-    }
-
-    public static void dismissAllDriver() {
-
-        for (RemoteWebDriver d : driverPool.values()) {
-            d.quit();
-        }
-        driverPool.clear();
+        return localDriver.get();
     }
 
     public static void dismissCurrentDriver() {
         if (isDriverCreated()) {
-            driverPool.get(Thread.currentThread().getId()).quit();
-            driverPool.remove(Thread.currentThread().getId());
+           localDriver.get().quit();
+           localDriver.remove();
         }
     }
 
     private static boolean isDriverCreated() {
-        return driverPool.containsKey(Thread.currentThread().getId());
+        return localDriver.get() != null;
     }
 
     private static boolean isAValidDriver() {
-        return driverPool.get(Thread.currentThread().getId()).getSessionId() != null;
+
+        return localDriver.get().getSessionId() != null;
     }
 
     public static void dismissDriver() {

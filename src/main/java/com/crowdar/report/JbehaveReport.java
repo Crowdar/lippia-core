@@ -43,6 +43,11 @@ public class JbehaveReport implements StoryReporter {
     }
 
     @Override
+    public void beforeScenario(Scenario scenario) {
+
+    }
+
+    @Override
     public void beforeScenario(String s) {
 
     }
@@ -58,12 +63,22 @@ public class JbehaveReport implements StoryReporter {
     }
 
     @Override
+    public void beforeGivenStories() {
+
+    }
+
+    @Override
     public void givenStories(GivenStories givenStories) {
 
     }
 
     @Override
     public void givenStories(List<String> list) {
+
+    }
+
+    @Override
+    public void afterGivenStories() {
 
     }
 
@@ -94,6 +109,11 @@ public class JbehaveReport implements StoryReporter {
 
     @Override
     public void ignorable(String s) {
+
+    }
+
+    @Override
+    public void comment(String s) {
 
     }
 

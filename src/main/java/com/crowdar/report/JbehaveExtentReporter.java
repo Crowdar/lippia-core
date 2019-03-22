@@ -6,7 +6,6 @@ import com.crowdar.driver.DriverManager;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import io.appium.java_client.AppiumDriver;
 import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
 import org.openqa.selenium.remote.RemoteWebDriver;

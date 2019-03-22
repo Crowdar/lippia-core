@@ -1,20 +1,19 @@
 package com.crowdar.mobile.core;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
+import io.appium.java_client.*;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.crowdar.core.Constants;
 import com.crowdar.core.Utils;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidKeyCode;
 
@@ -62,7 +61,7 @@ abstract public class PageBase extends com.crowdar.core.PageBase {
      * @return mobile element
      */
     public MobileElement getMobileElement(By locator) {
-        return (MobileElement) getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
+        return (MobileElement) getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     /**
@@ -84,7 +83,8 @@ abstract public class PageBase extends com.crowdar.core.PageBase {
      * @param y
      */
     public void clickElement(int x, int y) {
-        ((AppiumDriver) driver).tap(1, x, y, 0);
+        TouchAction touchAction = new TouchAction((PerformsTouchActions) driver);
+        touchAction.tap(PointOption.point(x,y)).perform();
         sleep(1000);
     }
 
@@ -371,7 +371,8 @@ abstract public class PageBase extends com.crowdar.core.PageBase {
         int y_start = (int) (size.height * 0.60);
         int y_end = (int) (size.height * 0.30);
         int x = size.width / 2;
-        ((AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
+        //((AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
+        throw new UnsupportedOperationException("this is not supported yet, guys should implement swipe in java-client 7.0 for appium");
     }
 
     public void scroll(int timesToScroll) {
@@ -380,7 +381,8 @@ abstract public class PageBase extends com.crowdar.core.PageBase {
             int y_start = (int) (size.height * 0.60);
             int y_end = (int) (size.height * 0.30);
             int x = size.width / 2;
-            ((AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
+            //(AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
+            throw new UnsupportedOperationException("this is not supported yet, guys should implement swipe in java-client 7.0 for appium");
         }
         sleep(1000);
     }

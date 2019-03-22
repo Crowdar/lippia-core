@@ -20,6 +20,7 @@ public final class WebDriverManager {
 
     private static RemoteWebDriver driver;
     private static Enum<BrowserConfiguration> browserConfiguration = null;
+    private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<>();
 
     private WebDriverManager() {
     }
@@ -41,16 +42,39 @@ public final class WebDriverManager {
     }
 
     private static RemoteWebDriver getDriver() {
-//        driver = browserConfiguration.getDriver();
+        if( localDriver.get() != null && localDriver.get().getSessionId() == null){
+            localDriver.remove();
+        }
 
-        driver.manage().timeouts().setScriptTimeout(Constants.getWaitScriptTimeout(), TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+        if(localDriver.get() == null ){
+            WebDriver driver = ((BrowserConfiguration) browserConfiguration).getDriver();
+            driver.manage().timeouts().setScriptTimeout(Constants.getWaitScriptTimeout(), TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+            localDriver.set((RemoteWebDriver) driver);
+        }
 
-        return driver;
+
+        return localDriver.get();
     }
 
     public static void dismissAll() {
         WebDriverPool.DEFAULT.dismissAll();
+    }
+
+    public static void dismissCurrentDriver(){
+        if(localDriver.get() != null){
+            localDriver.get().quit();
+            localDriver.remove();
+        }
+    }
+
+    public static void removeCurrentThreadDriver(){
+        if(localDriver.get() != null)
+        localDriver.remove();
+    }
+
+    public static WebDriver getCurrentDriver(){
+        return localDriver.get();
     }
 
     public static String getLocalStorageItemValue(String key, String item) {

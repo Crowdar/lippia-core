@@ -14,7 +14,7 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 import com.crowdar.core.PropertyManager;
 import com.crowdar.driver.setupStrategy.SetupStrategy;
 
-class DriverFactory {
+class  DriverFactory {
 	
 	private static Logger logger = Logger.getLogger(DriverFactory.class);
 

@@ -4,6 +4,8 @@ import com.crowdar.core.PropertyManager;
 import com.crowdar.json.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
@@ -18,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 public enum BrowserConfiguration {
@@ -35,6 +39,19 @@ public enum BrowserConfiguration {
             return capabilities;
         }
     },
+    FIREFOXDYNAMIC {
+        @Override
+        public void localSetup() {
+            FirefoxDriverManager.firefoxdriver().setup();
+        }
+
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+            capabilities.setBrowserName("firefox");
+            return capabilities;
+        }
+    },
     CHROME {
         @Override
         public void localSetup() {
@@ -43,16 +60,21 @@ public enum BrowserConfiguration {
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
+            String downloadFilepath = System.getProperty("user.dir") + File.separator + PropertyManager.getProperty("crowdar.download.folder");
+            HashMap<String, Object> chromePrefs = new HashMap<>();
+            chromePrefs.put("profile.default_content_settings.popups", 0);
+            chromePrefs.put("download.default_directory", downloadFilepath);
 
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
             capabilities.setBrowserName(capabilities.getBrowserName());
-
             ChromeOptions options = new ChromeOptions();
+            options.setExperimentalOption("prefs", chromePrefs);
             options.addArguments("disable-infobars");
             options.addArguments("--ignore-certificate-errors");
+            options.addArguments("download.default_directory", downloadFilepath);
 //			options.addArguments("screenshot");
             
-            //options.addArguments("no-sandbox", "disable-gpu");
+            options.addArguments("no-sandbox", "disable-gpu");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
@@ -61,10 +83,6 @@ public enum BrowserConfiguration {
         @Override
         public void localSetup() {
             ChromeDriverManager.chromedriver().setup();
-        }
-
-        public WebDriver getDynamicWebDriver() {
-            return new ChromeDriver(getDesiredCapabilities());
         }
 
         @Override
@@ -78,7 +96,7 @@ public enum BrowserConfiguration {
             capabilities.setBrowserName(capabilities.getBrowserName());
             ChromeOptions options = new ChromeOptions();
             options.addArguments("disable-infobars");
-            options.addArguments("start-maximized");
+            //options.addArguments("start-maximized");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
@@ -100,7 +118,6 @@ public enum BrowserConfiguration {
             ChromeOptions options = new ChromeOptions();
             ChromeUtils.insertHeadersExtension(options);
             options.addArguments("disable-infobars");
-            options.addArguments("start-maximized");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
@@ -126,6 +143,23 @@ public enum BrowserConfiguration {
         @Override
         public void localSetup() {
             System.setProperty("webdriver.ie.driver", getWebDriverPath().concat("IEDriverServer.exe"));
+        }
+
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+
+//			System.setProperty("webdriver.ie.driver.loglevel","DEBUG");
+
+            DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+            capabilities.setPlatform(Platform.VISTA);
+            capabilities.setBrowserName(capabilities.getBrowserName());
+            return capabilities;
+        }
+    },
+    IEDYNAMIC {
+        @Override
+        public void localSetup() {
+            InternetExplorerDriverManager.iedriver().setup();
         }
 
         @Override

@@ -31,12 +31,10 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
  * </p>
  */
 public class SharedDriver extends EventFiringWebDriver {
-    private static final RemoteWebDriver REAL_DRIVER ;
 
     static {
         WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
         //REAL_DRIVER = WebDriverManager.getDriverInstance();
-        REAL_DRIVER = DriverManager.getDriverInstance();
     }
 
     private static final Thread CLOSE_THREAD = new Thread() {
@@ -51,15 +49,17 @@ public class SharedDriver extends EventFiringWebDriver {
     }
 
     public SharedDriver() {
-        super(REAL_DRIVER);
+        super(DriverManager.getDriverInstance());
+    }
+
+
+    public RemoteWebDriver get(){
+        return (RemoteWebDriver) this.getWrappedDriver();
     }
 
     @Override
     public void quit() {
-        if (Thread.currentThread() != CLOSE_THREAD) {
-            throw new UnsupportedOperationException("You shouldn't quit this WebDriver. It's shared and will quit when the JVM exits.");
-        }
-        super.quit();
+       DriverManager.dismissCurrentDriver();
     }
 
 
