@@ -23,7 +23,7 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
         	DesiredCapabilities capabilities = DesiredCapabilities.android();
         	
             capabilities.setCapability("deviceName", PropertyManager.getProperty("mobile.deviceName"));
-            capabilities.setCapability("app", System.getProperty("user.dir").concat(File.separator).concat(MOBILE_APP_PATH).concat(File.separator).concat(PropertyManager.getProperty("mobile.apk.name")));
+            capabilities.setCapability("app", System.getProperty("user.dir").concat(MOBILE_APP_PATH).concat(File.separator).concat(PropertyManager.getProperty("mobile.apk.name")));
             
             capabilities.setCapability("autoGrantPermissions", true);
         	

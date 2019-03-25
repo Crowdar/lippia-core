@@ -3,6 +3,8 @@ package com.crowdar.mobile.core;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import com.crowdar.bdd.cukes.SharedDriver;
+import com.crowdar.core.CucumberPageBase;
 import io.appium.java_client.*;
 import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.*;
@@ -23,17 +25,12 @@ import io.appium.java_client.android.AndroidKeyCode;
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBase extends com.crowdar.core.PageBase {
+abstract public class PageBase extends CucumberPageBase {
 
     protected RemoteWebDriver driver;
-    private WebDriverWait wait;
-    private FluentWait<RemoteWebDriver> fluentWait;
 
-    public PageBase(RemoteWebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
-        this.fluentWait = new FluentWait<>(driver).withTimeout(Constants.getFluentWaitTimeoutInSeconds(), TimeUnit.SECONDS)
-                .pollingEvery(Constants.getFluentWaitRequestFrequencyInMillis(), TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
+    public PageBase(SharedDriver driver) {
+        super(driver);
     }
 
     /**
