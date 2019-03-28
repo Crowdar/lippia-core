@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.ResourceLoader;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.ExamplesTableFactory;
@@ -19,7 +20,7 @@ public class CustomExampleTableFactory extends ExamplesTableFactory {
 
 
     public CustomExampleTableFactory(ResourceLoader resourceLoader) {
-        super(resourceLoader);
+        super((Configuration) resourceLoader);
     }
 
     @Override

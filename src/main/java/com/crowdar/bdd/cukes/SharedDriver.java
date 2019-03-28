@@ -1,16 +1,14 @@
 package com.crowdar.bdd.cukes;
 
 import com.crowdar.core.PropertyManager;
+import com.crowdar.driver.DriverManager;
 import com.crowdar.web.BrowserConfiguration;
 import com.crowdar.web.WebDriverManager;
 import cucumber.api.Scenario;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <p>
@@ -34,38 +32,36 @@ import java.util.Map;
  */
 public class SharedDriver extends EventFiringWebDriver {
 
-    private static final Map<Long, WebDriver> threadDriversMap = new HashMap<>();
-
-    private static WebDriver get(){
-
-        Long id = Thread.currentThread().getId();
-        if(threadDriversMap.containsKey(id)){
-            return  threadDriversMap.get(id);
-        }else{
-            WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
-            WebDriver webDriver =  WebDriverManager.getNewDriverInstance();
-            threadDriversMap.put(id,webDriver);
-            addShutDownHook(webDriver);
-            return webDriver;
-
-        }
-
+    static {
+        WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
+        //REAL_DRIVER = WebDriverManager.getDriverInstance();
     }
 
-    private static void addShutDownHook(WebDriver driver){
-        Thread close = new Thread(){
-            @Override
-            public void run() {
-                System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DRIVERQUIT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-                driver.quit();
-            }
-        };
-        Runtime.getRuntime().addShutdownHook(close);
+    private static final Thread CLOSE_THREAD = new Thread() {
+        @Override
+        public void run() {
+            DriverManager.dismissCurrentDriver();
+        }
+    };
+
+    static {
+        Runtime.getRuntime().addShutdownHook(CLOSE_THREAD);
     }
 
     public SharedDriver() {
-        super(get());
+        super(DriverManager.getDriverInstance());
     }
+
+
+    public RemoteWebDriver get(){
+        return (RemoteWebDriver) this.getWrappedDriver();
+    }
+
+    @Override
+    public void quit() {
+       DriverManager.dismissCurrentDriver();
+    }
+
 
     public void deleteAllCookies() {
         manage().deleteAllCookies();

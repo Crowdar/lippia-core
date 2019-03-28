@@ -18,18 +18,21 @@ import ru.stqa.selenium.factory.WebDriverPool;
 
 public final class WebDriverManager {
 
-    private static WebDriver driver;
+    private static RemoteWebDriver driver;
     private static Enum<BrowserConfiguration> browserConfiguration = null;
     private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<>();
 
     private WebDriverManager() {
     }
 
-    public static WebDriver getDriverInstance() {
-        return getDriver();
+    public static RemoteWebDriver getDriverInstance() {
+        if (driver == null || ((RemoteWebDriver) driver).getSessionId() == null) {
+            driver = getDriver();
+        }
+        return driver;
     }
 
-
+    @Deprecated
     public static WebDriver getNewDriverInstance() {
         return getDriver();
     }
@@ -38,8 +41,7 @@ public final class WebDriverManager {
         browserConfiguration = browserConfig;
     }
 
-    private static WebDriver getDriver() {
-
+    private static RemoteWebDriver getDriver() {
         if( localDriver.get() != null && localDriver.get().getSessionId() == null){
             localDriver.remove();
         }

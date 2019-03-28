@@ -1,8 +1,6 @@
 package com.crowdar.bdd;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-
+import com.crowdar.report.JbehaveStoryReporterBuilder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.embedder.Embedder;
@@ -16,16 +14,17 @@ import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.ParameterConverters;
 import org.jbehave.core.steps.ParameterConverters.DateConverter;
 import org.jbehave.core.steps.SilentStepMonitor;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.crowdar.report.JbehaveStoryReporterBuilder;
+import java.io.File;
+import java.text.SimpleDateFormat;
 
 /**
  * @author Agustin Mascheroni
  */
 public abstract class EmbedderBase extends Embedder {
 
-	protected abstract WebDriver getDriver();
+	protected abstract RemoteWebDriver getDriver();
 	
 	/**
 	 * This method overrides the embedderControls method, in order to

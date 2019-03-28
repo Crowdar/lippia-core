@@ -3,6 +3,7 @@ package com.crowdar.core.listeners;
 import com.crowdar.core.Constants;
 import com.crowdar.core.PropertyManager;
 import com.crowdar.core.RetryManager;
+import com.crowdar.driver.DriverManager;
 import com.crowdar.email.EmailUtil;
 import com.crowdar.web.BrowserConfiguration;
 import com.crowdar.web.WebDriverManager;
@@ -27,7 +28,7 @@ public class SuiteTestngListener implements ISuiteListener {
 
     @Override
     public void onFinish(ISuite iSuite) {
-        WebDriverManager.dismissAll();
+        DriverManager.dismissCurrentDriver();
         if (Boolean.valueOf(PropertyManager.getProperty("report.mail.available"))) {
             EmailUtil.sendReportEmail();
         }

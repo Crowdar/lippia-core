@@ -21,6 +21,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -43,19 +44,19 @@ abstract public class PageBase{
 	protected String url;// this is the url that corespond to this child page and should be initialized in  child contructor child page
 
 	
-	protected WebDriver driver;	
+	protected RemoteWebDriver driver;
 	protected NgWebDriver ngWebDriver;
 	protected WebDriverWait wait;
-	protected Wait<WebDriver> fluentWait;
+	protected FluentWait<RemoteWebDriver> fluentWait;
 
 	protected Logger logger;
 
-	public PageBase(WebDriver driver) {
+	public PageBase(RemoteWebDriver driver) {
 		logger = Logger.getLogger(this.getClass());
 		this.driver = driver;
 		this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
 		this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
-		this.fluentWait = new FluentWait<WebDriver>(driver).withTimeout(30, TimeUnit.SECONDS)
+		this.fluentWait = new FluentWait<RemoteWebDriver>(driver).withTimeout(30, TimeUnit.SECONDS)
 				.pollingEvery(10, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 	}
 
@@ -85,7 +86,7 @@ abstract public class PageBase{
 	 * 
 	 * @return web driver
 	 */
-	public WebDriver getDriver() {
+	public RemoteWebDriver getDriver() {
 		return driver;
 	}
 
@@ -112,7 +113,7 @@ abstract public class PageBase{
 	 * 
 	 * @return wait
 	 */
-	public Wait<WebDriver> getFluentWait() {
+	public Wait<RemoteWebDriver> getFluentWait() {
 		return fluentWait;
 	}
 
@@ -387,7 +388,7 @@ abstract public class PageBase{
 	 * Method that produce a dynamic wait time waiting to finish an angular
 	 * request
 	 * 
-	 * @param WebDriver
+	 * @param SeleniumWebDriver
 	 *            for Angular
 	 */
 	public void angularWait(NgWebDriver ngDrv) {

@@ -1,4 +1,5 @@
 **CrowdarCoreFramework**
+
 El root del framework tiene todas las librerias que son utilizadas dentro del core para correr cualquier proyecto cliente
 **CrowdarCoreFramework**
 El core del framework tiene todos las librerias propias de crowdar por ejemplo todas las Paginas base tanto de cucumber como de jbehave
@@ -113,6 +114,14 @@ por favor revisar los siguientes ejemplos de proyectos Incayuyo-cucumber para te
 
 
 ---
+
+## Properties necesarias para consumir el core
+
+crowdar.projectType=WEB_CHROME  
+crowdar.setupStrategy=web.LocalWebExecutionStrategy  
+crowdar.driverHub=http://localhost:4444/grid/hub  
+
+
 
 
 

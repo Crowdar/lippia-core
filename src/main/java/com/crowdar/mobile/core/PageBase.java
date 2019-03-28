@@ -3,18 +3,19 @@ package com.crowdar.mobile.core;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import com.crowdar.bdd.cukes.SharedDriver;
+import com.crowdar.core.CucumberPageBase;
+import io.appium.java_client.*;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.crowdar.core.Constants;
 import com.crowdar.core.Utils;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidKeyCode;
 
@@ -24,17 +25,12 @@ import io.appium.java_client.android.AndroidKeyCode;
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBase {
+abstract public class PageBase extends CucumberPageBase {
 
-    protected AppiumDriver driver;
-    private WebDriverWait wait;
-    private Wait<AppiumDriver> fluentWait;
+    protected RemoteWebDriver driver;
 
-    public PageBase(AppiumDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver,Constants.getWaitForElementTimeout());
-        this.fluentWait = new FluentWait<>(driver).withTimeout(Constants.getFluentWaitTimeoutInSeconds(), TimeUnit.SECONDS)
-                .pollingEvery(Constants.getFluentWaitRequestFrequencyInMillis(), TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
+    public PageBase(SharedDriver driver) {
+        super(driver);
     }
 
     /**
@@ -42,7 +38,7 @@ abstract public class PageBase {
      *
      * @return mobile driver
      */
-    public AppiumDriver getDriver() {
+    public RemoteWebDriver getDriver() {
         return driver;
     }
 
@@ -53,15 +49,6 @@ abstract public class PageBase {
      */
     public WebDriverWait getWait() {
         return wait;
-    }
-
-    /**
-     * Returns the default fluent wait in our framework
-     *
-     * @return wait
-     */
-    public Wait<AppiumDriver> getFluentWait() {
-        return fluentWait;
     }
 
     /**
@@ -93,7 +80,8 @@ abstract public class PageBase {
      * @param y
      */
     public void clickElement(int x, int y) {
-        driver.tap(1, x, y, 0);
+        TouchAction touchAction = new TouchAction((PerformsTouchActions) driver);
+        touchAction.tap(PointOption.point(x,y)).perform();
         sleep(1000);
     }
 
@@ -172,12 +160,22 @@ abstract public class PageBase {
      * @param value   to write in the field
      */
     public void completeField(MobileElement element, String value) {
-        element.click();
         if (!element.getText().isEmpty()) {
             element.clear();
         }
         element.sendKeys(value);
-        //  driver.hideKeyboard();
+        ((AppiumDriver) driver).hideKeyboard();
+
+    }
+
+    public void completeFieldWithoutClear(By locator, String value) {
+        MobileElement element = getMobileElement(locator);
+        this.completeFieldWithoutClear(element, value);
+    }
+
+    public void completeFieldWithoutClear(MobileElement element, String value) {
+        element.setValue(value);
+        ((AppiumDriver) driver).hideKeyboard();
     }
 
     /**
@@ -193,7 +191,7 @@ abstract public class PageBase {
             element.clear();
         }
         element.setValue(value);
-        driver.hideKeyboard();
+        ((AppiumDriver) driver).hideKeyboard();
     }
 
     /**
@@ -203,7 +201,7 @@ abstract public class PageBase {
      * @throws RuntimeException if checkbox is not enabled to be operated
      */
     public void selectCheckbox(String accessibilityId) {
-        MobileElement checkbox = (MobileElement) driver.findElementByAccessibilityId(accessibilityId);
+        MobileElement checkbox = (MobileElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
         if (checkbox.isEnabled()) {
             if (!checkbox.isSelected()) {
                 checkbox.click();
@@ -220,7 +218,7 @@ abstract public class PageBase {
      * @throws RuntimeException if checkbox is not enabled to be operated
      */
     public void deselectCheckbox(String accessibilityId) {
-        MobileElement checkbox = (MobileElement) driver.findElementByAccessibilityId(accessibilityId);
+        MobileElement checkbox = (MobileElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
         if (checkbox.isEnabled()) {
             if (checkbox.isSelected()) {
                 checkbox.click();
@@ -239,7 +237,26 @@ abstract public class PageBase {
     public boolean isElementPresent(String accessibilityId) {
         driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         try {
-            getDriver().findElementByAccessibilityId(accessibilityId);
+            ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
+            return true;
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+        }
+    }
+
+    /**
+     * Verifies if the element specific is present in the window
+     *
+     * @param locator of the element node
+     * @return <b>true</b> if the element is present, <b>false</b> otherwise
+     */
+    public boolean isElementPresent(By locator) {
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        try {
+            MobileElement element = (MobileElement) getDriver().findElement(locator);
             return true;
         } catch (NoSuchElementException e) {
             System.out.println(e.getMessage());
@@ -275,7 +292,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementVisibility(By locator) {
-        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.visibilityOfElementLocated(locator));
+        MobileElement element = (MobileElement) getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public boolean isElementVisible(By locator) {
@@ -293,7 +310,7 @@ abstract public class PageBase {
      * @param accessibilityId
      */
     public void waitForElementsVisibility(String accessibilityId) {
-        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.visibilityOfAllElementsLocatedBy(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
+        getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
     }
 
     /**
@@ -302,7 +319,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementInvisibility(By locator) {
-        getFluentWait().until((Function<? super AppiumDriver, ? extends Object>) ExpectedConditions.invisibilityOfElementLocated(locator));
+        getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     /**
@@ -311,7 +328,7 @@ abstract public class PageBase {
      * @param accessibilityId
      */
     public void waitForElementClickeable(String accessibilityId) {
-        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.elementToBeClickable(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
+        getWait().until(ExpectedConditions.elementToBeClickable(MobileBy.ByAccessibilityId.AccessibilityId(accessibilityId)));
     }
 
     /**
@@ -320,7 +337,7 @@ abstract public class PageBase {
      * @param element
      */
     public void waitForElementClickeable(MobileElement element) {
-        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.elementToBeClickable(element));
+        getWait().until(ExpectedConditions.elementToBeClickable(element));
     }
 
     /**
@@ -329,7 +346,7 @@ abstract public class PageBase {
      * @param locator
      */
     public void waitForElementClickeable(By locator) {
-        getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.elementToBeClickable(locator));
+        getWait().until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     public void waitForElementEnabled(By locator) {
@@ -351,7 +368,8 @@ abstract public class PageBase {
         int y_start = (int) (size.height * 0.60);
         int y_end = (int) (size.height * 0.30);
         int x = size.width / 2;
-        driver.swipe(x, y_start, x, y_end, 4000);
+        //((AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
+        throw new UnsupportedOperationException("this is not supported yet, guys should implement swipe in java-client 7.0 for appium");
     }
 
     public void scroll(int timesToScroll) {
@@ -360,12 +378,13 @@ abstract public class PageBase {
             int y_start = (int) (size.height * 0.60);
             int y_end = (int) (size.height * 0.30);
             int x = size.width / 2;
-            driver.swipe(x, y_start, x, y_end, 4000);
+            //(AppiumDriver) driver).swipe(x, y_start, x, y_end, 4000);
+            throw new UnsupportedOperationException("this is not supported yet, guys should implement swipe in java-client 7.0 for appium");
         }
         sleep(1000);
     }
 
-    public void selectOptionSpinner(String option){
+    public void selectOptionSpinner(String option) {
         String uiSelector = "new UiSelector().textContains(\"" + option
                 + "\")";
 

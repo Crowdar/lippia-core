@@ -1,23 +1,24 @@
 package com.crowdar.bdd;
 
-import com.crowdar.core.PageSteps;
-import com.crowdar.core.PropertyManager;
-import com.google.common.collect.Lists;
-import org.jbehave.core.steps.InjectableStepsFactory;
-import org.jbehave.core.steps.InstanceStepsFactory;
-import org.openqa.selenium.WebDriver;
-import org.reflections.Reflections;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 
+import org.jbehave.core.steps.InjectableStepsFactory;
+import org.jbehave.core.steps.InstanceStepsFactory;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.reflections.Reflections;
+
+import com.crowdar.core.PageSteps;
+import com.crowdar.core.PropertyManager;
+import com.google.common.collect.Lists;
+
 public class GUIStories extends EmbedderBase {
 
-    private WebDriver driver;
+    private RemoteWebDriver driver;
 
-    public GUIStories(WebDriver driver) {
+    public GUIStories(RemoteWebDriver driver) {
         this.driver = driver;
     }
 
@@ -26,17 +27,15 @@ public class GUIStories extends EmbedderBase {
 
         List<PageSteps> pageStepsImplementations = Lists.newArrayList();
 
-
         Reflections reflections = new Reflections(PropertyManager.getProperty("stepsClass.location"));
 
         Set<Class<? extends PageSteps>> subTypes = reflections.getSubTypesOf(PageSteps.class);
-
 
         for (Class<? extends PageSteps> currentClass : subTypes) {
             Constructor<?> constructor = null;
 
             try {
-                constructor = currentClass.getDeclaredConstructor(WebDriver.class);// Gives constructor which takes in webDriver I assume
+                constructor = currentClass.getDeclaredConstructor(RemoteWebDriver.class);// Gives constructor which takes in webDriver I assume
                 pageStepsImplementations.add((PageSteps)constructor.newInstance(driver));
 
             } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -49,7 +48,7 @@ public class GUIStories extends EmbedderBase {
     }
 
 	@Override
-	protected WebDriver getDriver() {
+	protected RemoteWebDriver getDriver() {
 		return driver;
 	}
 }

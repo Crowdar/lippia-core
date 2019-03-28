@@ -1,17 +1,16 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.crowdar</groupId>
         <artifactId>Crowd-Root-Framework</artifactId>
-        <version>1.4</version>
+        <version>1.5</version>
     </parent>
     <groupId>com.crowdar</groupId>
     <artifactId>Crowd-Core-Framework</artifactId>
     <url>http://maven.apache.org</url>
     <packaging>jar</packaging>
     <name>CrowCoreFramework</name>
-    <version>1.4.2</version>
+    <version>1.5</version>
     
     <dependencies>
         <dependency>
@@ -28,7 +27,6 @@
             <url>http://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-public/</url>
         </repository>
     </repositories>
-    
     <distributionManagement>
 		<repository>
 			<id>crowdarNexus-releases</id>

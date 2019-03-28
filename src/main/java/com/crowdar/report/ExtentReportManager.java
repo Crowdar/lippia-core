@@ -10,7 +10,7 @@ import com.aventstack.extentreports.reporter.configuration.ChartLocation;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.crowdar.core.PropertyManager;
-import com.crowdar.web.WebDriverManager;
+import com.crowdar.driver.DriverManager;
 import com.aventstack.extentreports.gherkin.model.Feature;
 import com.aventstack.extentreports.gherkin.model.Scenario;
 import com.aventstack.extentreports.gherkin.model.ScenarioOutline;
@@ -228,7 +228,7 @@ public class ExtentReportManager {
         String screenShotOnSuccessStep = PropertyManager.getProperty("crowdar.extent.screenshotOnSuccess");
         if(screenShotOnSuccessStep != null && !screenShotOnSuccessStep.isEmpty()){
             try {
-                stepTest.get().addScreenCaptureFromPath(takeScreeshot());
+                stepTest.get().addScreenCaptureFromPath(takeScreenshot());
             }catch (IOException e){
                 logger4j.error(e.getStackTrace());
             }
@@ -243,7 +243,7 @@ public class ExtentReportManager {
             stepTest.get().fail(error.getMessage());
         }
         try {
-            stepTest.get().addScreenCaptureFromPath(takeScreeshot());
+            stepTest.get().addScreenCaptureFromPath(takeScreenshot());
         }catch (IOException e){
             logger4j.error(e.getStackTrace());
         }
@@ -282,10 +282,10 @@ public class ExtentReportManager {
         ExtentReportManager.stepTest.set(stepTest);
     }
 
-    private static String takeScreeshot()throws IOException{
+    private static String takeScreenshot()throws IOException{
         String fileLocation = "";
         String name = "";
-        final File screenshot = ((TakesScreenshot) WebDriverManager.getDriverInstance()).getScreenshotAs(OutputType.FILE);
+        final File screenshot = ((TakesScreenshot) DriverManager.getDriverInstance()).getScreenshotAs(OutputType.FILE);
         name = "screenshot".concat(Long.toString(System.currentTimeMillis()));
         fileLocation = reportPath.concat(File.separator).concat(name);
         FileUtils.copyFile(screenshot, new File(fileLocation));
