@@ -12,11 +12,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-
 import io.appium.java_client.MobileElement;
 import org.apache.commons.lang.RandomStringUtils;
-import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -89,23 +86,6 @@ public class Utils {
     }
     
     /**
-     * This function return a string based on the 'value' parameter changing '?' with a random character
-     * 
-     * @author Prosperi
-     * @param driver
-     * @param inputId
-     * @param valueToSet
-     */
-    public static String fillWithRandomChars(String value) {
-    	final String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    	Random r = new Random();
-    	String strAux = value;
-    	int countCh = strAux.replace('?', ' ').length();
-    	for(int xx=0;xx<countCh;xx++) {strAux = StringUtils.replaceOnce(strAux, '?', validChars.charAt(r.nextInt(validChars.length())));}
-    	return strAux;
-    }
-    
-        /**
      * 
      * @param element
      * @return the html of the element

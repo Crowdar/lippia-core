@@ -1,6 +1,5 @@
 package com.crowdar.email;
 
-import com.crowdar.report.ReportManager;
 import com.crowdar.core.PropertyManager;
 
 import javax.mail.Message;
@@ -49,7 +48,7 @@ public class EmailUtil {
 			
 			System.out.println("Recipients: " + message.getAllRecipients());
 
-			String reportLink = ReportManager.getPublicUrlReport();
+			String reportLink = System.getProperty("crowdar.email.report.public.url");
 			message.setText("Report link: \n" + reportLink, "UTF-8");
 			
 			Transport.send(message);
