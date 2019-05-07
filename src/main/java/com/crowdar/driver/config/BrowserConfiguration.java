@@ -91,20 +91,40 @@ public enum BrowserConfiguration implements AutomationConfiguration{
 
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
             capabilities.setBrowserName(capabilities.getBrowserName());
-            
-
             ChromeOptions options = new ChromeOptions();
             options.addArguments("disable-infobars");
             options.addArguments("--ignore-certificate-errors");
             options.addArguments("start-maximized");
-//			options.addArguments("screenshot");
-            
+            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+            return capabilities;
+        }
+    },
+    CHROME_HEADLESS {
+        @Override
+        public DriverManagerType getDriverManagerType() {
+            return DriverManagerType.CHROME;
+        }
+
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+
+            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+            capabilities.setBrowserName(capabilities.getBrowserName());
+
+
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("disable-infobars");
+            options.addArguments("--ignore-certificate-errors");
+            options.addArguments("--headless");
+            options.addArguments("start-maximized");
+			options.addArguments("screenshot");
+
             //options.addArguments("no-sandbox", "disable-gpu");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
     },
-    CHROMEEXTENCION {
+    CHROME_EXTENCION {
     	@Override
 		public DriverManagerType getDriverManagerType() {
 			return DriverManagerType.CHROME;

@@ -26,6 +26,45 @@ public enum ProjectTypeEnum {
 		}
 		
 	},
+	WEB_CHROME_EXTENCION {
+
+		@Override
+		public Class<? extends RemoteWebDriver> getDriverImplementation() {
+			return ChromeDriver.class;
+		}
+
+		@Override
+		public AutomationConfiguration getDriverConfig() {
+			return BrowserConfiguration.CHROME_EXTENCION;
+		}
+
+	},
+	WEB_CHROME_HEADLESS {
+
+		@Override
+		public Class<? extends RemoteWebDriver> getDriverImplementation() {
+			return ChromeDriver.class;
+		}
+
+		@Override
+		public AutomationConfiguration getDriverConfig() {
+			return BrowserConfiguration.CHROME_HEADLESS;
+		}
+
+	},
+	WEB_CHROME_CUSTOM {
+
+		@Override
+		public Class<? extends RemoteWebDriver> getDriverImplementation() {
+			return ChromeDriver.class;
+		}
+
+		@Override
+		public AutomationConfiguration getDriverConfig() {
+			return BrowserConfiguration.CUSTOM_CHROME;
+		}
+
+	},
 	WEB_IE {
 
 		@Override
