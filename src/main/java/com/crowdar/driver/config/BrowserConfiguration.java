@@ -117,9 +117,6 @@ public enum BrowserConfiguration implements AutomationConfiguration{
             options.addArguments("--ignore-certificate-errors");
             options.addArguments("--headless");
             options.addArguments("start-maximized");
-			options.addArguments("screenshot");
-
-            //options.addArguments("no-sandbox", "disable-gpu");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
             return capabilities;
         }
