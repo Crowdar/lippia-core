@@ -3,11 +3,11 @@ package com.crowdar.api.rest;
 import java.util.List;
 import java.util.Map;
 
-public class HTTPHeaders {
+public class Headers {
 
 	private Map<String, List<String>> headers;
 	
-	public HTTPHeaders(Map<String, List<String>> headers) {
+	public Headers(Map<String, List<String>> headers) {
 		this.headers = headers;
 	}
 

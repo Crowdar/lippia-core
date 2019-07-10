@@ -54,4 +54,16 @@ public class JsonUtils {
 		}
 		return json;
 	}
+
+
+	public static String prettyJsonToCompact(String prettyJson) {
+		JsonNode jsonNode = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			jsonNode = objectMapper.readValue(prettyJson, JsonNode.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonNode.toString();
+	}
 }

@@ -1,6 +1,5 @@
 package com.crowdar.api.rest;
 
-import com.crowdar.core.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -46,29 +45,29 @@ public class RestClient {
         return headers;
     }
 
-    public HTTPResponse get(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response get(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.GET);
     }
 
-    public HTTPResponse post(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response post(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.POST);
     }
 
-    public HTTPResponse patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PATCH);
     }
 
-    public HTTPResponse delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.DELETE);
     }
 
-    private HTTPResponse createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
+    private Response createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
         HttpEntity<String> request = this.createRequest(body, this.setHeaders(headers));
 
         ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
                 request, type);
-        HTTPHeaders responseHeaders = new HTTPHeaders(this.getHeaders(response.getHeaders()));
+        Headers responseHeaders = new Headers(this.getHeaders(response.getHeaders()));
         return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
     }
 
@@ -78,8 +77,8 @@ public class RestClient {
         return new HttpEntity<>(body, headers);
     }
 
-    private HTTPResponse createResponse(int statusCode, String message, Object response, HTTPHeaders headers) {
-        return new HTTPResponse(statusCode, message, response, headers);
+    private Response createResponse(int statusCode, String message, Object response, Headers headers) {
+        return new Response(statusCode, message, response, headers);
     }
 
     private Map<String, List<String>> getHeaders(HttpHeaders headers) {
