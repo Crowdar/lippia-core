@@ -1,14 +1,14 @@
 package com.crowdar.api.rest;
 
-public class HTTPResponse {
+public class Response {
 
 	private int statusCode;
 	private String message;
 	private Object response;
-	private HTTPHeaders headers;
+	private Headers headers;
 
 
-	public HTTPResponse(int statusCode, String message, Object response, HTTPHeaders headers) {
+	public Response(int statusCode, String message, Object response, Headers headers) {
 		this.statusCode = statusCode;
 		this.message = message;
 		this.response = response;
@@ -27,7 +27,7 @@ public class HTTPResponse {
 		return response;
 	}
 
-	public HTTPHeaders getHeader() {
+	public Headers getHeader() {
 		return this.headers;
 	}
 
