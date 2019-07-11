@@ -64,6 +64,7 @@ public class Request {
         this.body = body;
     }
 
+    //TODO: moderlo a JsonUtils y un nombre mas explicativo, por ej: convertObjectToJson
     private String convertToJson(Object jsonObject) {
         String json = JsonUtils.serialize(jsonObject);
         return json.substring(0, json.length() - 1).substring(1);
