@@ -1,7 +1,9 @@
 package com.crowdar.core;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.collect.Lists;
 
@@ -14,10 +16,11 @@ public class JsonUtils {
 
 	private static ObjectMapper mapper = new ObjectMapper();
 
-	public static <T> T deserialize(String json, Class<T> type) {
+
+	public static <T> List<T> deserialize(String json, Class<T> type) {
 		try {
 			TypeFactory typeFactory = mapper.getTypeFactory();
-			return mapper.readValue(json, typeFactory.constructType(type));
+			return (List)mapper.readValue(json, typeFactory.constructType(type));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
