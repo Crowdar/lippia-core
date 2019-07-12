@@ -33,6 +33,8 @@ abstract public class PageBase extends CucumberPageBase {
         super(driver);
     }
 
+    public PageBase(RemoteWebDriver driver){super(driver); }
+
     /**
      * Returns the mobile driver
      *

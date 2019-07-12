@@ -22,6 +22,24 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             return capabilities;
         }
     },
+    ANDROID_LOCAL {
+
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+
+            DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilities.setCapability("deviceName", PropertyManager.getProperty("crowdar.mobile.deviceName"));
+            capabilities.setCapability("noReset",true);
+            if(!PropertyManager.isPropertyPresentAndNotEmpty("crowdar.mobile.platformVersion")){
+                capabilities.setCapability("platformVersion", PropertyManager.getProperty("crowdar.mobile.platformVersion"));
+            }
+            capabilities.setCapability("appPackage",PropertyManager.getProperty("crowdar.mobile.appPackage"));
+            capabilities.setCapability("appActivity",PropertyManager.getProperty("crowdar.mobile.appActivity"));
+            capabilities.setCapability("autoGrantPermissions", true);
+            capabilities.setCapability("platformName","Android");
+            return capabilities;
+        }
+    },
     IOS {
         
         @Override
