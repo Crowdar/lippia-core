@@ -15,7 +15,7 @@ public class LocalMobileExecutionStrategy implements SetupStrategy{
 	public void beforeDriverStartSetup(AutomationConfiguration contextConfiguration) {
 		
 		switch ((MobilePlatformConfiguration)contextConfiguration) {
-			case ANDROID:
+			case ANDROID_CHROME:
 				System.setProperty("webdriver.gecko.driver", getWebDriverPath().concat("geckodriver.exe"));
 				break;
 			case IOS:

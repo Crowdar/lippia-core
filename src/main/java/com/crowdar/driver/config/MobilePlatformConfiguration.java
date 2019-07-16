@@ -6,7 +6,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 public enum MobilePlatformConfiguration implements AutomationConfiguration{
 
-    ANDROID {
+    ANDROID_APK {
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
@@ -21,8 +21,18 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("platformName","Android");
             return capabilities;
         }
-    },
-    ANDROID_LOCAL {
+    },ANDROID_CHROME {
+    	
+    	@Override
+    	public DesiredCapabilities getDesiredCapabilities() {
+    		
+    		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    		capabilities.setCapability("deviceName", PropertyManager.getProperty("crowdar.mobile.deviceName"));
+    		capabilities.setCapability("platformName","Android");
+    		return capabilities;
+    		}
+
+    },ANDROID_LOCAL {
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
@@ -39,8 +49,7 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("platformName","Android");
             return capabilities;
         }
-    },
-    IOS {
+    },IOS {
         
         @Override
         public DesiredCapabilities getDesiredCapabilities() {

@@ -80,7 +80,7 @@ public enum ProjectTypeEnum {
 	},
 	// WEB_SAFARI
 	// WEB_FIREFOX
-	MOBILE_ANDROID {
+	MOBILE_ANDROID_APK {
 
 		@Override
 		public Class<? extends RemoteWebDriver> getDriverImplementation() {
@@ -89,7 +89,20 @@ public enum ProjectTypeEnum {
 
 		@Override
 		public AutomationConfiguration getDriverConfig() {
-			return MobilePlatformConfiguration.ANDROID;
+			return MobilePlatformConfiguration.ANDROID_APK;
+		}
+
+	},
+	MOBILE_ANDROID_CHROME {
+
+		@Override
+		public Class<? extends RemoteWebDriver> getDriverImplementation() {
+			return AndroidDriver.class;
+		}
+
+		@Override
+		public AutomationConfiguration getDriverConfig() {
+			return MobilePlatformConfiguration.ANDROID_CHROME;
 		}
 
 	},
