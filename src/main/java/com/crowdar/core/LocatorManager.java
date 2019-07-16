@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class LocatorManager {
-	private static final String LOCATORS_PROPERTY_KEY = "crowdar.locatorsConfig";
+	private static final String LOCATORS_PROPERTY_KEY = "crowdar.locatorsProperties";
 	private static Properties properties;
 
 	private LocatorManager() {

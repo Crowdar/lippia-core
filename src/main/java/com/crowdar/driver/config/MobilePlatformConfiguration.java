@@ -2,6 +2,7 @@ package com.crowdar.driver.config;
 
 import com.crowdar.core.PropertyManager;
 
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 public enum MobilePlatformConfiguration implements AutomationConfiguration{
@@ -28,9 +29,10 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
     		
     		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
     		capabilities.setCapability("deviceName", PropertyManager.getProperty("crowdar.mobile.deviceName"));
-    		capabilities.setCapability("platformName","Android");
+            capabilities.setCapability("platformName", PropertyManager.getProperty("crowdar.platformName"));
+            capabilities.setVersion(PropertyManager.getProperty("crowdar.browserVersion"));
     		return capabilities;
-    		}
+    	}
 
     },ANDROID_LOCAL {
 
