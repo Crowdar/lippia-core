@@ -242,10 +242,12 @@ public class ExtentReportManager {
         }else{
             stepTest.get().fail(error.getMessage());
         }
-        try {
-            stepTest.get().addScreenCaptureFromPath(takeScreenshot());
-        }catch (IOException e){
-            logger4j.error(e.getStackTrace());
+        if(PropertyManager.getProperty("crowdar.api") == null && PropertyManager.getProperty("crowdar.api").isEmpty()){
+            try {
+                stepTest.get().addScreenCaptureFromPath(takeScreenshot());
+            }catch (IOException e){
+                logger4j.error(e.getStackTrace());
+            }
         }
     }
 

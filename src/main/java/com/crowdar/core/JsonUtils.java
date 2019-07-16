@@ -17,10 +17,10 @@ public class JsonUtils {
 	private static ObjectMapper mapper = new ObjectMapper();
 
 
-	public static <T> List<T> deserialize(String json, Class<T> type) {
+	public static <T> T deserialize(String json, Class<T> type) {
 		try {
 			TypeFactory typeFactory = mapper.getTypeFactory();
-			return (List)mapper.readValue(json, typeFactory.constructType(type));
+			return (T) mapper.readValue(json, typeFactory.constructType(type));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
