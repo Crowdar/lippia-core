@@ -14,30 +14,38 @@ public class MethodsService {
 
     public static <T> Response get(String jsonName, Class<T> classModel) {
         Request req = getRequest(jsonName);
-        Response resp = new RestClient().get(BASE_URL, classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = new RestClient().get(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response post(String jsonName, Class<T> classModel) {
         Request req = getRequest(jsonName);
-        Response resp = new RestClient().post(BASE_URL, classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = new RestClient().post(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response patch(String jsonName, Class<T> classModel) {
         Request req = getRequest(jsonName);
-        Response resp = new RestClient().patch(BASE_URL, classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = new RestClient().patch(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response delete(String jsonName, Class<T> classModel) {
         Request req = getRequest(jsonName);
-        Response resp = new RestClient().delete(BASE_URL, classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = new RestClient().delete(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
+    }
+
+    private static String getURL(Request req){
+        String url = req.getUrl();
+        if(url.isEmpty() || url == null){
+            url = BASE_URL;
+        }
+        return url;
     }
 
 }
