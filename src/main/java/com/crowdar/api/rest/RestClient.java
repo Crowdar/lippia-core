@@ -64,11 +64,17 @@ public class RestClient {
     private Response createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
         HttpEntity<String> request = this.createRequest(body, this.setHeaders(headers));
+        try {
+            ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
+                    request, type);
+            return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createHeaders(response.getHeaders()));
+        } catch (HttpServerErrorException e) {
+            return this.createResponse(e.getStatusCode().value(), "OK", e.getLocalizedMessage(), createHeaders(e.getResponseHeaders()));
+        }
+    }
 
-        ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod,
-                request, type);
-        Headers responseHeaders = new Headers(this.getHeaders(response.getHeaders()));
-        return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), responseHeaders);
+    private Headers createHeaders(HttpHeaders headers) {
+        return new Headers(this.getHeaders(headers));
     }
 
     private HttpEntity<String> createRequest(String body, HttpHeaders headers) {
@@ -110,31 +116,6 @@ public class RestClient {
             e.printStackTrace();
             return null;
         }
-    }
-
-
-    public void initWithKapschProxy() {
-        this.restTemplate = new RestTemplate();
-
-        final int proxyPortNum = 8080;
-        final String proxyHost = "148.198.148.50";
-        final String proxyUser = "KAPSCH\\spoleti";
-        final String proxyPassword = "Kapsch2018";
-
-        final CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(new AuthScope(proxyHost, proxyPortNum), new UsernamePasswordCredentials(proxyUser, proxyPassword));
-
-        final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-        clientBuilder.useSystemProperties();
-        clientBuilder.setProxy(new HttpHost(proxyHost, proxyPortNum));
-        clientBuilder.setDefaultCredentialsProvider(credsProvider);
-        clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
-        final CloseableHttpClient client = clientBuilder.build();
-
-        final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setHttpClient(client);
-
-        restTemplate.setRequestFactory(factory);
     }
 
 }
