@@ -42,7 +42,7 @@ public class MethodsService {
 
     private static String getURL(Request req){
         String url = req.getUrl();
-        if(url.isEmpty() || url == null){
+        if(url == null || url.isEmpty()){
             url = BASE_URL;
         }
         return url;
