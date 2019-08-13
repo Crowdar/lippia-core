@@ -21,7 +21,7 @@ node{
             mavenLocalRepo: '.repository') {
      
             // Run the maven deploy
-            sh "mvn deploy -DskipTests=true -e -U"
+            sh "mvn deploy -DskipTests=true -e"
      
         }
 
