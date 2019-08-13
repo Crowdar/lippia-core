@@ -1,11 +1,11 @@
 package com.crowdar.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -134,22 +134,22 @@ public class FileUtils {
 
     private static final String fileFormat = "files/%s.json";
 
-    public static void jsonWriter(List<Object> objects, String fileName) {
-        try {
-            JsonGenerator jGenerator = new JsonFactory().createJsonGenerator(new File(
-                    String.format(fileFormat, fileName)), JsonEncoding.UTF8);
-            jGenerator.setCodec(new ObjectMapper());
-            jGenerator.writeStartArray();
-            for (Object o : objects) {
-                jGenerator.writeObject(o);
-                jGenerator.writeRaw("\n");
-            }
-            jGenerator.writeEndArray();
-            jGenerator.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void jsonWriter(List<Object> objects, String fileName) {
+//        try {
+//            JsonGenerator jGenerator = new JsonFactory().createJsonGenerator(new File(
+//                    String.format(fileFormat, fileName)), JsonEncoding.UTF8);
+//            jGenerator.setCodec(new ObjectMapper());
+//            jGenerator.writeStartArray();
+//            for (Object o : objects) {
+//                jGenerator.writeObject(o);
+//                jGenerator.writeRaw("\n");
+//            }
+//            jGenerator.writeEndArray();
+//            jGenerator.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static List<Object> jsonReader(String fileName) {
         try {
@@ -181,7 +181,7 @@ public class FileUtils {
                 .stream().map(Object::toString)
                 .collect(Collectors.toCollection(LinkedList::new));
         String value = queue.remove();
-        jsonWriter(new ArrayList<>(queue), fileName);
+//        jsonWriter(new ArrayList<>(queue), fileName);
         return value;
     }
 }
