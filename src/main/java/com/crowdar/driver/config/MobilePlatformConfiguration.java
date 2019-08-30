@@ -19,6 +19,10 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("app",PropertyManager.getProperty("crowdar.mobile.apk.path"));
             capabilities.setCapability("autoGrantPermissions", true);
             capabilities.setCapability("platformName","Android");
+            
+            capabilities.setCapability("newCommandTimeout","60");
+            capabilities.setCapability("unicodeKeyboard", true);
+            capabilities.setCapability("resetKeyboard", true);
             return capabilities;
         }
     },
@@ -37,6 +41,10 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("appActivity",PropertyManager.getProperty("crowdar.mobile.appActivity"));
             capabilities.setCapability("autoGrantPermissions", true);
             capabilities.setCapability("platformName","Android");
+            
+            capabilities.setCapability("newCommandTimeout","60");
+            capabilities.setCapability("unicodeKeyboard", true);
+            capabilities.setCapability("resetKeyboard", true);
             return capabilities;
         }
     },
