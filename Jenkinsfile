@@ -21,7 +21,7 @@ node{
             mavenLocalRepo: '.repository') {
      
             // Run the maven deploy
-            sh "mvn clean deploy -DskipTests=true -e -U"
+            sh "mvn dependency:purge-local-repository clean deploy -DskipTests=true -e -U"
      
         }
 
