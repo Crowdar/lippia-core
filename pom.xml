@@ -1,14 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.crowdar</groupId>
-    <artifactId>Crowd-Core-Framework</artifactId>
+    <groupId>com.crowdar.lippia</groupId>
+    <artifactId>root</artifactId>
     <url>http://maven.apache.org</url>
     <packaging>pom</packaging>
-    <name>CrowCoreFramework</name>
+    <name>root</name>
     <version>1.6.5</version>
-    
     <properties>
-        <powermock.version>2.0.2</powermock.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <minimum.maven.version>3.3</minimum.maven.version>
@@ -30,7 +28,7 @@
         <reportDirectory>target/surefire-reports</reportDirectory>
         <picocontainer.version>2.15</picocontainer.version>
         <tag-expressions.version>1.1.1</tag-expressions.version>
-        <selenium.version>3.141.59</selenium.version>
+		<selenium.version>3.141.59</selenium.version>
         <java.version>1.8</java.version>
         <kotlin.version>1.2.41</kotlin.version>
         <crowd.project.name>CroudProjectNameDefault</crowd.project.name>
@@ -39,9 +37,15 @@
         <spring-framework.version>4.3.8.RELEASE</spring-framework.version>
         <jira.client.version>4.0.0</jira.client.version>
     </properties>
-    <dependencies>
 
-        <!-- Cucumber  -->
+    <modules>
+    	<module>core</module>
+    </modules>
+
+
+    <dependencies>
+            
+           <!-- Cucumber  -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>gherkin</artifactId>
@@ -99,98 +103,98 @@
             <version>${cucumber.version}</version>
         </dependency>
 
-        <!-- TestNg -->
+            <!-- TestNg -->
 
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-        </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+            </dependency>
         <!-- picocontainer -->
-        <dependency>
-            <groupId>picocontainer</groupId>
-            <artifactId>picocontainer</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <!-- Guice -->
-        <!-- Reflections -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
-        </dependency>
+            <dependency>
+                <groupId>picocontainer</groupId>
+                <artifactId>picocontainer</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <!-- Guice -->
+            <!-- Reflections -->
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.10</version>
+            </dependency>
 
-        <!-- ENCRYPTION -->
+            <!-- ENCRYPTION -->
 
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
-            <version>1.9.0</version>
-        </dependency>
+            <dependency>
+                <groupId>org.jasypt</groupId>
+                <artifactId>jasypt</artifactId>
+                <version>1.9.0</version>
+            </dependency>
 
-        <!-- JAVA MAIL -->
+            <!-- JAVA MAIL -->
 
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
-        </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>1.6.2</version>
+            </dependency>
 
-        <!-- PDF box -->
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>2.0.13</version>
-        </dependency>
+			<!-- PDF box -->
+			<dependency>
+				<groupId>org.apache.pdfbox</groupId>
+				<artifactId>pdfbox</artifactId>
+				<version>2.0.13</version>
+			</dependency>
 
-        <!-- EXTENT REPORT -->
+            <!-- EXTENT REPORT -->
 
-        <dependency>
-            <groupId>com.aventstack</groupId>
-            <artifactId>extentreports</artifactId>
-            <version>3.1.5</version>
-            <scope>provided</scope>
-        </dependency>
+            <dependency>
+                <groupId>com.aventstack</groupId>
+                <artifactId>extentreports</artifactId>
+                <version>3.1.5</version>
+                <scope>provided</scope>
+            </dependency>
 
-        <dependency>
-            <groupId>com.relevantcodes</groupId>
-            <artifactId>extentreports</artifactId>
-            <version>2.41.2</version>
-        </dependency>
+            <dependency>
+                <groupId>com.relevantcodes</groupId>
+                <artifactId>extentreports</artifactId>
+                <version>2.41.2</version>
+            </dependency>
 
-        <!-- REPORTNG -->
+            <!-- REPORTNG -->
 
-        <dependency>
-            <groupId>org.uncommons</groupId>
-            <artifactId>reportng</artifactId>
-            <version>1.1.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.testng</groupId>
-                    <artifactId>testng</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+            <dependency>
+                <groupId>org.uncommons</groupId>
+                <artifactId>reportng</artifactId>
+                <version>1.1.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.testng</groupId>
+                        <artifactId>testng</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
-        <!-- APACHE COMMONS -->
+            <!-- APACHE COMMONS -->
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-            <version>1.10</version>
-        </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>1.10</version>
+            </dependency>
 
-        <!-- Log4J -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
+            <!-- Log4J -->
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
 
 
 
@@ -276,232 +280,160 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>htmlunit-driver</artifactId>
-            <version>${htmlunit.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>htmlunit-driver</artifactId>
+                <version>${htmlunit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
-        <dependency>
-            <groupId>ru.stqa.selenium</groupId>
-            <artifactId>webdriver-factory</artifactId>
-            <version>4.2</version>
-        </dependency>
+            <dependency>
+                <groupId>ru.stqa.selenium</groupId>
+                <artifactId>webdriver-factory</artifactId>
+                <version>4.2</version>
+            </dependency>
 
-        <dependency>
-            <groupId>com.paulhammant</groupId>
-            <artifactId>ngwebdriver</artifactId>
-            <version>1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-java</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+            <dependency>
+                <groupId>com.paulhammant</groupId>
+                <artifactId>ngwebdriver</artifactId>
+                <version>1.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-java</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
 
 
-        <!-- serialization dependencies -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.9.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.9.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring-framework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${spring-framework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring-framework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring-framework.version}</version>
-        </dependency>
+            <!-- serialization dependencies -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.9.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.9.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.9.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-framework.version}</version>
+            </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.json/json -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180130</version>
-        </dependency>
+            <!-- https://mvnrepository.com/artifact/org.json/json -->
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20180130</version>
+            </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.5</version>
-        </dependency>
+            <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.9.5</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.5</version>
-        </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.5</version>
+            </dependency>           
 
-        <!--jira zapi -->
-        <dependency>
-            <groupId>com.atlassian.jira</groupId>
-            <artifactId>jira-rest-java-client-core</artifactId>
-            <version>5.0.4</version>
-        </dependency>
+            <!-- APPIUM -->
 
-        <dependency>
-            <groupId>com.atlassian.fugue</groupId>
-            <artifactId>fugue</artifactId>
-            <version>2.7.0</version>
-        </dependency>
+            <dependency>
+                <groupId>io.appium</groupId>
+                <artifactId>java-client</artifactId>
+                <version>7.0.0</version>
+            </dependency>
+          
+            <!--WebDriverManager -->
+            <dependency>
+                <groupId>io.github.bonigarcia</groupId>
+                <artifactId>webdrivermanager</artifactId>
+                <version>3.6.1</version>
+            </dependency>
 
-        <dependency>
-            <groupId>com.atlassian.connect</groupId>
-            <artifactId>ac-play-java_2.10</artifactId>
-            <version>0.10.1</version>
-        </dependency>
-
-        <!-- APPIUM -->
-
-        <dependency>
-            <groupId>io.appium</groupId>
-            <artifactId>java-client</artifactId>
-            <version>7.0.0</version>
-        </dependency>
-
-        <!--WebDriverManager -->
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>3.6.1</version>
-        </dependency>
-
-        <!--proxy -->
-        <dependency>
-            <groupId>net.lightbody.bmp</groupId>
-            <artifactId>browsermob-core</artifactId>
-            <version>2.1.5</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- FIREBASE -->
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>27.0-jre</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>5.9.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.firebase</groupId>
-            <artifactId>firebase-client-android</artifactId>
-            <version>[2.5.2,)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>2.3.23</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-            <version>4.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>1.4.01</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.lightbody.bmp</groupId>
-            <artifactId>browsermob-core</artifactId>
-            <version>2.1.5</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.28.2</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-testng</artifactId>
-                <version>${powermock.version}</version>
+            <!--proxy -->
+            <dependency>
+                <groupId>net.lightbody.bmp</groupId>
+                <artifactId>browsermob-core</artifactId>
+                <version>2.1.5</version>
                 <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
+            </dependency>
+            
+            <!-- FIREBASE -->
 
-        </dependency>
-        <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito2</artifactId>
-                <version>${powermock.version}</version>
-                <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>4.0.2</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>27.0-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.firebase</groupId>
+                <artifactId>firebase-admin</artifactId>
+                <version>5.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.firebase</groupId>
+                <artifactId>firebase-client-android</artifactId>
+                <version>[2.5.2,)</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.23</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>4.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>1.4.01</version>
+            </dependency>
+                        
     </dependencies>
 
+
     <build>
-        <filters>
+        <filters>            
             <filter>src/main/resources/config.properties</filter>
         </filters>
         <resources>
@@ -559,31 +491,11 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>crowdarRepo</id>
-            <name>crowdar-repository</name>
-            <url>http://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>atlassian-public</id>
-            <url>https://maven.atlassian.com/repository/public</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
-    <distributionManagement>
+   <distributionManagement>
 		<repository>
 			<id>crowdarNexus-releases</id>
 			<url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-releases/</url>
 		</repository>
 	</distributionManagement>
-
+   
 </project>
