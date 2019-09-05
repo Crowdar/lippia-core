@@ -21,7 +21,7 @@ node{
             mavenLocalRepo: '.repository') {
      
             // Run the maven deploy
-            sh "mvn clean deploy"
+            sh "mvn clean deploy -DskipTests"
      
         }
 
