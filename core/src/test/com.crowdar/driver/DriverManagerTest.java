@@ -3,6 +3,7 @@ package com.crowdar.driver;
 
 
 import com.crowdar.core.PropertyManager;
+import org.easymock.EasyMock;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 
 @PrepareForTest(PropertyManager.class)
-@PowerMockIgnore({"javax.net.ssl.*","org.w3c.*", "javax.xml.*","org.xml.*", "org.apache.*"})
+@PowerMockIgnore("javax.net.ssl.*")
 public class DriverManagerTest extends PowerMockTestCase {
 
     @ObjectFactory
@@ -25,14 +26,19 @@ public class DriverManagerTest extends PowerMockTestCase {
     }
 
     @Test
-    public void verifyCHROMEDYNAMICWeb_Chrome()
+    public void WebConfiguration()
     {
+
         PowerMockito.mockStatic(PropertyManager.class);
         when(PropertyManager.getProperty("crowdar.cucumber.browser")).thenReturn("CHROMEDYNAMIC");
         when(PropertyManager.getProperty("crowdar.projectType")).thenReturn("WEB_CHROME");
         when(PropertyManager.getProperty("crowdar.setupStrategy")).thenReturn("web.DownloadLatestStrategy");
+
+
         RemoteWebDriver remoteWebDriver = DriverManager.getDriverInstance();
         Assert.notNull(remoteWebDriver, "Error creating Dynamic web Driver in DriverManager");
+
+
     }
 
 }
