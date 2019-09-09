@@ -64,6 +64,7 @@ atlassian-ide-plugin.xml
 .idea/replstate.xml
 
 target/
+
 core/.classpath
 .project
 core/.settings
