@@ -2,11 +2,12 @@ package com.crowdar.driver.config;
 
 import com.crowdar.core.PropertyManager;
 
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 public enum MobilePlatformConfiguration implements AutomationConfiguration{
 
-    ANDROID {
+    ANDROID_APK {
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
@@ -25,8 +26,19 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("resetKeyboard", true);
             return capabilities;
         }
-    },
-    ANDROID_LOCAL {
+    },ANDROID_CHROME {
+    	
+    	@Override
+    	public DesiredCapabilities getDesiredCapabilities() {
+    		
+    		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    		capabilities.setCapability("deviceName", PropertyManager.getProperty("crowdar.mobile.deviceName"));
+            capabilities.setCapability("platformName", PropertyManager.getProperty("crowdar.platformName"));
+            capabilities.setVersion(PropertyManager.getProperty("crowdar.browserVersion"));
+    		return capabilities;
+    	}
+
+    },ANDROID_LOCAL {
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
@@ -47,8 +59,7 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
             capabilities.setCapability("resetKeyboard", true);
             return capabilities;
         }
-    },
-    IOS {
+    },IOS {
         
         @Override
         public DesiredCapabilities getDesiredCapabilities() {

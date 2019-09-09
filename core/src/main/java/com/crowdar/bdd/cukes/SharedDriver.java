@@ -33,7 +33,7 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
 public class SharedDriver extends EventFiringWebDriver {
 
     static {
-        WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
+        //WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.cucumber.browser")));
         //REAL_DRIVER = WebDriverManager.getDriverInstance();
     }
 

@@ -91,6 +91,8 @@ public enum BrowserConfiguration implements AutomationConfiguration{
 
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
             capabilities.setBrowserName(capabilities.getBrowserName());
+            capabilities.setCapability("platformName", PropertyManager.getProperty("crowdar.platformName"));
+            capabilities.setVersion(PropertyManager.getProperty("crowdar.browserVersion"));
             ChromeOptions options = new ChromeOptions();
             options.addArguments("disable-infobars");
             options.addArguments("--ignore-certificate-errors");
