@@ -150,7 +150,7 @@ public class Utils {
          System.out.println("Deletion successful.");
      }
 
-    public static boolean isTextFieldEmpty(MobileElement element, String placeholder){
+    public static boolean isTextFieldEmpty(WebElement element, String placeholder){
         return element.getText().equals(placeholder);
     }
     

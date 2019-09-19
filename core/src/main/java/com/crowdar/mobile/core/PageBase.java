@@ -3,21 +3,29 @@ package com.crowdar.mobile.core;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import com.crowdar.bdd.cukes.SharedDriver;
-import com.crowdar.core.CucumberPageBase;
-import io.appium.java_client.*;
-import io.appium.java_client.touch.offset.PointOption;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.crowdar.bdd.cukes.SharedDriver;
 import com.crowdar.core.Constants;
+import com.crowdar.core.CucumberPageBase;
 import com.crowdar.core.Utils;
 
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.PerformsTouchActions;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidKeyCode;
+import io.appium.java_client.touch.offset.PointOption;
 
 /**
  * This class represents the things in common between the other classes of
@@ -25,7 +33,7 @@ import io.appium.java_client.android.AndroidKeyCode;
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBase extends CucumberPageBase {
+abstract public class PageBase extends CucumberPageBase  {
 
     protected RemoteWebDriver driver;
 
@@ -59,8 +67,8 @@ abstract public class PageBase extends CucumberPageBase {
      * @param locator of the element
      * @return mobile element
      */
-    public MobileElement getMobileElement(By locator) {
-        return (MobileElement) getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.presenceOfElementLocated(locator));
+    public WebElement getMobileElement(By locator) {
+        return (WebElement) getWait().until((Function<? super WebDriver, ? extends Object>) ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     /**
@@ -71,7 +79,7 @@ abstract public class PageBase extends CucumberPageBase {
     public void clickElement(By locator) {
         // this.scrollToElement(locator);
         this.waitForElementClickeable(locator);
-        MobileElement element = getMobileElement(locator);
+        WebElement element = getMobileElement(locator);
         this.clickElement(element);
     }
 
@@ -92,7 +100,7 @@ abstract public class PageBase extends CucumberPageBase {
      *
      * @param element to be clicked
      */
-    public void clickElement(MobileElement element) {
+    public void clickElement(WebElement element) {
         element.click();
     }
 
@@ -115,7 +123,7 @@ abstract public class PageBase extends CucumberPageBase {
      * @param value   to write in the field
      */
     public void completeField(By locator, String value) {
-        MobileElement element = getMobileElement(locator);
+        WebElement element = getMobileElement(locator);
         this.completeField(element, value);
     }
 
@@ -150,7 +158,7 @@ abstract public class PageBase extends CucumberPageBase {
      */
     public void completeField(By locator, String value, String placeholder) {
         //this.scrollToElement(locator);
-        MobileElement element = getMobileElement(locator);
+        WebElement element = getMobileElement(locator);
         this.completeField(element, value, placeholder);
     }
 
@@ -161,7 +169,7 @@ abstract public class PageBase extends CucumberPageBase {
      * @param element to be completed
      * @param value   to write in the field
      */
-    public void completeField(MobileElement element, String value) {
+    public void completeField(WebElement element, String value) {
         if (!element.getText().isEmpty()) {
             element.clear();
         }
@@ -171,12 +179,12 @@ abstract public class PageBase extends CucumberPageBase {
     }
 
     public void completeFieldWithoutClear(By locator, String value) {
-        MobileElement element = getMobileElement(locator);
+        WebElement element = getMobileElement(locator);
         this.completeFieldWithoutClear(element, value);
     }
 
-    public void completeFieldWithoutClear(MobileElement element, String value) {
-        element.setValue(value);
+    public void completeFieldWithoutClear(WebElement element, String value) {
+        element.sendKeys(value);
         ((AppiumDriver) driver).hideKeyboard();
     }
 
@@ -188,11 +196,11 @@ abstract public class PageBase extends CucumberPageBase {
      * @param value       to write in the field
      * @param placeholder
      */
-    public void completeField(MobileElement element, String value, String placeholder) {
+    public void completeField(WebElement element, String value, String placeholder) {
         if (!Utils.isTextFieldEmpty(element, placeholder)) {
             element.clear();
         }
-        element.setValue(value);
+        ((MobileElement)element).setValue(value);
         ((AppiumDriver) driver).hideKeyboard();
     }
 
@@ -203,7 +211,7 @@ abstract public class PageBase extends CucumberPageBase {
      * @throws RuntimeException if checkbox is not enabled to be operated
      */
     public void selectCheckbox(String accessibilityId) {
-        MobileElement checkbox = (MobileElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
+        WebElement checkbox = (WebElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
         if (checkbox.isEnabled()) {
             if (!checkbox.isSelected()) {
                 checkbox.click();
@@ -220,7 +228,7 @@ abstract public class PageBase extends CucumberPageBase {
      * @throws RuntimeException if checkbox is not enabled to be operated
      */
     public void deselectCheckbox(String accessibilityId) {
-        MobileElement checkbox = (MobileElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
+        WebElement checkbox = (WebElement) ((AppiumDriver) driver).findElementByAccessibilityId(accessibilityId);
         if (checkbox.isEnabled()) {
             if (checkbox.isSelected()) {
                 checkbox.click();
@@ -258,7 +266,7 @@ abstract public class PageBase extends CucumberPageBase {
     public boolean isElementPresent(By locator) {
         driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         try {
-            MobileElement element = (MobileElement) getDriver().findElement(locator);
+            WebElement element = (WebElement) getDriver().findElement(locator);
             return true;
         } catch (NoSuchElementException e) {
             System.out.println(e.getMessage());
@@ -294,7 +302,7 @@ abstract public class PageBase extends CucumberPageBase {
      * @param locator
      */
     public void waitForElementVisibility(By locator) {
-        MobileElement element = (MobileElement) getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+        WebElement element = (WebElement) getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public boolean isElementVisible(By locator) {
@@ -338,7 +346,7 @@ abstract public class PageBase extends CucumberPageBase {
      *
      * @param element
      */
-    public void waitForElementClickeable(MobileElement element) {
+    public void waitForElementClickeable(WebElement element) {
         getWait().until(ExpectedConditions.elementToBeClickable(element));
     }
 
@@ -352,7 +360,7 @@ abstract public class PageBase extends CucumberPageBase {
     }
 
     public void waitForElementEnabled(By locator) {
-        MobileElement element = getMobileElement(locator);
+        WebElement element = getMobileElement(locator);
         boolean isEnabled = element.isEnabled();
         int interval = 0;
         while (!isEnabled) {
@@ -393,7 +401,7 @@ abstract public class PageBase extends CucumberPageBase {
         String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
                 + uiSelector + ");";
 
-        MobileElement element = (MobileElement) driver.findElement(MobileBy.AndroidUIAutomator(command));
+        WebElement element = (WebElement) driver.findElement(MobileBy.AndroidUIAutomator(command));
 
         this.clickElement(element);
     }
