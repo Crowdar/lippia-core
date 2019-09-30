@@ -13,139 +13,142 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
 public enum ProjectTypeEnum {
-	WEB_CHROME {
+    WEB_CHROME {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return ChromeDriver.class;
+        }
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return ChromeDriver.class;
-		}
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.CHROME;
+        }
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return BrowserConfiguration.CHROME;
-		}
-		
-	},
-	WEB_CHROME_EXTENCION {
+    },
+    WEB_CHROME_EXTENCION {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return ChromeDriver.class;
+        }
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return ChromeDriver.class;
-		}
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.CHROME_EXTENCION;
+        }
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return BrowserConfiguration.CHROME_EXTENCION;
-		}
+    },
+    WEB_CHROME_HEADLESS {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return ChromeDriver.class;
+        }
 
-	},
-	WEB_CHROME_HEADLESS {
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.CHROME_HEADLESS;
+        }
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return ChromeDriver.class;
-		}
+    },
+    WEB_CHROME_CUSTOM {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return ChromeDriver.class;
+        }
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return BrowserConfiguration.CHROME_HEADLESS;
-		}
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.CUSTOM_CHROME;
+        }
 
-	},
-	WEB_CHROME_CUSTOM {
+    },
+    WEB_IE {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return InternetExplorerDriver.class;
+        }
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return ChromeDriver.class;
-		}
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.IE;
+        }
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return BrowserConfiguration.CUSTOM_CHROME;
-		}
+    },
+    // WEB_SAFARI
+    // WEB_FIREFOX
+    MOBILE_ANDROID_APK {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return AndroidDriver.class;
+        }
 
-	},
-	WEB_IE {
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return MobilePlatformConfiguration.ANDROID_APK;
+        }
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return InternetExplorerDriver.class;
-		}
+    },
+    MOBILE_ANDROID_LOCAL {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return AndroidDriver.class;
+        }
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return BrowserConfiguration.IE;
-		}
-		
-	},
-	// WEB_SAFARI
-	// WEB_FIREFOX
-	MOBILE_ANDROID_APK {
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return MobilePlatformConfiguration.ANDROID_LOCAL;
+        }
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return AndroidDriver.class;
-		}
+    },
+    MOBILE_ANDROID_CHROME {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return AndroidDriver.class;
+        }
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return MobilePlatformConfiguration.ANDROID_APK;
-		}
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return MobilePlatformConfiguration.ANDROID_CHROME;
+        }
 
-	},
-	MOBILE_ANDROID_CHROME {
+    },
+    MOBILE_IOS {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return IOSDriver.class;
+        }
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return AndroidDriver.class;
-		}
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return MobilePlatformConfiguration.IOS;
+        }
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return MobilePlatformConfiguration.ANDROID_CHROME;
-		}
+    },
+    // MOBILE_CHROME
 
-	},
-	MOBILE_IOS {
-		
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return IOSDriver.class;
-		}
-		
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return MobilePlatformConfiguration.IOS;
-		}
-		
-	},
-	// MOBILE_CHROME
+    WIN32 {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return null;
+        }
 
-	WIN32 {
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return null;
+        }
+    };
 
-		@Override
-		public Class<? extends RemoteWebDriver> getDriverImplementation() {
-			return null;
-		}
+    public abstract Class<? extends RemoteWebDriver> getDriverImplementation();
 
-		@Override
-		public AutomationConfiguration getDriverConfig() {
-			return null;
-		}
-	};
+    public abstract AutomationConfiguration getDriverConfig();
 
-	public abstract Class<? extends RemoteWebDriver> getDriverImplementation();
 
-	public abstract AutomationConfiguration getDriverConfig();
+    public static ProjectTypeEnum get(String key) {
+        try {
+            return Enum.valueOf(ProjectTypeEnum.class, key);
 
-	
-	public static ProjectTypeEnum get(String key) {
-		try {          
-	         return Enum.valueOf(ProjectTypeEnum.class, key);
-
-		} catch (IllegalArgumentException e) {
-	         throw new RuntimeException("Invalid value for enum ProjectTypeEnum : " + key);
-	      }
-	}
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid value for enum ProjectTypeEnum : " + key);
+        }
+    }
 
 }

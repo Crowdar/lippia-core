@@ -50,6 +50,7 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration{
                 capabilities.setCapability("platformVersion", PropertyManager.getProperty("crowdar.mobile.platformVersion"));
             }
             capabilities.setCapability("appPackage",PropertyManager.getProperty("crowdar.mobile.appPackage"));
+            capabilities.setCapability("app",PropertyManager.getProperty("crowdar.mobile.apk.path"));
             capabilities.setCapability("appActivity",PropertyManager.getProperty("crowdar.mobile.appActivity"));
             capabilities.setCapability("autoGrantPermissions", true);
             capabilities.setCapability("platformName","Android");
