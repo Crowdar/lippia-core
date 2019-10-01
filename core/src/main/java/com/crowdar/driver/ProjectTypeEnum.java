@@ -87,18 +87,6 @@ public enum ProjectTypeEnum {
         }
 
     },
-    MOBILE_ANDROID_LOCAL {
-        @Override
-        public Class<? extends RemoteWebDriver> getDriverImplementation() {
-            return AndroidDriver.class;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return MobilePlatformConfiguration.ANDROID_LOCAL;
-        }
-
-    },
     MOBILE_ANDROID_CHROME {
         @Override
         public Class<? extends RemoteWebDriver> getDriverImplementation() {
