@@ -8,7 +8,6 @@ import com.crowdar.driver.config.AutomationConfiguration;
 import com.crowdar.driver.config.BrowserConfiguration;
 import com.crowdar.driver.config.MobilePlatformConfiguration;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 

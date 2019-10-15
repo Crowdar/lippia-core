@@ -2,7 +2,6 @@ package com.crowdar.driver.config;
 
 import com.crowdar.core.PropertyManager;
 
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 public enum MobilePlatformConfiguration implements AutomationConfiguration {
