@@ -24,7 +24,8 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.PerformsTouchActions;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidKeyCode;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.touch.offset.PointOption;
 
 /**
@@ -49,7 +50,7 @@ abstract public class PageBase extends CucumberPageBase  {
      * @return mobile driver
      */
     public RemoteWebDriver getDriver() {
-        return driver;
+        return super.getDriver();
     }
 
     /**
@@ -142,7 +143,7 @@ abstract public class PageBase extends CucumberPageBase  {
         driver.getKeyboard().sendKeys(value);
 
         if (driver.getCapabilities().getPlatform().is(Platform.ANDROID)) {
-            ((AndroidDriver) driver).pressKeyCode(AndroidKeyCode.ENTER);
+            ((AndroidDriver) driver).pressKey(new KeyEvent(AndroidKey.ENTER));
         }
         sleep(1000);
     }

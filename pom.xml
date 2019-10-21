@@ -5,7 +5,7 @@
     <url>http://maven.apache.org</url>
     <packaging>pom</packaging>
     <name>root</name>
-    <version>1.6.7</version>
+    <version>1.6.8</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -374,7 +374,7 @@
             <dependency>
                 <groupId>io.appium</groupId>
                 <artifactId>java-client</artifactId>
-                <version>7.0.0</version>
+                <version>7.2.0</version>
             </dependency>
           
             <!--WebDriverManager -->

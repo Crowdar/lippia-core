@@ -20,8 +20,13 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration {
             capabilities.setCapability("app", PropertyManager.getProperty("crowdar.mobile.apk.path"));
             capabilities.setCapability("autoGrantPermissions", true);
             capabilities.setCapability("platformName", "Android");
+            capabilities.setCapability("platformVersion", PropertyManager.getProperty("crowdar.mobile.platformVersion"));
 
-            capabilities.setCapability("newCommandTimeout", "60");
+//            if (!PropertyManager.getProperty("crowdar.mobile.appium.newCommandTimeout").isEmpty()) {
+//            }
+            capabilities.setCapability("newCommandTimeout", Integer.parseInt(PropertyManager.getProperty("crowdar.mobile.appium.newCommandTimeout")));
+            capabilities.setCapability("automationName",PropertyManager.getProperty("crowdar.mobile.automationName"));
+            
             capabilities.setCapability("unicodeKeyboard", true);
             capabilities.setCapability("resetKeyboard", true);
             return capabilities;
