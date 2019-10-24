@@ -91,6 +91,16 @@ public class MethodsServiceTest {
 						request.getHeaders().toString()
 				)
 		).thenReturn(response);
+		
+		Mockito.when(
+				restClient.put(
+						"http://test.test", 
+						Response.class, 
+						request.getBody().toString(), 
+						request.getUrlParameters(), 
+						request.getHeaders().toString()
+				)
+		).thenReturn(response);
     }
 	
     @Test
@@ -137,6 +147,19 @@ public class MethodsServiceTest {
 	public void whenCallSomeApiWithDeleteMethod() throws Exception{
 		Response responseFromStaticMethod = MethodsService.delete(jsonRequest, Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).delete(
+				"http://test.test", 
+				Response.class, 
+				request.getBody().toString(), 
+				request.getUrlParameters(), 
+				request.getHeaders().toString());
+		Assert.assertTrue(response.equals(responseFromStaticMethod));
+		Assert.assertTrue(APIManager.getLastResponse().equals(response));
+	}
+    
+    @Test
+	public void whenCallSomeApiWithPutMethod() throws Exception{
+		Response responseFromStaticMethod = MethodsService.put(jsonRequest, Response.class);
+		Mockito.verify(restClient, Mockito.times(1)).put(
 				"http://test.test", 
 				Response.class, 
 				request.getBody().toString(), 
