@@ -1,9 +1,6 @@
 package com.crowdar.bdd.cukes;
 
-import com.crowdar.core.PropertyManager;
 import com.crowdar.driver.DriverManager;
-import com.crowdar.web.BrowserConfiguration;
-import com.crowdar.web.WebDriverManager;
 import cucumber.api.Scenario;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriverException;

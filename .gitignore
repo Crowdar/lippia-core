@@ -65,6 +65,9 @@ atlassian-ide-plugin.xml
 
 target/
 
+build/
+.gradle/
+gradle/
 core/.classpath
 .project
 core/.settings

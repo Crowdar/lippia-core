@@ -2,11 +2,9 @@ package com.crowdar.driver.setupStrategy.mobile;
 
 import java.io.File;
 
-import com.crowdar.driver.config.MobilePlatformConfiguration;
-import org.apache.log4j.Logger;
-
 import com.crowdar.driver.config.AutomationConfiguration;
-import com.crowdar.driver.config.BrowserConfiguration;
+import com.crowdar.driver.config.MobilePlatformConfiguration;
+
 import com.crowdar.driver.setupStrategy.SetupStrategy;
 
 public class LocalMobileExecutionStrategy implements SetupStrategy{

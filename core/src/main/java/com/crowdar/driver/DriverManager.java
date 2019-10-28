@@ -3,8 +3,6 @@ package com.crowdar.driver;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.util.HashMap;
-
 public class DriverManager {
 
     private DriverManager() {

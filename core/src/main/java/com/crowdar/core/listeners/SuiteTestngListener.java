@@ -2,15 +2,12 @@ package com.crowdar.core.listeners;
 
 import com.crowdar.core.Constants;
 import com.crowdar.core.PropertyManager;
-import com.crowdar.core.RetryManager;
 import com.crowdar.driver.DriverManager;
 import com.crowdar.email.EmailUtil;
 import com.crowdar.web.BrowserConfiguration;
 import com.crowdar.web.WebDriverManager;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
-import org.testng.ITestContext;
-import org.testng.annotations.BeforeSuite;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
