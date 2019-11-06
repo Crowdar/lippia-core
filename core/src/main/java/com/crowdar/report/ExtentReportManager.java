@@ -242,7 +242,9 @@ public class ExtentReportManager {
         }else{
             stepTest.get().fail(error.getMessage());
         }
-        if(PropertyManager.getProperty("crowdar.api") == null && PropertyManager.getProperty("crowdar.api").isEmpty()){
+        
+        Boolean screenshotDisable = new Boolean(PropertyManager.getProperty("crowdar.report.disable_screenshot_on_failure"));
+        if(screenshotDisable.equals(Boolean.FALSE)){
             try {
                 stepTest.get().addScreenCaptureFromPath(takeScreenshot());
             }catch (IOException e){
