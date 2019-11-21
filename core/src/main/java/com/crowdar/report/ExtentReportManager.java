@@ -6,7 +6,6 @@ import com.aventstack.extentreports.GherkinKeyword;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
-import com.aventstack.extentreports.reporter.configuration.ChartLocation;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.crowdar.core.PropertyManager;
@@ -63,7 +62,7 @@ public class ExtentReportManager {
     }
 
     private static void htmlReporSetup(){
-        htmlReporter.config().setChartVisibilityOnOpen(true);
+       // htmlReporter.config().setChartVisibilityOnOpen(true);
         // report title
         if(PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.document.title")){
             htmlReporter.config().setDocumentTitle(PropertyManager.getProperty("crowdar.extent.report.document.title"));
@@ -81,9 +80,10 @@ public class ExtentReportManager {
             htmlReporter.config().setReportName(PropertyManager.getProperty("crowdar.extent.report.name"));
         }
         // chart location - top, bottom
-        if(PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.chart.location")) {
+        /*if(PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.chart.location")) {
             htmlReporter.config().setTestViewChartLocation(ChartLocation.valueOf(PropertyManager.getProperty("crowdar.extent.report.chart.location")));
-        }
+        }*/
+
         // theme - standard, dark
         if(PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.theme")) {
             htmlReporter.config().setTheme(Theme.valueOf(PropertyManager.getProperty("crowdar.extent.report.theme").toUpperCase()));
@@ -101,7 +101,7 @@ public class ExtentReportManager {
         htmlReporter.config().setEncoding("UTF-8");
         //appending existing report
         logger4j.info("--------EXTENTREPORT   Setting Append Existing to true -------------------------------");
-        htmlReporter.setAppendExisting(true);
+        /*htmlReporter.setAppendExisting(true);*/
 
     }
 
