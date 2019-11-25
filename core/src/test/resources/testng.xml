@@ -4,6 +4,7 @@
     <test name="Login and Update Profile Test" annotations="JDK" preserve-order="true">
         <classes>
             <class name="com.crowdar.driver.DriverManagerTest" />
+            <class name="com.crowdar.api.rest.MethodsServiceTest" />
         </classes>
     </test>
 </suite>
