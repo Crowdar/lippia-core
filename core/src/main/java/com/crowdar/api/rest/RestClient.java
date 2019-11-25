@@ -28,6 +28,10 @@ public class RestClient {
     public RestClient() {
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     }
+    
+    public static RestClient getRestclientInstance() {
+    	return new RestClient();
+    }
 
     public HttpHeaders setHeaders(String jsonHeaders) {
         this.headers = new HttpHeaders();
