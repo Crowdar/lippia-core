@@ -8,14 +8,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.util.Assert;
-import org.testng.IObjectFactory;
-import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.when;
 
 @PrepareForTest(PropertyManager.class)
 @PowerMockIgnore({"javax.net.ssl.*","org.apache.log4j.*","org.apache.xerces.*","org.w3c.*", "javax.xml.*", "org.xml.*", "org.apache.*", "org.w3c.dom.*", "org.apache.cxf.*"})
-public class DriverManagerTest extends PowerMockTestCase {
+public class DriverManagerTest {
 
     @Test
     public void CHROMEDYNAMIC_Test()
