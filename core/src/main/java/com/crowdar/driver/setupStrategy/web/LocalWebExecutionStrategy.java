@@ -2,10 +2,9 @@ package com.crowdar.driver.setupStrategy.web;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
-
 import com.crowdar.driver.config.AutomationConfiguration;
 import com.crowdar.driver.config.BrowserConfiguration;
+
 import com.crowdar.driver.setupStrategy.SetupStrategy;
 
 public class LocalWebExecutionStrategy implements SetupStrategy{

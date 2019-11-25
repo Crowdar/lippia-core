@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.crowdar.driver.setupStrategy.SetupStrategy;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Capabilities;
@@ -12,7 +13,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import com.crowdar.core.PropertyManager;
-import com.crowdar.driver.setupStrategy.SetupStrategy;
 
 class  DriverFactory {
 	
