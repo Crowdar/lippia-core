@@ -10,6 +10,7 @@ public class Request {
 
     private Object body;
     private String url;
+    private String endpoint;
     private Object headers;
     private Object urlParameters;
 
@@ -68,5 +69,13 @@ public class Request {
     private String convertToJson(Object jsonObject) {
         String json = JsonUtils.serialize(jsonObject);
         return json.substring(0, json.length() - 1).substring(1);
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 }

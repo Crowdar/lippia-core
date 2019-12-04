@@ -1,5 +1,6 @@
 package com.crowdar.api.rest;
 
+import com.crowdar.core.JsonUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +32,7 @@ public class MethodsServiceTest {
 	private Response response;
 	private Request request;
 	private String jsonRequest;
+	private Map<String, String> parametersMap;
 	
 	@Before
     public void setUp() throws Exception {
@@ -107,7 +109,7 @@ public class MethodsServiceTest {
 	
     @Test
 	public void whenCallSomeApiWithGetMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.get(jsonRequest, Response.class);
+		Response responseFromStaticMethod = MethodsService.get(getRequest(jsonRequest,null), Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).get(
 				"http://test.test", 
 				Response.class, 
@@ -121,7 +123,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithPostMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.post(jsonRequest, Response.class);
+		Response responseFromStaticMethod = MethodsService.post(getRequest(jsonRequest,parametersMap), Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).post(
 				"http://test.test", 
 				Response.class, 
@@ -134,7 +136,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithPatchMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.patch(jsonRequest, Response.class);
+		Response responseFromStaticMethod = MethodsService.patch(getRequest(jsonRequest,parametersMap), Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).patch(
 				"http://test.test", 
 				Response.class, 
@@ -147,7 +149,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithDeleteMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.delete(jsonRequest, Response.class);
+		Response responseFromStaticMethod = MethodsService.delete(getRequest(jsonRequest,parametersMap), Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).delete(
 				"http://test.test", 
 				Response.class, 
@@ -160,7 +162,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithPutMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.put(jsonRequest, Response.class);
+		Response responseFromStaticMethod = MethodsService.put(getRequest(jsonRequest,parametersMap), Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).put(
 				"http://test.test", 
 				Response.class, 
@@ -171,5 +173,19 @@ public class MethodsServiceTest {
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
 
-    
+
+	private static Request getRequest(String jsonFileName, Map<String, String> replacementParameters) {
+		String jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
+
+		if(replacementParameters != null) {
+			for (String key : replacementParameters.keySet()) {
+				jsonRequest=jsonRequest.replace("{{"+key+"}}", replacementParameters.get(key));
+			}
+		}
+
+		return JsonUtils.deserialize(jsonRequest, Request.class);
+	}
+
+
+
 }
