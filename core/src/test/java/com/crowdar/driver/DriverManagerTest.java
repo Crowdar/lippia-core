@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 @PowerMockIgnore({"javax.net.ssl.*","org.apache.log4j.*","org.apache.xerces.*","org.w3c.*", "javax.xml.*", "org.xml.*", "org.apache.*", "org.w3c.dom.*", "org.apache.cxf.*"})
 public class DriverManagerTest {
 
+   /**
     @Test
     public void CHROMEDYNAMIC_Test()
     {
@@ -38,5 +39,6 @@ public class DriverManagerTest {
         Assert.notNull(remoteWebDriver, "Error creating Dynamic web Driver in DriverManager");
         remoteWebDriver.quit();
     }
+    **/
 
 }
