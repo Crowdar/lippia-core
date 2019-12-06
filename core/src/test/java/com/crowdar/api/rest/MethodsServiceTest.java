@@ -1,16 +1,15 @@
 package com.crowdar.api.rest;
 
-import com.crowdar.core.JsonUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import com.crowdar.core.PropertyManager;
 
@@ -20,24 +19,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({RestClient.class, PropertyManager.class})
-public class MethodsServiceTest {
-	private static final String JSON_CLASS_RESPONSE = "request";
+@PowerMockIgnore({"javax.net.ssl.*","org.apache.log4j.*","org.slf4j.*","org.apache.xerces.*","org.w3c.*", "javax.xml.*", "org.xml.*", "org.apache.*", "org.w3c.dom.*", "org.apache.cxf.*"})
+public class MethodsServiceTest extends PowerMockTestCase {
 
 	@Mock
     private RestClient restClient;
 	private Response response;
 	private Request request;
-	private String jsonRequest;
-	private Map<String, String> parametersMap;
 	
-	@Before
+	@BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         
-		jsonRequest = MethodsServiceTest.JSON_CLASS_RESPONSE;
-
         request = new Request();
 		request.setBody("");
 		request.setUrlParameters("");
@@ -103,11 +97,12 @@ public class MethodsServiceTest {
 						request.getHeaders().toString()
 				)
 		).thenReturn(response);
-    }
+		
+	}
 	
     @Test
 	public void whenCallSomeApiWithGetMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.get(getRequest(jsonRequest,null), Response.class);
+		Response responseFromStaticMethod = MethodsService.get(request, Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).get(
 				"http://test.test", 
 				Response.class, 
@@ -121,7 +116,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithPostMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.post(getRequest(jsonRequest,parametersMap), Response.class);
+		Response responseFromStaticMethod = MethodsService.post(request, Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).post(
 				"http://test.test", 
 				Response.class, 
@@ -134,7 +129,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithPatchMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.patch(getRequest(jsonRequest,parametersMap), Response.class);
+		Response responseFromStaticMethod = MethodsService.patch(request, Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).patch(
 				"http://test.test", 
 				Response.class, 
@@ -147,7 +142,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithDeleteMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.delete(getRequest(jsonRequest,parametersMap), Response.class);
+		Response responseFromStaticMethod = MethodsService.delete(request, Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).delete(
 				"http://test.test", 
 				Response.class, 
@@ -160,7 +155,7 @@ public class MethodsServiceTest {
     
     @Test
 	public void whenCallSomeApiWithPutMethod() throws Exception{
-		Response responseFromStaticMethod = MethodsService.put(getRequest(jsonRequest,parametersMap), Response.class);
+		Response responseFromStaticMethod = MethodsService.put(request, Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).put(
 				"http://test.test", 
 				Response.class, 
@@ -170,20 +165,5 @@ public class MethodsServiceTest {
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
-
-
-	private static Request getRequest(String jsonFileName, Map<String, String> replacementParameters) {
-		String jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
-
-		if(replacementParameters != null) {
-			for (String key : replacementParameters.keySet()) {
-				jsonRequest=jsonRequest.replace("{{"+key+"}}", replacementParameters.get(key));
-			}
-		}
-
-		return JsonUtils.deserialize(jsonRequest, Request.class);
-	}
-
-
 
 }
