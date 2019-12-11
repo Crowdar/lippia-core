@@ -63,6 +63,11 @@ abstract public class PageBase{
 	public PageBase(){
 
 	}
+
+	public void maximizeWindow(){
+		driver.manage().window().maximize();
+	}
+
 	/**
 	 * Method that returns the complet url to  the page
 	 *  BASE_URL + url
