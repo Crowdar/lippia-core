@@ -1,6 +1,8 @@
 package com.crowdar.driver;
 
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -10,6 +12,7 @@ import com.crowdar.driver.config.MobilePlatformConfiguration;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 public enum ProjectTypeEnum {
     WEB_CHROME {
@@ -21,6 +24,54 @@ public enum ProjectTypeEnum {
         @Override
         public AutomationConfiguration getDriverConfig() {
             return BrowserConfiguration.CHROME;
+        }
+
+    },
+    WEB_FIREFOX {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return FirefoxDriver.class;
+        }
+
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.FIREFOX;
+        }
+
+    },
+    WEB_EDGE {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return EdgeDriver.class;
+        }
+
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.EDGE;
+        }
+
+    },
+    WEB_IE {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return InternetExplorerDriver.class;
+        }
+
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.IE;
+        }
+
+    },
+    WEB_SAFARI {
+        @Override
+        public Class<? extends RemoteWebDriver> getDriverImplementation() {
+            return SafariDriver.class;
+        }
+
+        @Override
+        public AutomationConfiguration getDriverConfig() {
+            return BrowserConfiguration.SAFARI;
         }
 
     },
@@ -60,20 +111,6 @@ public enum ProjectTypeEnum {
         }
 
     },
-    WEB_IE {
-        @Override
-        public Class<? extends RemoteWebDriver> getDriverImplementation() {
-            return InternetExplorerDriver.class;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.IE;
-        }
-
-    },
-    // WEB_SAFARI
-    // WEB_FIREFOX
     MOBILE_ANDROID_APK {
         @Override
         public Class<? extends RemoteWebDriver> getDriverImplementation() {

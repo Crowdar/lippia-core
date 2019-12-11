@@ -42,7 +42,6 @@ class  DriverFactory {
 			}
 			
 			setupStrategy.afterDriverStartSetup();
-			
 			return driver;
 
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
