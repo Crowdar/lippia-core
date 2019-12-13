@@ -3,6 +3,7 @@ package com.crowdar.api.rest;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -26,7 +28,9 @@ public class RestClient {
     private RestTemplate restTemplate;
 
     public RestClient() {
-        this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
     }
     
     public static RestClient getRestclientInstance() {
@@ -69,7 +73,7 @@ public class RestClient {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
         HttpEntity<String> request = this.createRequest(body, this.setHeaders(headers));
         try {
-            ResponseEntity<Object> response = (ResponseEntity<Object>) this.restTemplate.exchange(uri, httpMethod, request, type);
+            ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.exchange(uri, httpMethod, request, type);
             return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createHeaders(response.getHeaders()));
             
         }catch (HttpClientErrorException e1) {
