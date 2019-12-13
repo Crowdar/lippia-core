@@ -1,13 +1,6 @@
 package com.crowdar.api.rest;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,11 +9,16 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RestClient {
 
@@ -32,9 +30,9 @@ public class RestClient {
         restTemplate.getMessageConverters()
                 .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
     }
-    
+
     public static RestClient getRestclientInstance() {
-    	return new RestClient();
+        return new RestClient();
     }
 
     public HttpHeaders setHeaders(String jsonHeaders) {
@@ -58,7 +56,7 @@ public class RestClient {
     }
 
     public Response put(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
-    	return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PUT);
+        return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PUT);
     }
 
     public Response patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
@@ -75,12 +73,12 @@ public class RestClient {
         try {
             ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.exchange(uri, httpMethod, request, type);
             return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createHeaders(response.getHeaders()));
-            
-        }catch (HttpClientErrorException e1) {
-        	System.out.println(e1.getResponseBodyAsString());
-        	return this.createResponse(e1.getStatusCode().value(), e1.getResponseBodyAsString(), e1.getLocalizedMessage(), createHeaders(e1.getResponseHeaders()));
+
+        } catch (HttpClientErrorException e1) {
+            System.out.println(e1.getResponseBodyAsString());
+            return this.createResponse(e1.getStatusCode().value(), e1.getResponseBodyAsString(), e1.getLocalizedMessage(), createHeaders(e1.getResponseHeaders()));
         } catch (HttpServerErrorException e) {
-        	System.out.println(e.getResponseBodyAsString());
+            System.out.println(e.getResponseBodyAsString());
             return this.createResponse(e.getStatusCode().value(), e.getResponseBodyAsString(), e.getLocalizedMessage(), createHeaders(e.getResponseHeaders()));
         }
     }
