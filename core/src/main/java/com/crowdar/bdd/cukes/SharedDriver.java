@@ -50,13 +50,13 @@ public class SharedDriver extends EventFiringWebDriver {
     }
 
 
-    public RemoteWebDriver get(){
+    public RemoteWebDriver get() {
         return (RemoteWebDriver) this.getWrappedDriver();
     }
 
     @Override
     public void quit() {
-       DriverManager.dismissCurrentDriver();
+        DriverManager.dismissCurrentDriver();
     }
 
 

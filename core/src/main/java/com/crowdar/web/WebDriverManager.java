@@ -1,20 +1,18 @@
 package com.crowdar.web;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
 import com.crowdar.core.Constants;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.stqa.selenium.factory.WebDriverPool;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public final class WebDriverManager {
 
@@ -42,11 +40,11 @@ public final class WebDriverManager {
     }
 
     private static RemoteWebDriver getDriver() {
-        if( localDriver.get() != null && localDriver.get().getSessionId() == null){
+        if (localDriver.get() != null && localDriver.get().getSessionId() == null) {
             localDriver.remove();
         }
 
-        if(localDriver.get() == null ){
+        if (localDriver.get() == null) {
             WebDriver driver = ((BrowserConfiguration) browserConfiguration).getDriver();
             driver.manage().timeouts().setScriptTimeout(Constants.getWaitScriptTimeout(), TimeUnit.SECONDS);
             driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
@@ -61,19 +59,19 @@ public final class WebDriverManager {
         WebDriverPool.DEFAULT.dismissAll();
     }
 
-    public static void dismissCurrentDriver(){
-        if(localDriver.get() != null){
+    public static void dismissCurrentDriver() {
+        if (localDriver.get() != null) {
             localDriver.get().quit();
             localDriver.remove();
         }
     }
 
-    public static void removeCurrentThreadDriver(){
-        if(localDriver.get() != null)
-        localDriver.remove();
+    public static void removeCurrentThreadDriver() {
+        if (localDriver.get() != null)
+            localDriver.remove();
     }
 
-    public static WebDriver getCurrentDriver(){
+    public static WebDriver getCurrentDriver() {
         return localDriver.get();
     }
 
@@ -81,11 +79,12 @@ public final class WebDriverManager {
         String strItemValue = "";
         JavascriptExecutor js = (JavascriptExecutor) driver;
         String jsonAuth = js.executeScript(String.format("return window.localStorage.getItem('%s');", key)).toString();
-        if(!jsonAuth.isEmpty()) {
+        if (!jsonAuth.isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
 
             try {
-                Map<String, Object> authData = mapper.readValue(jsonAuth, new TypeReference<Map<String, Object>>(){});
+                Map<String, Object> authData = mapper.readValue(jsonAuth, new TypeReference<Map<String, Object>>() {
+                });
                 strItemValue = authData.get(item).toString();
             } catch (JsonParseException e) {
                 e.printStackTrace();

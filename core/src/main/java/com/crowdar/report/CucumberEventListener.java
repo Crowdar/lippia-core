@@ -15,7 +15,7 @@ public abstract class CucumberEventListener implements ConcurrentEventListener {
 
     public abstract void handleTestSourceRead(TestSourceRead event);
 
-    private EventHandler<TestCaseStarted> caseStartedHandler= new EventHandler<TestCaseStarted>() {
+    private EventHandler<TestCaseStarted> caseStartedHandler = new EventHandler<TestCaseStarted>() {
         @Override
         public void receive(TestCaseStarted event) {
             handleTestCaseStarted(event);
@@ -40,7 +40,7 @@ public abstract class CucumberEventListener implements ConcurrentEventListener {
         }
     };
 
-    public abstract   void handleTestStepFinished(TestStepFinished event);
+    public abstract void handleTestStepFinished(TestStepFinished event);
 
     private EventHandler<EmbedEvent> embedEventhandler = new EventHandler<EmbedEvent>() {
         @Override
@@ -58,7 +58,7 @@ public abstract class CucumberEventListener implements ConcurrentEventListener {
         }
     };
 
-    public abstract void handleWrite(WriteEvent event) ;
+    public abstract void handleWrite(WriteEvent event);
 
     private EventHandler<TestRunFinished> runFinishedHandler = new EventHandler<TestRunFinished>() {
         @Override

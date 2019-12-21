@@ -17,13 +17,15 @@
 package com.crowdar.driver.factory;
 
 public class DriverCreationError extends RuntimeException {
-  public DriverCreationError(String msg) {
-    super(msg);
-  }
-  public DriverCreationError(Throwable e) {
-    super(e);
-  }
-  public DriverCreationError(String msg, Throwable e) {
-    super(msg, e);
-  }
+    public DriverCreationError(String msg) {
+        super(msg);
+    }
+
+    public DriverCreationError(Throwable e) {
+        super(e);
+    }
+
+    public DriverCreationError(String msg, Throwable e) {
+        super(msg, e);
+    }
 }

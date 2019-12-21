@@ -26,7 +26,7 @@ public class Request {
      * Remplaza en la url los valores {} por la variable enviada
      */
     public String getUrl(String var) {
-        return url.replace("{}",var);
+        return url.replace("{}", var);
     }
 
     public void setUrl(String url) {

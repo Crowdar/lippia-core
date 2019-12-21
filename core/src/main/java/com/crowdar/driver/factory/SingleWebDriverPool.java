@@ -23,68 +23,68 @@ import java.net.URL;
 
 public final class SingleWebDriverPool extends AbstractWebDriverPool {
 
-  private String key;
-  private WebDriver driver;
+    private String key;
+    private WebDriver driver;
 
-  public SingleWebDriverPool() {
-    Runtime.getRuntime().addShutdownHook(new Thread(SingleWebDriverPool.this::dismissAll));
-  }
+    public SingleWebDriverPool() {
+        Runtime.getRuntime().addShutdownHook(new Thread(SingleWebDriverPool.this::dismissAll));
+    }
 
-  @Override
-  public WebDriver getDriver(URL hub, Capabilities capabilities) {
-    String newKey = createKey(capabilities, hub);
-    if (driver == null) {
-      createNewDriver(hub, capabilities);
+    @Override
+    public WebDriver getDriver(URL hub, Capabilities capabilities) {
+        String newKey = createKey(capabilities, hub);
+        if (driver == null) {
+            createNewDriver(hub, capabilities);
 
-    } else {
-      if (!newKey.equals(key)) {
-        // A different flavour of WebDriver is required
-        dismissDriver();
-        createNewDriver(hub, capabilities);
+        } else {
+            if (!newKey.equals(key)) {
+                // A different flavour of WebDriver is required
+                dismissDriver();
+                createNewDriver(hub, capabilities);
 
-      } else {
-        // Check the browser is alive
-        if (! alivenessChecker.isAlive(driver)) {
-          createNewDriver(hub, capabilities);
+            } else {
+                // Check the browser is alive
+                if (!alivenessChecker.isAlive(driver)) {
+                    createNewDriver(hub, capabilities);
+                }
+            }
         }
-      }
+
+        return driver;
     }
 
-    return driver;
-  }
-
-  @Override
-  public void dismissDriver(WebDriver driver) {
-    if (driver != this.driver) {
-      throw new Error("The driver is not owned by the factory: " + driver);
+    @Override
+    public void dismissDriver(WebDriver driver) {
+        if (driver != this.driver) {
+            throw new Error("The driver is not owned by the factory: " + driver);
+        }
+        dismissDriver();
     }
-    dismissDriver();
-  }
 
-  @Override
-  public void dismissAll() {
-    dismissDriver();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return driver == null;
-  }
-
-  private void createNewDriver(URL hub, Capabilities capabilities) {
-    String newKey = createKey(capabilities, hub);
-    driver = newDriver(hub, capabilities);
-    key = newKey;
-  }
-
-  private void dismissDriver() {
-    if (driver != null) {
-      try {
-        driver.quit();
-      } finally {
-        driver = null;
-        key = null;
-      }
+    @Override
+    public void dismissAll() {
+        dismissDriver();
     }
-  }
+
+    @Override
+    public boolean isEmpty() {
+        return driver == null;
+    }
+
+    private void createNewDriver(URL hub, Capabilities capabilities) {
+        String newKey = createKey(capabilities, hub);
+        driver = newDriver(hub, capabilities);
+        key = newKey;
+    }
+
+    private void dismissDriver() {
+        if (driver != null) {
+            try {
+                driver.quit();
+            } finally {
+                driver = null;
+                key = null;
+            }
+        }
+    }
 }

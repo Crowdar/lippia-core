@@ -12,7 +12,7 @@ public class Query {
         super();
     }
 
-    public Query(String reference, String keyToOrderBy, String valueEqualTo, String keyChildFinal, String valueToSet){
+    public Query(String reference, String keyToOrderBy, String valueEqualTo, String keyChildFinal, String valueToSet) {
         this();
         this.reference = reference;
         this.keyToOrderBy = keyToOrderBy;

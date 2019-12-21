@@ -19,5 +19,5 @@ package com.crowdar.driver.factory;
 import org.openqa.selenium.WebDriver;
 
 public interface DriverAlivenessChecker {
-  boolean isAlive(WebDriver driver);
+    boolean isAlive(WebDriver driver);
 }

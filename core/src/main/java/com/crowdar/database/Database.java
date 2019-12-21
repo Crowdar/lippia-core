@@ -1,5 +1,6 @@
 package com.crowdar.database;
 
+import com.crowdar.core.PropertyManager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.core.ApiFuture;
@@ -9,7 +10,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-import com.crowdar.core.PropertyManager;
 
 import java.io.File;
 import java.io.FileInputStream;
