@@ -51,11 +51,11 @@ public class ChromeUtils {
     }
 
     public static void addDisableInfoBars(ChromeOptions options) {
-        options.addArguments("--disable-infobars"); 	
+        options.addArguments("--disable-infobars");
     }
 
     public static void startMaximized(ChromeOptions options) {
         options.addArguments("--start-maximized");
-	}
+    }
 }
 

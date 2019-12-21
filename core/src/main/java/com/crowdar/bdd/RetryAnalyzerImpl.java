@@ -1,11 +1,10 @@
 package com.crowdar.bdd;
 
-import org.testng.IRetryAnalyzer;
-import org.testng.ITestResult;
-
 import com.crowdar.core.Context;
 import com.crowdar.core.MyThreadLocal;
 import com.crowdar.core.PropertyManager;
+import org.testng.IRetryAnalyzer;
+import org.testng.ITestResult;
 
 public class RetryAnalyzerImpl implements IRetryAnalyzer {
 
@@ -15,12 +14,12 @@ public class RetryAnalyzerImpl implements IRetryAnalyzer {
     public boolean retry(ITestResult result) {
         int retryCount;
         try {
-            retryCount = (Integer) MyThreadLocal.get().getData(Context.RETRY_COUNT);
-        }catch (NullPointerException e){
+            retryCount = (Integer) MyThreadLocal.getData(Context.RETRY_COUNT);
+        } catch (NullPointerException e) {
             retryCount = RETRY_COUNT;
         }
         if (retryCount < maxRetryCount) {
-            MyThreadLocal.get().setData(Context.RETRY_COUNT, ++retryCount);
+            MyThreadLocal.setData(Context.RETRY_COUNT, ++retryCount);
             return true;
         }
         return false;

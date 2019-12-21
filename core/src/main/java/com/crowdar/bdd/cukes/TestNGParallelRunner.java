@@ -12,9 +12,9 @@ public class TestNGParallelRunner {
     private TestNGCucumberRunner testNGCucumberRunner;
 
 
-   public TestNGParallelRunner(){
+    public TestNGParallelRunner() {
 
-   }
+    }
 
     @BeforeClass(
             alwaysRun = true

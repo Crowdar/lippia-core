@@ -13,36 +13,36 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertyManager {
-	private static Properties properties;
-	private static final String PROPERTY_FILE_NAME = "config.properties";
+    private static Properties properties;
+    private static final String PROPERTY_FILE_NAME = "config.properties";
 
-	private PropertyManager() {
-	}
+    private PropertyManager() {
+    }
 
-	private static Properties getProperties() {
-		if (properties == null) {
-			try {
-				loadProperties();
-			} catch (IOException var1) {
-				var1.printStackTrace();
-			}
-		}
+    private static Properties getProperties() {
+        if (properties == null) {
+            try {
+                loadProperties();
+            } catch (IOException var1) {
+                var1.printStackTrace();
+            }
+        }
 
-		return properties;
-	}
+        return properties;
+    }
 
-	public static String getProperty(String propertyKey) {
-		return getProperties().getProperty(propertyKey);
-	}
+    public static String getProperty(String propertyKey) {
+        return getProperties().getProperty(propertyKey);
+    }
 
-	public static boolean isPropertyPresentAndNotEmpty(String propertyKey){
-		return getProperties().containsKey(propertyKey) && !getProperties().getProperty(propertyKey).isEmpty();
-	}
+    public static boolean isPropertyPresentAndNotEmpty(String propertyKey) {
+        return getProperties().containsKey(propertyKey) && !getProperties().getProperty(propertyKey).isEmpty();
+    }
 
-	private static void loadProperties() throws IOException {
-		StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-		properties = new EncryptableProperties(encryptor);
-		InputStream inputStream = PropertyManager.class.getClassLoader().getResourceAsStream(PROPERTY_FILE_NAME);
-		properties.load(inputStream);
-	}
+    private static void loadProperties() throws IOException {
+        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        properties = new EncryptableProperties(encryptor);
+        InputStream inputStream = PropertyManager.class.getClassLoader().getResourceAsStream(PROPERTY_FILE_NAME);
+        properties.load(inputStream);
+    }
 }

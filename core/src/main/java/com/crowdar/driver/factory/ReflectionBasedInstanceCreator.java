@@ -24,38 +24,38 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ReflectionBasedInstanceCreator {
 
-  private String driverClassName;
+    private String driverClassName;
 
-  public ReflectionBasedInstanceCreator(String driverClassName) {
-    this.driverClassName = driverClassName;
-  }
-
-  private Class<? extends WebDriver> getDriverClass() {
-    try {
-      return Class.forName(driverClassName).asSubclass(WebDriver.class);
-    } catch (ClassNotFoundException | NoClassDefFoundError e) {
-      throw new DriverCreationError("Driver class not found: " + driverClassName, e);
-    } catch (UnsupportedClassVersionError e) {
-      throw new DriverCreationError("Driver class is built for higher Java version: " + driverClassName, e);
+    public ReflectionBasedInstanceCreator(String driverClassName) {
+        this.driverClassName = driverClassName;
     }
-  }
 
-  public WebDriver createDriver(Capabilities capabilities) {
-    return callConstructor(getDriverClass(), capabilities);
-  }
-
-  private WebDriver callConstructor(Class<? extends WebDriver> from, Capabilities capabilities) {
-    try {
-      Constructor<? extends WebDriver> constructor = from.getConstructor(Capabilities.class);
-      return constructor.newInstance(capabilities);
-    } catch (NoSuchMethodException e) {
-      try {
-        return from.newInstance();
-      } catch (InstantiationException | IllegalAccessException e1) {
-        throw new DriverCreationError(e);
-      }
-    } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      throw new DriverCreationError(e);
+    private Class<? extends WebDriver> getDriverClass() {
+        try {
+            return Class.forName(driverClassName).asSubclass(WebDriver.class);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            throw new DriverCreationError("Driver class not found: " + driverClassName, e);
+        } catch (UnsupportedClassVersionError e) {
+            throw new DriverCreationError("Driver class is built for higher Java version: " + driverClassName, e);
+        }
     }
-  }
+
+    public WebDriver createDriver(Capabilities capabilities) {
+        return callConstructor(getDriverClass(), capabilities);
+    }
+
+    private WebDriver callConstructor(Class<? extends WebDriver> from, Capabilities capabilities) {
+        try {
+            Constructor<? extends WebDriver> constructor = from.getConstructor(Capabilities.class);
+            return constructor.newInstance(capabilities);
+        } catch (NoSuchMethodException e) {
+            try {
+                return from.newInstance();
+            } catch (InstantiationException | IllegalAccessException e1) {
+                throw new DriverCreationError(e);
+            }
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new DriverCreationError(e);
+        }
+    }
 }

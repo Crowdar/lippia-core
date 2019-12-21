@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CucumberExtentReport extends CucumberEventListener{
+public class CucumberExtentReport extends CucumberEventListener {
 
 
     private ThreadLocal<String> currentFeatureFile = new ThreadLocal<String>();
     private ThreadLocal<ScenarioOutline> currentScenarioOutline = new ThreadLocal<ScenarioOutline>();
     private List<String> uris = new ArrayList<String>();
-
 
 
     @Override
@@ -29,17 +28,17 @@ public class CucumberExtentReport extends CucumberEventListener{
 
     @Override
     public void handleTestCaseStarted(TestCaseStarted event) {
-       System.out.println("TESTCASE "+event.testCase.getName() +" STARTED IN THREAD:"+ Thread.currentThread().getId());
-       handleStartOfFeature(event.testCase);
-       handleScenarioOutline(event.testCase);
-       ExtentReportManager.createScenarioOutlineOrStandard(event.testCase.getName(),event.testCase.getScenarioDesignation(),event.testCase.getTags());
+        System.out.println("TESTCASE " + event.testCase.getName() + " STARTED IN THREAD:" + Thread.currentThread().getId());
+        handleStartOfFeature(event.testCase);
+        handleScenarioOutline(event.testCase);
+        ExtentReportManager.createScenarioOutlineOrStandard(event.testCase.getName(), event.testCase.getScenarioDesignation(), event.testCase.getTags());
     }
 
     @Override
     public void handleTestStepStarted(TestStepStarted event) {
 
         if (event.testStep instanceof PickleStepTestStep) {
-            System.out.println("TEST STEP STARTED IN THREAD :"+ Thread.currentThread().getId());
+            System.out.println("TEST STEP STARTED IN THREAD :" + Thread.currentThread().getId());
             ExtentReportManager.addCucumberStep((PickleStepTestStep) event.testStep);
         }
 
@@ -47,11 +46,11 @@ public class CucumberExtentReport extends CucumberEventListener{
 
     @Override
     public void handleTestStepFinished(TestStepFinished event) {
-        if(event.testStep instanceof  PickleStepTestStep){
-            System.out.println("TEST STEP FINISHED IN THREAD :"+ Thread.currentThread().getId());
-            PickleStepTestStep pickleStepTestStep =  ExtentReportManager.pollCucumberStep();
+        if (event.testStep instanceof PickleStepTestStep) {
+            System.out.println("TEST STEP FINISHED IN THREAD :" + Thread.currentThread().getId());
+            PickleStepTestStep pickleStepTestStep = ExtentReportManager.pollCucumberStep();
             String keyword = getStepKeyword(pickleStepTestStep);
-            ExtentReportManager.matchCucumberStep(keyword,pickleStepTestStep.getStepText());
+            ExtentReportManager.matchCucumberStep(keyword, pickleStepTestStep.getStepText());
             ExtentReportManager.createResult(event.result);
         }
     }
@@ -68,7 +67,7 @@ public class CucumberExtentReport extends CucumberEventListener{
 
     @Override
     public void finishReport() {
-        System.out.println("TEST STEP FINISHED IN THREAD:"+ Thread.currentThread().getId());
+        System.out.println("TEST STEP FINISHED IN THREAD:" + Thread.currentThread().getId());
         ExtentReportManager.flush();
 
     }
@@ -77,22 +76,23 @@ public class CucumberExtentReport extends CucumberEventListener{
     private void handleScenarioOutline(TestCase testCase) {
         CucumberSourceModel.AstNode astNode = sourceModel.getAstNode(currentFeatureFile.get(), testCase.getLine());
         if (CucumberSourceModel.isScenarioOutlineScenario(astNode)) {
-            ScenarioOutline scenarioOutline = (ScenarioOutline)CucumberSourceModel.getScenarioDefinition(astNode);
+            ScenarioOutline scenarioOutline = (ScenarioOutline) CucumberSourceModel.getScenarioDefinition(astNode);
             if (currentScenarioOutline.get() == null || !currentScenarioOutline.get().equals(scenarioOutline)) {
                 currentScenarioOutline.set(scenarioOutline);
                 ExtentReportManager.createScenarioOutlineNode(currentScenarioOutline.get().getName());
             }
-            Examples examples = (Examples)astNode.parent.node;
+            Examples examples = (Examples) astNode.parent.node;
             ExtentReportManager.createExampleCucumber(examples);
 
         } else {
             currentScenarioOutline.set(null);
         }
     }
+
     private void handleStartOfFeature(TestCase testCase) {
-       Feature feature = sourceModel.getFeature(testCase.getUri());
-       ExtentReportManager.createFeature(feature.getName(),feature.getTags());
-       currentFeatureFile.set(testCase.getUri());
+        Feature feature = sourceModel.getFeature(testCase.getUri());
+        ExtentReportManager.createFeature(feature.getName(), feature.getTags());
+        currentFeatureFile.set(testCase.getUri());
     }
 
     private String getStepKeyword(PickleStepTestStep testStep) {

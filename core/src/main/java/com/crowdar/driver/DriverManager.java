@@ -15,7 +15,7 @@ public class DriverManager {
     public static RemoteWebDriver getDriverInstance() {
 
         if (!isDriverCreated() || !isAValidDriver()) {
-            if(localDriver.get() != null){
+            if (localDriver.get() != null) {
                 localDriver.remove();
             }
             localDriver.set(DriverFactory.createDriver());
@@ -25,8 +25,8 @@ public class DriverManager {
 
     public static void dismissCurrentDriver() {
         if (isDriverCreated()) {
-           localDriver.get().quit();
-           localDriver.remove();
+            localDriver.get().quit();
+            localDriver.remove();
         }
     }
 

@@ -1,17 +1,15 @@
 package com.crowdar.driver;
 
+import com.crowdar.driver.config.AutomationConfiguration;
+import com.crowdar.driver.config.BrowserConfiguration;
+import com.crowdar.driver.config.MobilePlatformConfiguration;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
-import com.crowdar.driver.config.AutomationConfiguration;
-import com.crowdar.driver.config.BrowserConfiguration;
-import com.crowdar.driver.config.MobilePlatformConfiguration;
-
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 public enum ProjectTypeEnum {

@@ -3,9 +3,6 @@ package com.crowdar.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -48,7 +45,7 @@ public class FileUtils {
                     }
                 }
                 if (directory == null) {
-                    throw new RuntimeException("There is no directory " +  dirName + "in the jar file");
+                    throw new RuntimeException("There is no directory " + dirName + "in the jar file");
                 }
                 for (JarEntry dirEntry : dirEntries) {
                     if (!dirEntry.isDirectory()) {
@@ -98,7 +95,7 @@ public class FileUtils {
     }
 
     public static boolean platformIsWindows() {
-        return  File.separatorChar == '\\';
+        return File.separatorChar == '\\';
     }
 
     public static void writeToJson(String jsonFilePath, Object object) {
@@ -120,7 +117,7 @@ public class FileUtils {
         }
     }
 
-    public static void writeLines (File f, String encoding, List<String> lines) {
+    public static void writeLines(File f, String encoding, List<String> lines) {
         try {
             org.apache.commons.io.FileUtils.writeLines(f, encoding, lines);
         } catch (IOException e) {

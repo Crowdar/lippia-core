@@ -18,9 +18,9 @@ public class SuiteTestngListener implements ISuiteListener {
     public void onStart(ISuite iSuite) {
         setJbehaveRunInstanceProperty();
         setJbehaveFrameworkRootProperty();
-      //  RetryManager.setRetryTests(iSuite.getAllMethods());
+        //  RetryManager.setRetryTests(iSuite.getAllMethods());
         System.setProperty("org.freemarker.loggerLibrary", "SLF4j");
-        WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));  
+        WebDriverManager.build(BrowserConfiguration.getBrowserConfiguration(PropertyManager.getProperty("crowdar.jbehave.browser")));
     }
 
     @Override

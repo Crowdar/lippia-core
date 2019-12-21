@@ -1,22 +1,19 @@
 package com.crowdar.driver.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
 import com.crowdar.core.PropertyManager;
 import com.crowdar.json.JsonUtil;
 import com.crowdar.web.ChromeUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.github.bonigarcia.wdm.DriverManagerType;
+import org.apache.log4j.Logger;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 public enum BrowserConfiguration implements AutomationConfiguration {
 

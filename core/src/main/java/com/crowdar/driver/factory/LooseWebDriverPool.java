@@ -25,39 +25,39 @@ import java.util.List;
 
 public final class LooseWebDriverPool extends AbstractWebDriverPool {
 
-  private List<WebDriver> drivers = new ArrayList<>();
+    private List<WebDriver> drivers = new ArrayList<>();
 
-  public LooseWebDriverPool() {
-    Runtime.getRuntime().addShutdownHook(new Thread(LooseWebDriverPool.this::dismissAll));
-  }
-
-  @Override
-  public WebDriver getDriver(URL hub, Capabilities capabilities) {
-    WebDriver driver = newDriver(hub, capabilities);
-    drivers.add(driver);
-    return driver;
-  }
-
-  @Override
-  public void dismissDriver(WebDriver driver) {
-    if (! drivers.contains(driver)) {
-      throw new Error("The driver is not owned by the factory: " + driver);
+    public LooseWebDriverPool() {
+        Runtime.getRuntime().addShutdownHook(new Thread(LooseWebDriverPool.this::dismissAll));
     }
-    driver.quit();
-    drivers.remove(driver);
-  }
 
-  @Override
-  public void dismissAll() {
-    for (WebDriver driver : new ArrayList<>(drivers)) {
-      driver.quit();
-      drivers.remove(driver);
+    @Override
+    public WebDriver getDriver(URL hub, Capabilities capabilities) {
+        WebDriver driver = newDriver(hub, capabilities);
+        drivers.add(driver);
+        return driver;
     }
-  }
 
-  @Override
-  public boolean isEmpty() {
-    return drivers.isEmpty();
-  }
+    @Override
+    public void dismissDriver(WebDriver driver) {
+        if (!drivers.contains(driver)) {
+            throw new Error("The driver is not owned by the factory: " + driver);
+        }
+        driver.quit();
+        drivers.remove(driver);
+    }
+
+    @Override
+    public void dismissAll() {
+        for (WebDriver driver : new ArrayList<>(drivers)) {
+            driver.quit();
+            drivers.remove(driver);
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return drivers.isEmpty();
+    }
 
 }

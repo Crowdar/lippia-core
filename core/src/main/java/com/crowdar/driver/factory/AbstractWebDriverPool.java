@@ -16,36 +16,37 @@
 
 package com.crowdar.driver.factory;
 
-import java.net.URL;
-
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 
+import java.net.URL;
+
 public abstract class AbstractWebDriverPool implements WebDriverPool {
 
-  DriverAlivenessChecker alivenessChecker = new DefaultDriverAlivenessChecker();
-  private LocalDriverProvider localDriverProvider = new DefaultLocalDriverProvider();
-  private RemoteDriverProvider remoteDriverProvider = new RemoteDriverProvider() {};
+    DriverAlivenessChecker alivenessChecker = new DefaultDriverAlivenessChecker();
+    private LocalDriverProvider localDriverProvider = new DefaultLocalDriverProvider();
+    private RemoteDriverProvider remoteDriverProvider = new RemoteDriverProvider() {
+    };
 
-  protected String createKey(Capabilities capabilities, URL hub) {
-    return capabilities.toString() + (hub == null ? "" : ":" + hub.toString());
-  }
+    protected String createKey(Capabilities capabilities, URL hub) {
+        return capabilities.toString() + (hub == null ? "" : ":" + hub.toString());
+    }
 
-  protected WebDriver newDriver(URL hub, Capabilities capabilities) {
-    return (hub == null)
-        ? localDriverProvider.createDriver(capabilities)
-        : remoteDriverProvider.createDriver(hub, capabilities);
-  }
+    protected WebDriver newDriver(URL hub, Capabilities capabilities) {
+        return (hub == null)
+                ? localDriverProvider.createDriver(capabilities)
+                : remoteDriverProvider.createDriver(hub, capabilities);
+    }
 
-  public void setDriverAlivenessChecker(DriverAlivenessChecker alivenessChecker) {
-    this.alivenessChecker = alivenessChecker;
-  }
+    public void setDriverAlivenessChecker(DriverAlivenessChecker alivenessChecker) {
+        this.alivenessChecker = alivenessChecker;
+    }
 
-  public void setLocalDriverProvider(LocalDriverProvider localDriverProvider) {
-    this.localDriverProvider = localDriverProvider;
-  }
+    public void setLocalDriverProvider(LocalDriverProvider localDriverProvider) {
+        this.localDriverProvider = localDriverProvider;
+    }
 
-  public void setRemoteDriverProvider(RemoteDriverProvider remoteDriverProvider) {
-    this.remoteDriverProvider = remoteDriverProvider;
-  }
+    public void setRemoteDriverProvider(RemoteDriverProvider remoteDriverProvider) {
+        this.remoteDriverProvider = remoteDriverProvider;
+    }
 }

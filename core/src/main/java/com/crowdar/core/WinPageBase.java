@@ -1,20 +1,20 @@
 package com.crowdar.core;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.HWND;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class WinPageBase extends PageBase {
     /**
      * On the windows system open file dialog, this function put a text a press
      * accept
      *
-     * @param filepath String of text that represent the file path that is
-     * required to load
-     *
+     * @param filepath            String of text that represent the file path that is
+     *                            required to load
      * @param windowsOpenFileName String of text that represent the system
-     * dialog windows name
+     *                            dialog windows name
      */
     public void systemOpenFileDialog(String filepath, String windowsOpenFileName) {
         HWND hwnd = User32.INSTANCE.FindWindow(null, windowsOpenFileName);

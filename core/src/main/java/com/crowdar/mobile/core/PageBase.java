@@ -1,32 +1,21 @@
 package com.crowdar.mobile.core;
 
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.crowdar.bdd.cukes.SharedDriver;
 import com.crowdar.core.Constants;
 import com.crowdar.core.CucumberPageBase;
 import com.crowdar.core.Utils;
-
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.PerformsTouchActions;
-import io.appium.java_client.TouchAction;
+import io.appium.java_client.*;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.touch.offset.PointOption;
+import org.openqa.selenium.*;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * This class represents the things in common between the other classes of
@@ -34,7 +23,7 @@ import io.appium.java_client.touch.offset.PointOption;
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBase extends CucumberPageBase  {
+abstract public class PageBase extends CucumberPageBase {
 
     protected RemoteWebDriver driver;
 
@@ -42,7 +31,9 @@ abstract public class PageBase extends CucumberPageBase  {
         super(driver);
     }
 
-    public PageBase(RemoteWebDriver driver){super(driver); }
+    public PageBase(RemoteWebDriver driver) {
+        super(driver);
+    }
 
     /**
      * Returns the mobile driver
@@ -92,7 +83,7 @@ abstract public class PageBase extends CucumberPageBase  {
      */
     public void clickElement(int x, int y) {
         TouchAction touchAction = new TouchAction((PerformsTouchActions) driver);
-        touchAction.tap(PointOption.point(x,y)).perform();
+        touchAction.tap(PointOption.point(x, y)).perform();
         sleep(1000);
     }
 
@@ -201,7 +192,7 @@ abstract public class PageBase extends CucumberPageBase  {
         if (!Utils.isTextFieldEmpty(element, placeholder)) {
             element.clear();
         }
-        ((MobileElement)element).setValue(value);
+        ((MobileElement) element).setValue(value);
         ((AppiumDriver) driver).hideKeyboard();
     }
 
