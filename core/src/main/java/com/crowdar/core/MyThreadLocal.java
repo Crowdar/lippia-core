@@ -14,4 +14,8 @@ public class MyThreadLocal {
     public static Object getData(String key) {
         return userThreadLocal.get().getData(key);
     }
+
+    public static void setData(String key, Object value) {
+        userThreadLocal.get().setData(key, value);
+    }
 }

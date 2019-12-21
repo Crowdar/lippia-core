@@ -12,7 +12,7 @@ public class RetryManager {
         for (ITestNGMethod method : context.getAllTestMethods()) {
             method.setRetryAnalyzer(new RetryAnalyzerImpl());
         }
-        MyThreadLocal.get().setData(Context.RETRY_COUNT, 0);
+        MyThreadLocal.setData(Context.RETRY_COUNT, 0);
     }
 
     public static void setRetryTests(List<ITestNGMethod> listMetods) {

@@ -28,7 +28,7 @@ public final class ScreenshotCapture {
     }
 
     public static String getScreenCaptureFileName() {
-        return MyThreadLocal.get().getData(Context.CONTEXT_TEST_NAME_KEY) + (String) MyThreadLocal.get().getData(Context.CONTEXT_TEST_ID_KEY) + ".png";
+        return MyThreadLocal.getData(Context.CONTEXT_TEST_NAME_KEY) + (String) MyThreadLocal.getData(Context.CONTEXT_TEST_ID_KEY) + ".png";
     }
 
 }
