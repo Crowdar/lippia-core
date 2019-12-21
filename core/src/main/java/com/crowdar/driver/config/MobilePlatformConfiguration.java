@@ -1,11 +1,7 @@
 package com.crowdar.driver.config;
 
 import com.crowdar.core.PropertyManager;
-
-import com.crowdar.driver.factory.Capability;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
-import java.util.List;
 
 public enum MobilePlatformConfiguration implements AutomationConfiguration {
 
@@ -23,7 +19,7 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration {
             capabilities.setCapability("platformVersion", PropertyManager.getProperty("crowdar.mobile.platformVersion"));
 
             capabilities.setCapability("newCommandTimeout", Integer.parseInt(PropertyManager.getProperty("crowdar.mobile.appium.newCommandTimeout")));
-            capabilities.setCapability("automationName",PropertyManager.getProperty("crowdar.mobile.automationName"));
+            capabilities.setCapability("automationName", PropertyManager.getProperty("crowdar.mobile.automationName"));
 
             capabilities.setCapability("autoGrantPermissions", "crowdar.mobile.autoGrantPermissions");
             capabilities.setCapability("unicodeKeyboard", "crowdar.mobile.unicodeKeyboard");
@@ -46,12 +42,13 @@ public enum MobilePlatformConfiguration implements AutomationConfiguration {
         public DesiredCapabilities getDesiredCapabilities() {
 
             DesiredCapabilities capabilities = DesiredCapabilities.iphone();
-            capabilities.setCapability("device", PropertyManager.getProperty("app.platform"));
-            capabilities.setCapability("deviceName", "Iphone X");
-            capabilities.setCapability("platformName", PropertyManager.getProperty("app.platform"));
-            capabilities.setCapability("appPackage", PropertyManager.getProperty("app.package"));
-            capabilities.setCapability("autoGrantPermissions", true);
-            capabilities.setCapability("app", PropertyManager.getProperty("crowdar.mobile.apk.path"));
+            capabilities.setCapability("deviceName", "crowdar.mobile.deviceName");
+            if (!PropertyManager.getProperty("crowdar.mobile.avd").isEmpty()) {
+                capabilities.setCapability("avd", PropertyManager.getProperty("crowdar.mobile.avd"));
+            }
+            capabilities.setCapability("platformName", PropertyManager.getProperty("crowdar.mobile.platformName"));
+            capabilities.setCapability("autoGrantPermissions", "crowdar.mobile.autoGrantPermissions");
+            capabilities.setCapability("app", PropertyManager.getProperty("crowdar.mobile.app.path"));
             return capabilities;
         }
 
