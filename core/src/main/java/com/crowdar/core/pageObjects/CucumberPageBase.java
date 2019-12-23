@@ -1,6 +1,7 @@
-package com.crowdar.core;
+package com.crowdar.core.pageObjects;
 
 import com.crowdar.bdd.cukes.SharedDriver;
+import com.crowdar.core.Context;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class CucumberPageBase extends PageBase {

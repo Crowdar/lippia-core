@@ -1,4 +1,4 @@
-package com.crowdar.core;
+package com.crowdar.core.pageObjects;
 
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.HWND;
@@ -22,7 +22,7 @@ public class WinPageBase extends PageBase {
         if (hwnd != null) {
             User32.INSTANCE.SetForegroundWindow(hwnd);
 
-            setTexttoClipboard(filepath);
+            setTextToClipboard(filepath);
 
             try {
                 Robot r = new Robot();

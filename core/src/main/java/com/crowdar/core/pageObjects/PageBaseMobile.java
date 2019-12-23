@@ -1,8 +1,6 @@
-package com.crowdar.mobile.core;
+package com.crowdar.core.pageObjects;
 
-import com.crowdar.bdd.cukes.SharedDriver;
 import com.crowdar.core.Constants;
-import com.crowdar.core.CucumberPageBase;
 import com.crowdar.core.Utils;
 import io.appium.java_client.*;
 import io.appium.java_client.android.AndroidDriver;
@@ -12,45 +10,19 @@ import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
- * This class represents the things in common between the other classes of
- * pages.
+ * This class represents the things in common between Mobile projects
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBase extends CucumberPageBase {
+abstract public class PageBaseMobile extends PageBase {
 
-    protected RemoteWebDriver driver;
-
-    public PageBase(SharedDriver driver) {
+    public PageBaseMobile(RemoteWebDriver driver) {
         super(driver);
-    }
-
-    public PageBase(RemoteWebDriver driver) {
-        super(driver);
-    }
-
-    /**
-     * Returns the mobile driver
-     *
-     * @return mobile driver
-     */
-    public RemoteWebDriver getDriver() {
-        return super.getDriver();
-    }
-
-    /**
-     * Returns the default wait in our framework
-     *
-     * @return mobile driver wait
-     */
-    public WebDriverWait getWait() {
-        return wait;
     }
 
     /**
@@ -396,14 +368,6 @@ abstract public class PageBase extends CucumberPageBase {
         WebElement element = (WebElement) driver.findElement(MobileBy.AndroidUIAutomator(command));
 
         this.clickElement(element);
-    }
-
-    public void sleep(int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            System.out.println("Sleep error: " + e);
-        }
     }
 
     protected void scrollToElementId(String id) {
