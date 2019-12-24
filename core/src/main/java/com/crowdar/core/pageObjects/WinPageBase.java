@@ -1,4 +1,4 @@
-package com.crowdar.core;
+package com.crowdar.core.pageObjects;
 
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.HWND;
@@ -6,7 +6,7 @@ import com.sun.jna.platform.win32.WinDef.HWND;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class WinPageBase extends PageBase {
+public abstract class WinPageBase extends PageBase {
     /**
      * On the windows system open file dialog, this function put a text a press
      * accept
@@ -22,7 +22,7 @@ public class WinPageBase extends PageBase {
         if (hwnd != null) {
             User32.INSTANCE.SetForegroundWindow(hwnd);
 
-            setTexttoClipboard(filepath);
+            setTextToClipboard(filepath);
 
             try {
                 Robot r = new Robot();

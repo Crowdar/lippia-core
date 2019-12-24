@@ -1,5 +1,6 @@
 package com.crowdar.core;
 
+import com.crowdar.core.pageObjects.PageBase;
 import com.crowdar.driver.DriverManager;
 import org.openqa.selenium.remote.RemoteWebDriver;
 

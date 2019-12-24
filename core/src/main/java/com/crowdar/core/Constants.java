@@ -23,52 +23,52 @@ public class Constants {
 
 
     public static long getFluentWaitRequestFrequencyInMillis() {
-        String overrided = System.getProperty("crowdar.wait.fluent.frecuency");
+        String overrided = PropertyManager.getProperty("crowdar.wait.fluent.frecuency");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : FLUENT_WAIT_REQUEST_FREQUENCY_IN_MILLIS;
     }
 
     public static long getWaitForFileDownloadInSeconds() {
-        String overrided = System.getProperty("crowdar.wait.file.download.timeout");
+        String overrided = PropertyManager.getProperty("crowdar.wait.file.download.timeout");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : WAIT_FOR_FILE_DOWNLOAD;
     }
 
     public static long getFluentWaitTimeoutInSeconds() {
-        String overrided = System.getProperty("crowdar.wait.fluent.timeout");
+        String overrided = PropertyManager.getProperty("crowdar.wait.fluent.timeout");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : FLUENT_WAIT_SECONDS_TIMEOUT;
     }
 
     public static long getWaitTimeoutInSeconds() {
-        String overrided = System.getProperty("crowdar.wait.timeout");
+        String overrided = PropertyManager.getProperty("crowdar.wait.timeout");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : WAIT_TIMEOUT_IN_SECONDS;
     }
 
     public static long getWaitScriptTimeout() {
-        String overrided = System.getProperty("crowdar.wait.script.timeout");
+        String overrided = PropertyManager.getProperty("crowdar.wait.script.timeout");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : WAIT_SCRIPT_TIMEOUT;
     }
 
     public static long getWaitImlicitTimeout() {
-        String overrided = System.getProperty("crowdar.wait.impicit.timeout");
+        String overrided = PropertyManager.getProperty("crowdar.wait.impicit.timeout");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : WAIT_IMPLICIT_TIMEOUT;
     }
 
     public static long getWaitForElementTimeout() {
-        String overrided = System.getProperty("crowdar.wait.element.timeout");
+        String overrided = PropertyManager.getProperty("crowdar.wait.element.timeout");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : WAIT_FOR_ELEMENT;
     }
 
     public static long getWaitForAppStart() {
-        String overrided = System.getProperty("crowdar.wait.appStart.timeout");
+        String overrided = PropertyManager.getProperty("crowdar.wait.appStart.timeout");
         return (overrided != null && !overrided.isEmpty()) ? Long.valueOf(overrided) : WAIT_FOR_APP_START;
     }
 
     public static String getSimpleDatePattern() {
-        String overrided = System.getProperty("crowdar.pattern.simpleDate");
+        String overrided = PropertyManager.getProperty("crowdar.pattern.simpleDate");
         return (overrided != null && !overrided.isEmpty()) ? overrided : SIMPLE_DATE_FORMAT;
     }
 
     public static String getCompleteDatePattern() {
-        String overrided = System.getProperty("crowdar.pattern.completeDate");
+        String overrided = PropertyManager.getProperty("crowdar.pattern.completeDate");
         return (overrided != null && !overrided.isEmpty()) ? overrided : COMPLETE_DATE_PATTERN;
     }
 
