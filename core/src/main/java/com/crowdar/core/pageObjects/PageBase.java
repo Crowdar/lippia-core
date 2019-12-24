@@ -47,7 +47,7 @@ abstract public class PageBase {
         logger = Logger.getLogger(this.getClass());
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
-        this.fluentWait = new FluentWait<RemoteWebDriver>(driver).withTimeout(Duration.ofSeconds(30))
+        this.fluentWait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(Constants.getWaitForElementTimeout()))
                 .pollingEvery(Duration.ofMillis(10)).ignoring(NoSuchElementException.class);
     }
 
@@ -97,27 +97,14 @@ abstract public class PageBase {
      *
      * @param locator of the element to be clickable
      */
-    public void clickElement(By locator) {
-
-        WebElement element = getWait().until(ExpectedConditions.elementToBeClickable(locator));
-
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-
-        jse.executeScript("arguments[0].scrollIntoView()", element);
-        element.click();
-    }
+    public abstract void clickElement(By locator);
 
     /**
      * Method that clicks the element specific
      *
      * @param element to be clickable
      */
-    public void clickElement(WebElement element) {
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-
-        jse.executeScript("arguments[0].scrollIntoView()", element);
-        element.click();
-    }
+    public abstract void clickElement(WebElement element);
 
     /**
      * Method that completes the input field specific with a value specific
@@ -129,7 +116,23 @@ abstract public class PageBase {
      */
     public void completeField(By locator, String value) {
         WebElement element = getWebElement(locator);
+        completeField(element, value);
+    }
+
+    public void completeField(WebElement element, String value) {
+        element.click();
         element.clear();
+        element.sendKeys(value);
+    }
+
+    public void completeFieldWithoutClear(By locator, String value) {
+        WebElement element = getWebElement(locator);
+        element.click();
+        element.sendKeys(value);
+    }
+
+    public void completeFieldWithoutClear(WebElement element, String value) {
+        element.click();
         element.sendKeys(value);
     }
 
@@ -141,6 +144,10 @@ abstract public class PageBase {
      */
     public String getElementText(By locator) {
         WebElement element = getWebElement(locator);
+        return getElementText(element);
+    }
+
+    public String getElementText(WebElement element) {
         return element.getText();
     }
 
@@ -184,6 +191,14 @@ abstract public class PageBase {
         } finally {
             driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
         }
+    }
+
+    public boolean isElementVisible(WebElement element) {
+        return element.isDisplayed();
+    }
+
+    public boolean isElementVisible(By locator) {
+        return isElementVisible(getWebElement(locator));
     }
 
     /**
@@ -274,6 +289,13 @@ abstract public class PageBase {
      */
     public void waitForElementVisibility(By locator) {
         getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    /**
+     * Wait until an element is not visible
+     */
+    public void waitForElementInvisibility(By locator) {
+        getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     /**

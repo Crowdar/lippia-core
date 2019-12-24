@@ -6,7 +6,7 @@ import com.sun.jna.platform.win32.WinDef.HWND;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class WinPageBase extends PageBase {
+public abstract class WinPageBase extends PageBase {
     /**
      * On the windows system open file dialog, this function put a text a press
      * accept

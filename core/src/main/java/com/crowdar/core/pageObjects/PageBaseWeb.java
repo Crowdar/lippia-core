@@ -1,5 +1,6 @@
 package com.crowdar.core.pageObjects;
 
+import com.crowdar.bdd.cukes.SharedDriver;
 import com.crowdar.core.Constants;
 import com.paulhammant.ngwebdriver.NgWebDriver;
 import org.openqa.selenium.By;
@@ -15,12 +16,34 @@ import org.openqa.selenium.support.ui.Select;
  *
  * @author: Juan Manuel Spoleti
  */
-abstract public class PageBaseWeb extends PageBase {
+public class PageBaseWeb extends CucumberPageBase {
 
     protected NgWebDriver ngWebDriver;
 
     public PageBaseWeb(RemoteWebDriver driver) {
         super(driver);
+        initConstructor();
+    }
+
+    public PageBaseWeb(SharedDriver driver) {
+        super(driver);
+        initConstructor();
+    }
+
+    @Override
+    public void clickElement(WebElement element) {
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        jse.executeScript("arguments[0].scrollIntoView()", element);
+        element.click();
+    }
+
+    @Override
+    public void clickElement(By locator) {
+        WebElement element = getWait().until(ExpectedConditions.elementToBeClickable(locator));
+        clickElement(element);
+    }
+
+    private void initConstructor() {
         this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
     }
 
@@ -67,46 +90,6 @@ abstract public class PageBaseWeb extends PageBase {
         return ngWebDriver;
     }
 
-    /**
-     * Method that clicks the element specific
-     *
-     * @param locator of the element to be clickable
-     */
-    public void clickElement(By locator) {
-
-        WebElement element = getWait().until(ExpectedConditions.elementToBeClickable(locator));
-
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-
-        jse.executeScript("arguments[0].scrollIntoView()", element);
-        element.click();
-    }
-
-    /**
-     * Method that clicks the element specific
-     *
-     * @param element to be clickable
-     */
-    public void clickElement(WebElement element) {
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-
-        jse.executeScript("arguments[0].scrollIntoView()", element);
-        element.click();
-    }
-
-    /**
-     * Method that completes the input field specific with a value specific
-     * First: obtains the element, Second: clean the field, Third: complete the
-     * field.
-     *
-     * @param locator of the element to be completed
-     * @param value   that i want to write in the field
-     */
-    public void completeField(By locator, String value) {
-        WebElement element = getWebElement(locator);
-        element.clear();
-        element.sendKeys(value);
-    }
 
     /**
      * Method that produce a dynamic wait time waiting to finish an angular
