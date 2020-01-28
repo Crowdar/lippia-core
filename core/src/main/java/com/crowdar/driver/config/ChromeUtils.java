@@ -1,4 +1,4 @@
-package com.crowdar.web;
+package com.crowdar.driver.config;
 
 
 import com.crowdar.core.PropertyManager;

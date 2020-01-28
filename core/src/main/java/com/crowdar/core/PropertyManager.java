@@ -5,16 +5,21 @@
 
 package com.crowdar.core;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.properties.EncryptableProperties;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.properties.EncryptableProperties;
+
+import com.crowdar.driver.config.BrowserConfiguration;
+
 public class PropertyManager {
-    private static Properties properties;
+	private static Logger logger = Logger.getLogger(PropertyManager.class);
     private static final String PROPERTY_FILE_NAME = "config.properties";
+    
+    private static Properties properties;
 
     private PropertyManager() {
     }
@@ -32,7 +37,8 @@ public class PropertyManager {
     }
 
     public static String getProperty(String propertyKey) {
-        return getProperties().getProperty(propertyKey);
+    	 String value = getProperties().getProperty(propertyKey);
+        return value;
     }
 
     public static boolean isPropertyPresentAndNotEmpty(String propertyKey) {

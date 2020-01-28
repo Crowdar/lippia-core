@@ -31,7 +31,7 @@ class DriverFactory {
             RemoteWebDriver driver;
 
             if (StringUtils.isEmpty(PropertyManager.getProperty("crowdar.driverHub"))) {
-                Constructor<?> constructor = projectType.getDriverImplementation().getDeclaredConstructor(Capabilities.class);
+                Constructor<?> constructor = projectType.getLocalDriverImplementation().getDeclaredConstructor(Capabilities.class);
                 driver = (RemoteWebDriver) constructor.newInstance(projectType.getDriverConfig().getDesiredCapabilities());
             } else {
                 Constructor<?> constructor = RemoteWebDriver.class.getDeclaredConstructor(URL.class, Capabilities.class);
@@ -44,13 +44,13 @@ class DriverFactory {
 
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException | UnreachableBrowserException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error creating driver: ");
+            logger.error(e.getCause());
+            throw new RuntimeException("Error creating driver", e.getCause());
 
         } catch (ClassNotFoundException e) {
             logger.error("error loading strategy class: com.crowdar.driver.setupStrategy." + PropertyManager.getProperty("crowdar.setupStrategy"));
             logger.error("Verify if path exist.");
-            throw new RuntimeException("Error creating driver: ");
+            throw new RuntimeException("Error creating driver");
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

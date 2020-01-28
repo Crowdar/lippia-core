@@ -19,7 +19,6 @@ public class DriverManagerTest extends PowerMockTestCase {
 	@BeforeMethod
 	public void setUp() {
 		PowerMockito.mockStatic(PropertyManager.class);
-		when(PropertyManager.getProperty("crowdar.cucumber.browser")).thenReturn("CHROMEDYNAMIC");
 		when(PropertyManager.getProperty("crowdar.projectType")).thenReturn("WEB_CHROME");
 		when(PropertyManager.getProperty("crowdar.setupStrategy")).thenReturn("web.DownloadLatestStrategy");
 	}
