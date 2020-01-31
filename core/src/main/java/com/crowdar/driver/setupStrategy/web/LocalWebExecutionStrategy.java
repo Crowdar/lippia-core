@@ -6,6 +6,8 @@ import com.crowdar.driver.setupStrategy.SetupStrategy;
 
 import java.io.File;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 public class LocalWebExecutionStrategy implements SetupStrategy {
 
     @Override
@@ -28,7 +30,7 @@ public class LocalWebExecutionStrategy implements SetupStrategy {
     }
 
     @Override
-    public void afterDriverStartSetup() {
+    public void afterDriverStartSetup(RemoteWebDriver driver) {
         // TODO Auto-generated method stub
 
     }

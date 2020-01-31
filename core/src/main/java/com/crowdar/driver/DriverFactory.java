@@ -39,7 +39,7 @@ class DriverFactory {
                 driver = (RemoteWebDriver) constructor.newInstance(url, projectType.getDriverConfig().getDesiredCapabilities());
             }
 
-            setupStrategy.afterDriverStartSetup();
+            setupStrategy.afterDriverStartSetup(driver);
             return driver;
 
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException

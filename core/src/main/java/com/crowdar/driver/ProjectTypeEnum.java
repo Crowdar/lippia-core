@@ -1,7 +1,5 @@
 package com.crowdar.driver;
 
-import java.sql.DriverPropertyInfo;
-
 import org.apache.log4j.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
