@@ -1,22 +1,40 @@
 package com.crowdar.driver.config;
 
-import com.crowdar.core.PropertyManager;
-import com.crowdar.json.JsonUtil;
-import com.crowdar.web.ChromeUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
-import io.github.bonigarcia.wdm.DriverManagerType;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.TreeMap;
+
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
+import com.crowdar.core.JsonUtils;
+import com.crowdar.core.PropertyManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.TagType;
+import com.github.jknack.handlebars.Template;
+
+import io.github.bonigarcia.wdm.DriverManagerType;
 
 public enum BrowserConfiguration implements AutomationConfiguration {
 
+	GENERIC {
+		@Override
+		public DriverManagerType getDriverManagerType() {
+			String bonigarciaDriverType = PropertyManager.getProperty("crowdar.localDriverType");
+			return DriverManagerType.valueOf(bonigarciaDriverType.toUpperCase());
+		}
+		
+		@Override
+		public DesiredCapabilities getDesiredCapabilities() {
+			return capabilitiesFromJson("BrowserConfiguration_GENERIC");
+	    }
+	},
     FIREFOX {
         @Override
         public DriverManagerType getDriverManagerType() {
@@ -116,6 +134,7 @@ public enum BrowserConfiguration implements AutomationConfiguration {
             options.addArguments("--headless");
             options.addArguments("start-maximized");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+            
             return capabilities;
         }
     },
@@ -145,31 +164,29 @@ public enum BrowserConfiguration implements AutomationConfiguration {
 
         @Override
         public DesiredCapabilities getDesiredCapabilities() {
-            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-            capabilitiesFromJson(capabilities, "CUSTOM_CHROME");
-            return capabilities;
-
+            return capabilitiesFromJson("CUSTOM_CHROME");
         }
     };
 
-    public void capabilitiesFromJson(DesiredCapabilities capabilities, String driverName) {
-        String path = PropertyManager.getProperty("crowdar.driver.capabilities.json.path");
+    public DesiredCapabilities capabilitiesFromJson(String driverName) {
+        String path = PropertyManager.getProperty("crowdar.driver.capabilities.json_path");
         if (path == null || path.isEmpty()) {
             String msg = String.format("Error creating %s driver -- Please define property crowdar.driver.capabilities.json.path in config.property properly ", driverName);
             logger.error(msg);
             throw new RuntimeException(msg);
         }
-
+        TreeMap<String,?> result = null;
         try {
-            Map<String, String> map = JsonUtil.i().getMapper().readValue(new File(path), new TypeReference<Map<String, String>>() {
-            });
-            map.keySet().stream().forEach(k -> {
-                capabilities.setCapability(k, map.get(k));
-            });
+        	String capabilities = JsonUtils.getJSON(Paths.get(path));
+        	capabilities = JsonUtils.replaceVarsFromPropertyManager(capabilities);
+              
+        	result = new ObjectMapper().readValue(capabilities, TreeMap.class);
+        	
         } catch (IOException e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }
+        return new DesiredCapabilities(result);
 
     }
 
@@ -186,5 +203,6 @@ public enum BrowserConfiguration implements AutomationConfiguration {
     }
 
     public abstract DriverManagerType getDriverManagerType();
+    
 
 }

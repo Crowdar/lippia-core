@@ -106,12 +106,16 @@ public class MethodsService {
     private static String getURL(Request req) {
         String url = req.getUrl();
         String endpoint = req.getEndpoint();
-        if ((url == null || url.isEmpty()) && (endpoint == null || endpoint.isEmpty())) {
-            url = BASE_URL;
-        } else if (!(endpoint == null) && !(endpoint.isEmpty())) {
-            url = BASE_URL + endpoint;
+        
+        if(url == null || url.isEmpty()) {
+        	url = BASE_URL;
         }
-        return url;
+        
+        if(endpoint == null) {
+        	endpoint = "";
+        }
+        
+        return BASE_URL + endpoint;
     }
 
 }
