@@ -8,8 +8,6 @@ import com.github.jknack.handlebars.TagType;
 import com.github.jknack.handlebars.Template;
 import com.google.common.collect.Lists;
 
-import io.appium.java_client.android.connection.HasNetworkConnection;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,8 +48,8 @@ public class JsonUtils {
      * @return String (json)
      */
     public static String getJSONFromFile(String fileName) {
-    	String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat("jsons").concat(File.separator).concat(fileName).concat(".json");
-		return getJSON(Paths.get(path));
+        String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat("jsons").concat(File.separator).concat(fileName).concat(".json");
+        return getJSON(Paths.get(path));
     }
 
     /**
@@ -62,20 +60,20 @@ public class JsonUtils {
      * @return String (json)
      */
     public static String getJSON(Path file) {
-    	ObjectMapper mapper = new ObjectMapper();
-    	String json = null;
-    	try {
-    		FileInputStream fis = new FileInputStream(file.toFile());
-    		JsonNode rootNode = mapper.readTree(fis);
-    		json = rootNode.toString();
-    	} catch (IOException e) {
-    		System.out.println("JSON was not found " + file + " " + e.getMessage());
-    	}
-    	return json;
+        ObjectMapper mapper = new ObjectMapper();
+        String json = null;
+        try {
+            FileInputStream fis = new FileInputStream(file.toFile());
+            JsonNode rootNode = mapper.readTree(fis);
+            json = rootNode.toString();
+        } catch (IOException e) {
+            System.out.println("JSON was not found " + file + " " + e.getMessage());
+        }
+        return json;
     }
 
     public static String prettyJsonToCompact(String prettyJson) {
-        JsonNode jsonNode = null; 
+        JsonNode jsonNode = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             jsonNode = objectMapper.readValue(prettyJson, JsonNode.class);
@@ -86,20 +84,19 @@ public class JsonUtils {
     }
 
     /**
-     * 
-     * @param jsonUnparsed json as String with Handlebars {{  }} to be replaced from propertyManager 
-     * @return String with replaced handlebars vars 
-     * @throws IOException 
+     * @param jsonUnparsed json as String with Handlebars {{  }} to be replaced from propertyManager
+     * @return String with replaced handlebars vars
+     * @throws IOException
      */
     public static String replaceVarsFromPropertyManager(String jsonUnparsed) throws IOException {
-	    Handlebars handlebars = new Handlebars();
-		Template template = handlebars.compileInline(jsonUnparsed);
-		List<String> vars = template.collect(TagType.VAR);
-		for (String var : vars) {
-			jsonUnparsed = jsonUnparsed.replace("{{"+var+"}}", PropertyManager.getProperty(var));
-		}
-		return jsonUnparsed;
-	}
-    
-    
+        Handlebars handlebars = new Handlebars();
+        Template template = handlebars.compileInline(jsonUnparsed);
+        List<String> vars = template.collect(TagType.VAR);
+        for (String var : vars) {
+            jsonUnparsed = jsonUnparsed.replace("{{" + var + "}}", PropertyManager.getProperty(var));
+        }
+        return jsonUnparsed;
+    }
+
+
 }

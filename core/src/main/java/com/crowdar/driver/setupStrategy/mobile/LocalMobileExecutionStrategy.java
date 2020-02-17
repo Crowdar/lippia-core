@@ -3,10 +3,9 @@ package com.crowdar.driver.setupStrategy.mobile;
 import com.crowdar.driver.config.AutomationConfiguration;
 import com.crowdar.driver.config.MobilePlatformConfiguration;
 import com.crowdar.driver.setupStrategy.SetupStrategy;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
-
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class LocalMobileExecutionStrategy implements SetupStrategy {
 

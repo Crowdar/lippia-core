@@ -193,15 +193,11 @@ public class PageBaseWeb extends CucumberPageBase {
      */
     protected boolean isElementPresentAndDisplayed(By by) {
         boolean isPresent = false;
-        // Temporarily set the implicit timeout to zero
         driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         try {
-            // Check to see if there are any elements in the found list
             List<WebElement> elements = driver.findElements(by);
             isPresent = (elements.size() == 1) && elements.get(0).isDisplayed();
-            // && elements.get(0).isEnabled();
         } finally {
-            // Return to the original implicit timeout value
             driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
         }
 

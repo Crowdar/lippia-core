@@ -1,40 +1,33 @@
 package com.crowdar.driver.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.TreeMap;
-
+import com.crowdar.core.JsonUtils;
+import com.crowdar.core.PropertyManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.bonigarcia.wdm.DriverManagerType;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.crowdar.core.JsonUtils;
-import com.crowdar.core.PropertyManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.TagType;
-import com.github.jknack.handlebars.Template;
-
-import io.github.bonigarcia.wdm.DriverManagerType;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.TreeMap;
 
 public enum BrowserConfiguration implements AutomationConfiguration {
 
-	GENERIC {
-		@Override
-		public DriverManagerType getDriverManagerType() {
-			String bonigarciaDriverType = PropertyManager.getProperty("crowdar.localDriverType");
-			return DriverManagerType.valueOf(bonigarciaDriverType.toUpperCase());
-		}
-		
-		@Override
-		public DesiredCapabilities getDesiredCapabilities() {
-			return capabilitiesFromJson("BrowserConfiguration_GENERIC");
-	    }
-	},
+    GENERIC {
+        @Override
+        public DriverManagerType getDriverManagerType() {
+            String bonigarciaDriverType = PropertyManager.getProperty("crowdar.localDriverType");
+            return DriverManagerType.valueOf(bonigarciaDriverType.toUpperCase());
+        }
+
+        @Override
+        public DesiredCapabilities getDesiredCapabilities() {
+            return capabilitiesFromJson("BrowserConfiguration_GENERIC");
+        }
+    },
     FIREFOX {
         @Override
         public DriverManagerType getDriverManagerType() {
@@ -134,7 +127,7 @@ public enum BrowserConfiguration implements AutomationConfiguration {
             options.addArguments("--headless");
             options.addArguments("start-maximized");
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-            
+
             return capabilities;
         }
     },
@@ -175,13 +168,13 @@ public enum BrowserConfiguration implements AutomationConfiguration {
             logger.error(msg);
             throw new RuntimeException(msg);
         }
-        TreeMap<String,?> result = null;
+        TreeMap<String, ?> result = null;
         try {
-        	String capabilities = JsonUtils.getJSON(Paths.get(path));
-        	capabilities = JsonUtils.replaceVarsFromPropertyManager(capabilities);
-              
-        	result = new ObjectMapper().readValue(capabilities, TreeMap.class);
-        	
+            String capabilities = JsonUtils.getJSON(Paths.get(path));
+            capabilities = JsonUtils.replaceVarsFromPropertyManager(capabilities);
+
+            result = new ObjectMapper().readValue(capabilities, TreeMap.class);
+
         } catch (IOException e) {
             logger.error(e.getMessage());
             e.printStackTrace();
@@ -203,6 +196,6 @@ public enum BrowserConfiguration implements AutomationConfiguration {
     }
 
     public abstract DriverManagerType getDriverManagerType();
-    
+
 
 }

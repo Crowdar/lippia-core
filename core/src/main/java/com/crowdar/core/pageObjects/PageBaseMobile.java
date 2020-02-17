@@ -1,15 +1,11 @@
 package com.crowdar.core.pageObjects;
 
 import com.crowdar.bdd.cukes.SharedDriver;
-import com.crowdar.core.Constants;
 import com.crowdar.core.Utils;
 import io.appium.java_client.MobileBy;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * This class represents the things in common between Mobile projects

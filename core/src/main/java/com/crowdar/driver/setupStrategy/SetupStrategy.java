@@ -1,8 +1,7 @@
 package com.crowdar.driver.setupStrategy;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
-
 import com.crowdar.driver.config.AutomationConfiguration;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public interface SetupStrategy {
 
