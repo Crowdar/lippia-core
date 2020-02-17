@@ -34,7 +34,7 @@ class DriverFactory {
                 Constructor<?> constructor = projectType.getLocalDriverImplementation().getDeclaredConstructor(Capabilities.class);
                 driver = (RemoteWebDriver) constructor.newInstance(projectType.getDriverConfig().getDesiredCapabilities());
             } else {
-                Constructor<?> constructor = RemoteWebDriver.class.getDeclaredConstructor(URL.class, Capabilities.class);
+                Constructor<?> constructor = projectType.getRemoteDriverImplementation().getDeclaredConstructor(URL.class, Capabilities.class);
                 URL url = new URL(PropertyManager.getProperty("crowdar.driverHub"));
                 driver = (RemoteWebDriver) constructor.newInstance(url, projectType.getDriverConfig().getDesiredCapabilities());
             }
