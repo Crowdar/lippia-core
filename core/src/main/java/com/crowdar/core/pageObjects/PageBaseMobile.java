@@ -26,16 +26,6 @@ public class PageBaseMobile extends CucumberPageBase {
         super(driver);
     }
 
-    public void scrollToElement(String accessibilityId) {
-        String uiSelector = "new UiSelector().description(\"" + accessibilityId
-                + "\")";
-
-        String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
-                + uiSelector + ");";
-
-        driver.findElement(MobileBy.AndroidUIAutomator(command));
-    }
-
     /**
      * Completes the input field specific with a value specific and check if its empty, if its empty, clear the field
      * First: cleans the field if its not empty, Second: completes the field.
@@ -68,7 +58,7 @@ public class PageBaseMobile extends CucumberPageBase {
         this.clickElement(element);
     }
 
-    protected void scrollToElementId(String id) {
+    public void scrollToElementByResourceId(String id) {
         String uiSelector = "new UiSelector().resourceId(\"" + id
                 + "\")";
 
@@ -78,55 +68,15 @@ public class PageBaseMobile extends CucumberPageBase {
         driver.findElement(MobileBy.AndroidUIAutomator(command));
     }
 
-    @Override
-    public void clickElement(By locator) {
-        WebElement element = getWebElement(locator);
-        clickElement(element);
+
+    public void scrollToElementByAccessibilityId(String accessibilityId) {
+        String uiSelector = "new UiSelector().description(\"" + accessibilityId
+                + "\")";
+
+        String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
+                + uiSelector + ");";
+
+        driver.findElement(MobileBy.AndroidUIAutomator(command));
     }
 
-    @Override
-    public void clickElement(WebElement element) {
-        element.click();
-    }
-
-    @Override
-    public boolean isElementVisible(WebElement element) {
-        return element.isEnabled();
-    }
-
-    @Override
-    public boolean isElementVisible(By locator) {
-        return isElementVisible(getWebElement(locator));
-    }
-
-    @Override
-    public void waitForElementVisibility(By locator) {
-        getFluentWait().until(driver -> driver.findElement(locator).isEnabled());
-    }
-
-    @Override
-    public void waitForElementInvisibility(By locator) {
-        getDriver().manage().timeouts().implicitlyWait(0L, SECONDS);
-        try {
-            boolean isPresent = true;
-            long attempts = Constants.getWaitForElementTimeout() * 2;
-            while (isPresent) {
-                try {
-                    getDriver().findElement(locator);
-                    isPresent = true;
-                } catch (NoSuchElementException var7) {
-                    System.out.println(var7.getMessage());
-                    isPresent = false;
-                }
-                if (attempts == 0) {
-                    System.out.println("Element is still visible.");
-                    isPresent = false;
-                }
-                sleep(500);
-                attempts--;
-            }
-        } finally {
-            getDriver().manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), SECONDS);
-        }
-    }
 }

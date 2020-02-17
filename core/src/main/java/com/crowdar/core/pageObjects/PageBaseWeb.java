@@ -1,8 +1,8 @@
 package com.crowdar.core.pageObjects;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import com.crowdar.bdd.cukes.SharedDriver;
+import com.crowdar.core.Constants;
+import com.paulhammant.ngwebdriver.NgWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -11,9 +11,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
-import com.crowdar.bdd.cukes.SharedDriver;
-import com.crowdar.core.Constants;
-import com.paulhammant.ngwebdriver.NgWebDriver;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class represents the things in common between Web projects
@@ -45,6 +44,14 @@ public class PageBaseWeb extends CucumberPageBase {
     public void clickElement(By locator) {
         WebElement element = getWait().until(ExpectedConditions.elementToBeClickable(locator));
         clickElement(element);
+    }
+
+    public void clickElementWithoutScroll(By locator) {
+        super.clickElement(locator);
+    }
+
+    public void clickElementWithoutScroll(WebElement element) {
+        super.clickElement(element);
     }
 
     private void initConstructor() {
@@ -175,31 +182,30 @@ public class PageBaseWeb extends CucumberPageBase {
     public void deselectOptionDropdownByText(By locator, String text) {
         deselectOptionDropdownByText(getWebElement(locator), text);
     }
-    
-    /**
-	 * Similar to does element exist, but also verifies that only one such
-	 * element exists and that it is displayed
-	 * 
-	 * @param by
-	 *            By statement locating the element.
-	 * @return boolean if one and only one element matching the locator is
-	 *         found, and if it is displayed and enabled, F otherwise.
-	 */
-	protected boolean isElementPresentAndDisplayed(By by) {
-		boolean isPresent = false;
-		// Temporarily set the implicit timeout to zero
-		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-		try {
-			// Check to see if there are any elements in the found list
-			List<WebElement> elements = driver.findElements(by);
-			isPresent = (elements.size() == 1) && elements.get(0).isDisplayed();
-			// && elements.get(0).isEnabled();
-		} finally {
-			// Return to the original implicit timeout value
-			driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
-		}
 
-		return isPresent;
-	}
-    
+    /**
+     * Similar to does element exist, but also verifies that only one such
+     * element exists and that it is displayed
+     *
+     * @param by By statement locating the element.
+     * @return boolean if one and only one element matching the locator is
+     * found, and if it is displayed and enabled, F otherwise.
+     */
+    protected boolean isElementPresentAndDisplayed(By by) {
+        boolean isPresent = false;
+        // Temporarily set the implicit timeout to zero
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        try {
+            // Check to see if there are any elements in the found list
+            List<WebElement> elements = driver.findElements(by);
+            isPresent = (elements.size() == 1) && elements.get(0).isDisplayed();
+            // && elements.get(0).isEnabled();
+        } finally {
+            // Return to the original implicit timeout value
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+        }
+
+        return isPresent;
+    }
+
 }

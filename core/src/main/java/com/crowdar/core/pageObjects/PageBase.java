@@ -97,14 +97,19 @@ abstract public class PageBase {
      *
      * @param locator of the element to be clickable
      */
-    public abstract void clickElement(By locator);
+    public void clickElement(By locator) {
+        WebElement element = getWebElement(locator);
+        clickElement(element);
+    }
 
     /**
      * Method that clicks the element specific
      *
      * @param element to be clickable
      */
-    public abstract void clickElement(WebElement element);
+    public void clickElement(WebElement element) {
+        element.click();
+    }
 
     /**
      * Method that completes the input field specific with a value specific
@@ -120,25 +125,48 @@ abstract public class PageBase {
     }
 
     public void completeField(WebElement element, String value) {
-        element.click();
+        clickElement(element);
+        element.clear();
+        completeFieldWithoutClick(element, value);
+    }
+
+    /**
+     * Complete field without doing clear of the element.
+     * Only clicks the element and complete the field with the value.
+     *
+     * @param locator of the element to be completed
+     * @param value   that i want to write in the field
+     */
+    public void completeFieldWithoutClear(By locator, String value) {
+        WebElement element = getWebElement(locator);
+        clickElement(element);
+        completeFieldWithoutClick(element, value);
+    }
+
+    /**
+     * Complete field without clicking it.
+     * Only clear the element and complete the field with the value.
+     *
+     * @param locator of the element to be completed
+     * @param value   that i want to write in the field
+     */
+    public void completeFieldWithoutClick(By locator, String value) {
+        WebElement element = getWebElement(locator);
+        completeFieldWithoutClick(element, value);
+    }
+
+    public void completeFieldWithoutClear(WebElement element, String value) {
+        clickElement(element);
+        element.sendKeys(value);
+    }
+
+    public void completeFieldWithoutClick(WebElement element, String value) {
         element.clear();
         element.sendKeys(value);
     }
 
-    public void completeFieldWithoutClear(By locator, String value) {
-        WebElement element = getWebElement(locator);
-        element.click();
-        element.sendKeys(value);
-    }
-
-    public void completeFieldWithoutClear(WebElement element, String value) {
-        element.click();
-        element.sendKeys(value);
-    }
-
     /**
-     * Method that get value of field s First: obtains the element, Second: get
-     * the value
+     * Method that get the text of a element.
      *
      * @param locator of the element to be completed
      */
@@ -149,6 +177,20 @@ abstract public class PageBase {
 
     public String getElementText(WebElement element) {
         return element.getText();
+    }
+
+    /**
+     * Method that get the attribute 'value' of a element, usually an input.
+     *
+     * @param locator of the element to be completed
+     */
+    public String getInputValue(By locator) {
+        WebElement element = getWebElement(locator);
+        return getInputValue(element);
+    }
+
+    public String getInputValue(WebElement element) {
+        return element.getAttribute("value");
     }
 
     /**
@@ -164,7 +206,7 @@ abstract public class PageBase {
     }
 
     /**
-     * Method that unchecks the option specific if it is not unselected
+     * Method that un checks the option specific if it is not unselected
      *
      * @param locator of the checkbox
      */
