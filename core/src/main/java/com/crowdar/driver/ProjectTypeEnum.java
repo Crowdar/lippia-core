@@ -13,6 +13,7 @@ import com.crowdar.driver.config.AutomationConfiguration;
 import com.crowdar.driver.config.BrowserConfiguration;
 import com.crowdar.driver.config.MobilePlatformConfiguration;
 
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
@@ -52,8 +53,21 @@ public enum ProjectTypeEnum {
 
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
-            // TODO: hace falta analizarlo un poco mas, me pa que hay que agregarlo como una property
-            return null;
+        	   String driverClass = PropertyManager.getProperty("crowdar.remoteDriverType");
+
+               if (driverClass.isEmpty()) {
+                   String msg = String.format("Error getting driver type -- For remote runs you need to specify a valid crowdar.remoteDriverType property. /r Current Values is '%s'", driverClass);
+                   logger.error(msg);
+                   throw new RuntimeException(msg);
+               }
+               
+               Class<? extends RemoteWebDriver> remoteDriverImplementation;
+			try {
+				remoteDriverImplementation = (Class<? extends RemoteWebDriver>) Class.forName(driverClass);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("Invalid value for remoteDriverImplementation: " + driverClass);
+			}
+            return remoteDriverImplementation;
         }
     },
     WEB_CHROME {
