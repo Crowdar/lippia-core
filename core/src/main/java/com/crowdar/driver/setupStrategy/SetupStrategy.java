@@ -5,7 +5,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public interface SetupStrategy {
 
-    public void beforeDriverStartSetup(AutomationConfiguration contextConfiguration);
+    void beforeDriverStartSetup(AutomationConfiguration contextConfiguration);
 
-    public void afterDriverStartSetup(RemoteWebDriver driver);
+    void afterDriverStartSetup(RemoteWebDriver driver);
 }
