@@ -25,14 +25,9 @@ public class EmailUtil {
     private static Session session;
 
     private static Properties getProperties() {
-
         Properties properties = new Properties();
-        properties.put("mail.store.protocol", PropertyManager.getProperty("email.protocol"));
-        properties.put("mail.pop3s.ssl.trust", "*");
-        properties.put("mail.pop3s.host", PropertyManager.getProperty("email.host"));
-        properties.put("mail.pop3s.port", PropertyManager.getProperty("email.port"));
-
-        return properties;
+        EmailPropertiesEnum emailPropertiesEnum = EmailPropertiesEnum.get(PropertyManager.getProperty("email.protocol").toUpperCase());
+        return emailPropertiesEnum.getProperties(properties);
     }
 
     /**
