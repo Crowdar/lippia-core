@@ -3,10 +3,9 @@ package com.crowdar.driver.setupStrategy.web;
 import com.crowdar.driver.config.AutomationConfiguration;
 import com.crowdar.driver.config.BrowserConfiguration;
 import com.crowdar.driver.setupStrategy.SetupStrategy;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
-
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class LocalWebExecutionStrategy implements SetupStrategy {
 
