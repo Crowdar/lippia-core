@@ -1,11 +1,12 @@
 package com.crowdar.driver.setupStrategy;
 
-import com.crowdar.driver.config.AutomationConfiguration;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import com.crowdar.driver.ProjectTypeEnum;
 
 public interface SetupStrategy {
 
-    void beforeDriverStartSetup(AutomationConfiguration contextConfiguration);
+    void beforeDriverStartSetup(ProjectTypeEnum configuration);
 
     void afterDriverStartSetup(RemoteWebDriver driver);
 }
