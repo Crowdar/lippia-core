@@ -22,7 +22,7 @@ class DriverFactory {
     protected static RemoteWebDriver createDriver() {
         try {
 
-            ProjectTypeEnum projectType = ProjectTypeEnum.get(PropertyManager.getProperty("crowdar.projectType"));
+            ProjectTypeEnum projectType = ProjectTypeEnum.get(PropertyManager.getProperty(ProjectTypeEnum.PROJECT_TYPE_KEY));
 
             Class<?> StrategyClass = Class.forName("com.crowdar.driver.setupStrategy." + PropertyManager.getProperty("crowdar.setupStrategy"));
             SetupStrategy setupStrategy = (SetupStrategy) StrategyClass.getDeclaredConstructor().newInstance();

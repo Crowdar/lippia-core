@@ -230,8 +230,9 @@ public class ExtentReportManager {
 
     public static void addCucumberPassStep() {
         stepTest.get().pass(Result.Type.PASSED.toString());
-        String screenShotOnSuccessStep = PropertyManager.getProperty("crowdar.extent.screenshotOnSuccess");
-        if (screenShotOnSuccessStep != null && !screenShotOnSuccessStep.isEmpty()) {
+        
+        Boolean screenShotOnSuccessStep = new Boolean(PropertyManager.getProperty("crowdar.report.screenshotOnSuccess"));
+        if (screenShotOnSuccessStep) {
             try {
                 stepTest.get().addScreenCaptureFromPath(takeScreenshot());
             } catch (IOException e) {
@@ -241,21 +242,23 @@ public class ExtentReportManager {
     }
 
     public static void addCucumberFailStep(Throwable error) {
-        String stack = PropertyManager.getProperty("crowdar.extent.stacktrace.detail");
-        if (stack != null && !stack.isEmpty() && stack.equalsIgnoreCase("true")) {
-            stepTest.get().fail(error);
+    	
+    	Boolean stackTrace = new Boolean(PropertyManager.getProperty("crowdar.report.stackTraceDetail"));
+    	if (stackTrace) {
+    		stepTest.get().fail(error);
         } else {
-            stepTest.get().fail(error.getMessage());
+        	stepTest.get().fail(error.getMessage());
         }
 
         Boolean screenshotDisable = new Boolean(PropertyManager.getProperty("crowdar.report.disable_screenshot_on_failure"));
-        if (screenshotDisable.equals(Boolean.FALSE)) {
+        if (!screenshotDisable) {
             try {
                 stepTest.get().addScreenCaptureFromPath(takeScreenshot());
             } catch (IOException e) {
                 logger4j.error(e.getStackTrace());
             }
         }
+        
     }
 
     private static void addCucumberSkipStep() {

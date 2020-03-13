@@ -2,9 +2,12 @@ package com.crowdar.driver;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.properties.EncryptableProperties;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -66,6 +69,11 @@ public enum ProjectTypeEnum {
 			}
             return remoteDriverImplementation;
         }
+
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
     },
     WEB_CHROME {
         @Override
@@ -77,6 +85,11 @@ public enum ProjectTypeEnum {
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return RemoteWebDriver.class;
         }
+
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
     },
     WEB_FIREFOX {
         @Override
@@ -89,6 +102,10 @@ public enum ProjectTypeEnum {
             return RemoteWebDriver.class;
         }
 
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
     },
     WEB_EDGE {
         @Override
@@ -101,6 +118,10 @@ public enum ProjectTypeEnum {
             return RemoteWebDriver.class;
         }
 
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
     },
     WEB_IE {
         @Override
@@ -113,6 +134,10 @@ public enum ProjectTypeEnum {
             return RemoteWebDriver.class;
         }
 
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
     },
     WEB_SAFARI {
         @Override
@@ -125,6 +150,10 @@ public enum ProjectTypeEnum {
             return RemoteWebDriver.class;
         }
 
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
     },
     MOBILE_ANDROID {
         @Override
@@ -137,6 +166,11 @@ public enum ProjectTypeEnum {
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return AndroidDriver.class;
         }
+
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
 
     },
     MOBILE_IOS {
@@ -151,8 +185,50 @@ public enum ProjectTypeEnum {
             return getLocalDriverImplementation();
         }
 
-    },
+		@Override
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
 
+    },
+    API{
+        @Override
+        public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
+            return null;
+        }
+
+        @Override
+        public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
+            return null;
+        }
+
+		@Override
+		public Properties getProperties() {
+	        Properties properties = new EncryptableProperties(new StandardPBEStringEncryptor());
+			properties.put("crowdar.report.disable_screenshot_on_failure", true);
+			properties.put("crowdar.report.stackTraceDetail", true);
+			return properties;
+		}
+    },
+    BD{
+        @Override
+        public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
+            return null;
+        }
+
+        @Override
+        public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
+            return null;
+        }
+
+		@Override
+		public Properties getProperties() {
+	        Properties properties = new EncryptableProperties(new StandardPBEStringEncryptor());
+			properties.put("crowdar.report.disable_screenshot_on_failure", true);
+			properties.put("crowdar.report.stackTraceDetail", true);
+			return properties;
+		}
+    },
     WIN32 {
         @Override
         public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
@@ -163,9 +239,16 @@ public enum ProjectTypeEnum {
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return null;
         }
+
+		public Properties getProperties() {
+	        return new EncryptableProperties(new StandardPBEStringEncryptor());	
+		}
+
     };
 
     private static Logger logger = Logger.getLogger(ProjectTypeEnum.class);
+
+    public static final String PROJECT_TYPE_KEY = "crowdar.projectType";
 
     /**
      * @return driver type to create instance on LocalWebExecutionStrategy or DownloadLatestStrategy. both local.
@@ -177,6 +260,7 @@ public enum ProjectTypeEnum {
      */
     public abstract Class<? extends RemoteWebDriver> getRemoteDriverImplementation();
 
+    public abstract Properties getProperties();
     
     public DesiredCapabilities getDesiredCapabilities() {
         String path = PropertyManager.getProperty("crowdar.projectType.driverCapabilities.jsonFile");
@@ -208,5 +292,6 @@ public enum ProjectTypeEnum {
             throw new RuntimeException("Invalid value for enum ProjectTypeEnum : " + key);
         }
     }
+
 
 }
