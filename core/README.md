@@ -1,4 +1,71 @@
-# CrowdarCoreFramework
+---------------------  
+
+ ProjectTypes:
+
+ 		Permite definir en tipo de driver con el que vamos a operar.
+ 		Se cuenta con ciertos templates predefinidos con las principales conbinaciones y uno generico para poder configurar a demanda.
+ 		En todos los casos es necesario definir la property crowdar.projectType.driverCapabilities.jsonFile en el cual definiremos la capabilities
+ 		con las que peticionaremos el driver.
+
+ 	WEB_CHROME 
+ 		local: org.openqa.selenium.chrome.ChromeDriver
+ 		remote: org.openqa.selenium.remote.RemoteWebDriver  
+ 		 
+ 	WEB_FIREFOX
+ 		local: org.openqa.selenium.firefox.FirefoxDriver
+ 		remote: org.openqa.selenium.remote.RemoteWebDriver 
+ 		
+ 	WEB_EDGE
+ 		local: org.openqa.selenium.edge.EdgeDriver
+ 		remote: org.openqa.selenium.remote.RemoteWebDriver
+ 	
+ 	WEB_IE
+ 		local: org.openqa.selenium.ie.InternetExplorerDriver
+ 		remote: org.openqa.selenium.remote.RemoteWebDriver
+ 		
+ 	WEB_SAFARI
+ 		local: org.openqa.selenium.safari.SafariDriver
+ 		remote: org.openqa.selenium.remote.RemoteWebDriver
+ 		
+ 	MOBILE_ANDROID
+ 		local: no soportado
+ 		remote: io.appium.java_client.android.AndroidDriver
+ 		
+ 	MOBILE_IOS
+ 		local: no soportado
+ 		remote: io.appium.java_client.ios.IOSDriver
+ 	
+ 	GENERIC
+ 		Para poder utilizar este tipo de proyecto es necesario definir 2 properties en el config.properties del proyecto.
+ 		Las properties son crowdar.localDriverType y crowdar.remoteDriverType.
+ 		 
+ 		Ejemplo: 
+	 		+ crowdar.projectType.localDriverType=org.openqa.selenium.chrome.ChromeDriver
+	 		+ crowdar.projectType.remoteDriverType=org.openqa.selenium.remote.RemoteWebDriver	
+ 
+   ---------------------
+
+Definiremos algunas configuraciones basicas a modo de ejemplo relacionadas al tipo de proyecto;
+
+ crowdar.projectType=WEB_FIREFOX
+ crowdar.projectType.driverCapabilities.jsonFile=src/main/resources/browsers/firefoxCapabilities.json
+ 
+ 	ó
+ 
+ crowdar.projectType=WEB_CHROME
+ crowdar.projectType.driverCapabilities.jsonFile=src/main/resources/browsers/chromeCapabilities.json
+ 
+  ó
+  
+ crowdar.projectType=GENERIC
+ crowdar.projectType.driverCapabilities.jsonFile=src/main/resources/browsers/chromeCapabilities.json
+ crowdar.projectType.localDriverType=org.openqa.selenium.chrome.ChromeDriver
+ crowdar.projectType.remoteDriverType=org.openqa.selenium.remote.RemoteWebDriver
+ 
+ ---------------------
+
+
+
 
 El root del framework tiene todas las librerias que son utilizadas dentro del core para correr cualquier proyecto cliente
 
