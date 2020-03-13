@@ -1,8 +1,9 @@
 package com.crowdar.core;
 
-import com.crowdar.bdd.cukes.SharedDriver;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import com.crowdar.bdd.cukes.SharedDriver;
 
 
 /**

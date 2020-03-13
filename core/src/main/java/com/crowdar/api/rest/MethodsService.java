@@ -1,11 +1,11 @@
 package com.crowdar.api.rest;
 
-import com.crowdar.core.JsonUtils;
+import static com.crowdar.api.rest.APIManager.BASE_URL;
+import static com.crowdar.api.rest.APIManager.setLastResponse;
 
 import java.util.Map;
 
-import static com.crowdar.api.rest.APIManager.BASE_URL;
-import static com.crowdar.api.rest.APIManager.setLastResponse;
+import com.crowdar.core.JsonUtils;
 
 public class MethodsService {
 

@@ -1,8 +1,8 @@
 package com.crowdar.email;
 
-import com.crowdar.core.PropertyManager;
-
 import java.util.Properties;
+
+import com.crowdar.core.PropertyManager;
 
 public enum EmailPropertiesEnum {
 

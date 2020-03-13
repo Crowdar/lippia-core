@@ -1,11 +1,24 @@
 package com.crowdar.report;
 
-import cucumber.api.event.TestSourceRead;
-import gherkin.*;
-import gherkin.ast.*;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import cucumber.api.event.TestSourceRead;
+import gherkin.AstBuilder;
+import gherkin.GherkinDialect;
+import gherkin.GherkinDialectProvider;
+import gherkin.Parser;
+import gherkin.ParserException;
+import gherkin.TokenMatcher;
+import gherkin.ast.Background;
+import gherkin.ast.Examples;
+import gherkin.ast.Feature;
+import gherkin.ast.GherkinDocument;
+import gherkin.ast.Node;
+import gherkin.ast.ScenarioDefinition;
+import gherkin.ast.ScenarioOutline;
+import gherkin.ast.Step;
+import gherkin.ast.TableRow;
 
 public class CucumberSourceModel {
     private final Map<String, TestSourceRead> pathToReadEventMap = new HashMap<String, TestSourceRead>();

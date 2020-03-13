@@ -16,11 +16,11 @@
 
 package com.crowdar.driver.factory;
 
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.WebDriver;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.WebDriver;
 
 public class ReflectionBasedInstanceCreator {
 

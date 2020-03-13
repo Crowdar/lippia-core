@@ -1,10 +1,11 @@
 package com.crowdar.bdd;
 
+import org.testng.IRetryAnalyzer;
+import org.testng.ITestResult;
+
 import com.crowdar.core.Context;
 import com.crowdar.core.MyThreadLocal;
 import com.crowdar.core.PropertyManager;
-import org.testng.IRetryAnalyzer;
-import org.testng.ITestResult;
 
 public class RetryAnalyzerImpl implements IRetryAnalyzer {
 

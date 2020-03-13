@@ -1,5 +1,11 @@
 package com.crowdar.api.rest;
 
+import static org.powermock.api.mockito.PowerMockito.when;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -12,12 +18,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.crowdar.core.PropertyManager;
-
-import static org.powermock.api.mockito.PowerMockito.when;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @PrepareForTest({RestClient.class, PropertyManager.class})
 @PowerMockIgnore({"javax.net.ssl.*","org.apache.log4j.*","org.slf4j.*","org.apache.xerces.*","org.w3c.*", "javax.xml.*", "org.xml.*", "org.apache.*", "org.w3c.dom.*", "org.apache.cxf.*"})

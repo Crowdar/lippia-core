@@ -1,17 +1,18 @@
 package com.crowdar.driver;
 
-import com.crowdar.core.PropertyManager;
-import com.crowdar.driver.setupStrategy.SetupStrategy;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.crowdar.core.PropertyManager;
+import com.crowdar.driver.setupStrategy.SetupStrategy;
 
 class DriverFactory {
 
@@ -26,17 +27,17 @@ class DriverFactory {
             Class<?> StrategyClass = Class.forName("com.crowdar.driver.setupStrategy." + PropertyManager.getProperty("crowdar.setupStrategy"));
             SetupStrategy setupStrategy = (SetupStrategy) StrategyClass.getDeclaredConstructor().newInstance();
 
-            setupStrategy.beforeDriverStartSetup(projectType.getDriverConfig());
+            setupStrategy.beforeDriverStartSetup(projectType);
 
             RemoteWebDriver driver;
 
             if (StringUtils.isEmpty(PropertyManager.getProperty("crowdar.driverHub"))) {
                 Constructor<?> constructor = projectType.getLocalDriverImplementation().getDeclaredConstructor(Capabilities.class);
-                driver = (RemoteWebDriver) constructor.newInstance(projectType.getDriverConfig().getDesiredCapabilities());
+                driver = (RemoteWebDriver) constructor.newInstance(projectType.getDesiredCapabilities());
             } else {
                 Constructor<?> constructor = projectType.getRemoteDriverImplementation().getDeclaredConstructor(URL.class, Capabilities.class);
                 URL url = new URL(PropertyManager.getProperty("crowdar.driverHub"));
-                driver = (RemoteWebDriver) constructor.newInstance(url, projectType.getDriverConfig().getDesiredCapabilities());
+                driver = (RemoteWebDriver) constructor.newInstance(url, projectType.getDesiredCapabilities());
             }
 
             setupStrategy.afterDriverStartSetup(driver);

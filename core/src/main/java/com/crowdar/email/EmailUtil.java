@@ -1,14 +1,5 @@
 package com.crowdar.email;
 
-import com.crowdar.core.PropertyManager;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.search.SearchTerm;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +7,26 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.mail.BodyPart;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.search.SearchTerm;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import com.crowdar.core.PropertyManager;
 
 /**
  * Configuration and sending of mail by TLS attaching a file.

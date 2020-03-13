@@ -1,11 +1,5 @@
 package com.crowdar.core;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.DirectoryNotEmptyException;
@@ -18,6 +12,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang.RandomStringUtils;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * this class represent all sorts of utility functions i need

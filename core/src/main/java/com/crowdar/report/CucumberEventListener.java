@@ -1,6 +1,15 @@
 package com.crowdar.report;
 
-import cucumber.api.event.*;
+import cucumber.api.event.ConcurrentEventListener;
+import cucumber.api.event.EmbedEvent;
+import cucumber.api.event.EventHandler;
+import cucumber.api.event.EventPublisher;
+import cucumber.api.event.TestCaseStarted;
+import cucumber.api.event.TestRunFinished;
+import cucumber.api.event.TestSourceRead;
+import cucumber.api.event.TestStepFinished;
+import cucumber.api.event.TestStepStarted;
+import cucumber.api.event.WriteEvent;
 
 public abstract class CucumberEventListener implements ConcurrentEventListener {
 
