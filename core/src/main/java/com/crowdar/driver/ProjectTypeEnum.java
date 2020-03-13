@@ -1,44 +1,43 @@
 package com.crowdar.driver;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.TreeMap;
+
 import org.apache.log4j.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
+import com.crowdar.core.JsonUtils;
 import com.crowdar.core.PropertyManager;
-import com.crowdar.driver.config.AutomationConfiguration;
-import com.crowdar.driver.config.BrowserConfiguration;
-import com.crowdar.driver.config.MobilePlatformConfiguration;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
 public enum ProjectTypeEnum {
 
-    /**
-     * driver:  Set first part of driver name. Possible values: Chrome, Firefox, Edge, InternetExplorer, Safari, Android, IOS.
-     */
     GENERIC {
         @Override
         public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
 
-            String driverClass = PropertyManager.getProperty("crowdar.localDriverType");
+            String driverClass = PropertyManager.getProperty("crowdar.projectType.localDriverType");
 
             if (driverClass.isEmpty()) {
-                String msg = String.format("Error getting driver type -- For local runs you need to specify a valid crowdar.localDriverType property. Possible values: Chrome, Firefox, Edge, InternetExplorer, Safari, Android, IOS. /r Current Values is '%s'", driverClass);
+                String msg = String.format("Error getting driver type -- For local runs you need to specify a valid crowdar.localDriverType property. /r Current Values is '%s'", driverClass);
                 logger.error(msg);
                 throw new RuntimeException(msg);
             }
 
             Class<? extends RemoteWebDriver> localDriverImplementation = null;
-            String classPackage = "org.openqa.selenium." + driverClass.toLowerCase() + ".";
 
             try {
-                localDriverImplementation = (Class<? extends RemoteWebDriver>) Class.forName(classPackage + driverClass + "Driver");
+                localDriverImplementation = (Class<? extends RemoteWebDriver>) Class.forName(driverClass);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Invalid value for localDriverImplementation: " + driverClass);
             }
@@ -47,13 +46,11 @@ public enum ProjectTypeEnum {
         }
 
         @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.GENERIC;
-        }
-
-        @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
-        	   String driverClass = PropertyManager.getProperty("crowdar.remoteDriverType");
+        	/**
+        	 * complete package and class name, example: "org.openqa.selenium.remote.RemoteWebDriver"
+        	 */
+        	   String driverClass = PropertyManager.getProperty("crowdar.projectType.remoteDriverType");
 
                if (driverClass.isEmpty()) {
                    String msg = String.format("Error getting driver type -- For remote runs you need to specify a valid crowdar.remoteDriverType property. /r Current Values is '%s'", driverClass);
@@ -77,11 +74,6 @@ public enum ProjectTypeEnum {
         }
 
         @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.CHROME;
-        }
-
-        @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return RemoteWebDriver.class;
         }
@@ -90,11 +82,6 @@ public enum ProjectTypeEnum {
         @Override
         public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
             return FirefoxDriver.class;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.FIREFOX;
         }
 
         @Override
@@ -110,11 +97,6 @@ public enum ProjectTypeEnum {
         }
 
         @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.EDGE;
-        }
-
-        @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return RemoteWebDriver.class;
         }
@@ -124,11 +106,6 @@ public enum ProjectTypeEnum {
         @Override
         public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
             return InternetExplorerDriver.class;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.IE;
         }
 
         @Override
@@ -144,95 +121,16 @@ public enum ProjectTypeEnum {
         }
 
         @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.SAFARI;
-        }
-
-        @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return RemoteWebDriver.class;
         }
 
     },
-    WEB_CHROME_EXTENCION {
-        @Override
-        public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
-            return ChromeDriver.class;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.CHROME_EXTENCION;
-        }
-
-        @Override
-        public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
-            return RemoteWebDriver.class;
-        }
-
-    },
-    WEB_CHROME_HEADLESS {
-        @Override
-        public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
-            return ChromeDriver.class;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.CHROME_HEADLESS;
-        }
-
-        @Override
-        public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
-            return RemoteWebDriver.class;
-        }
-
-    },
-    WEB_CHROME_CUSTOM {
-        @Override
-        public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
-            return ChromeDriver.class;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return BrowserConfiguration.CUSTOM_CHROME;
-        }
-
-        @Override
-        public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
-            return RemoteWebDriver.class;
-        }
-
-    },
-    MOBILE_ANDROID_APK {
+    MOBILE_ANDROID {
         @Override
         public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
             //TODO: no aplica para appium!
             return null;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return MobilePlatformConfiguration.ANDROID_APK;
-        }
-
-        @Override
-        public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
-            return AndroidDriver.class;
-        }
-
-    },
-    MOBILE_ANDROID_CHROME {
-        @Override
-        public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
-            //TODO: no aplica para appium!
-            return null;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return MobilePlatformConfiguration.ANDROID_CHROME;
         }
 
         @Override
@@ -247,11 +145,6 @@ public enum ProjectTypeEnum {
             return IOSDriver.class;
         }
 
-        @Override
-        public AutomationConfiguration getDriverConfig() {
-            return MobilePlatformConfiguration.IOS;
-        }
-
 
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
@@ -259,16 +152,10 @@ public enum ProjectTypeEnum {
         }
 
     },
-    // MOBILE_CHROME
 
     WIN32 {
         @Override
         public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
-            return null;
-        }
-
-        @Override
-        public AutomationConfiguration getDriverConfig() {
             return null;
         }
 
@@ -290,8 +177,28 @@ public enum ProjectTypeEnum {
      */
     public abstract Class<? extends RemoteWebDriver> getRemoteDriverImplementation();
 
-    public abstract AutomationConfiguration getDriverConfig();
+    
+    public DesiredCapabilities getDesiredCapabilities() {
+        String path = PropertyManager.getProperty("crowdar.projectType.driverCapabilities.jsonFile");
+        if (path == null || path.isEmpty()) {
+            String msg = String.format("Error creating driver -- Please define property crowdar.driver.capabilities.json.path in config.property properly");
+            logger.error(msg);
+            throw new RuntimeException(msg);
+        }
+        TreeMap<String, ?> result = null;
+        try {
+            String capabilities = JsonUtils.getJSON(Paths.get(path));
+            capabilities = JsonUtils.replaceVarsFromPropertyManager(capabilities);
 
+            result = new ObjectMapper().readValue(capabilities, TreeMap.class);
+
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return new DesiredCapabilities(result);
+
+    }
 
     public static ProjectTypeEnum get(String key) {
         try {
