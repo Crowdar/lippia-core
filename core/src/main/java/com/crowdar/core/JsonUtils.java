@@ -52,11 +52,16 @@ public class JsonUtils {
         return getJSON(Paths.get(path));
     }
 
+    public static <T> T getJSONFromFileAsObject(String file, Class<T> valueType) throws IOException {
+        String json = getJSONFromFile(file);
+        return new ObjectMapper().readValue(json, valueType);
+    }
+
     /**
      * Given a Json file location,
      * this method returns that JSON as a String
      *
-     * @param fileName
+     * @param file
      * @return String (json)
      */
     public static String getJSON(Path file) {
