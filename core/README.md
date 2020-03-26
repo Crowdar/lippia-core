@@ -1,3 +1,32 @@
+* Documentar las properties que existen en las siguientes clases(Explicar para que seirven y que properties hay disponibles):
+	- ProjectTypeEnum
+		- crowdar.report.disable_screenshot_on_failure
+		- crowdar.report.stackTraceDetail
+		- crowdar.projectType.driverCapabilities.jsonFile
+		- fijarse que otras properties hay		
+
+	- ExtentReportManager
+	- CucumberKlovExtentReport
+	
+* 	dar ejemplos de distintas cinfiguraciones.
+	api:
+		- config.properties
+			- crowdar.projectType=API
+			- base.api.url=${base.api.url}
+			
+			(contar un poco que es lo que hace cada propety)
+
+
+* enumerar los distintos valores que se le puede pasar al crowdar.projectType, extrar las claves del enum project type.
+	- aclarar que el tipo generc permite definir el driver local y remoto via properties.
+	
+	 				
+	
+
+
+
+
+
 ---------------------  
 
  ProjectTypes:
