@@ -49,6 +49,10 @@ public class JsonUtils {
      */
     public static String getJSONFromFile(String fileName) {
         String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat("jsons").concat(File.separator).concat(fileName).concat(".json");
+        return getJSONFromPath(path);
+    }
+
+    public static String getJSONFromPath(String path) {
         return getJSON(Paths.get(path));
     }
 
