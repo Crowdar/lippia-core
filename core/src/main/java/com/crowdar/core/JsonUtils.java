@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.TagType;
 import com.github.jknack.handlebars.Template;
-import com.google.common.collect.Lists;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,10 +21,16 @@ public class JsonUtils {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
+    private static ObjectMapper getMapper() {
+        if (mapper == null) {
+            mapper = new ObjectMapper();
+        }
+        return mapper;
+    }
 
     public static <T> T deserialize(String json, Class<T> type) {
         try {
-            TypeFactory typeFactory = mapper.getTypeFactory();
+            TypeFactory typeFactory = getMapper().getTypeFactory();
             return (T) mapper.readValue(json, typeFactory.constructType(type));
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,11 +41,29 @@ public class JsonUtils {
     public static String serialize(Object json) {
         String jsonResult = null;
         try {
-            jsonResult = mapper.writeValueAsString(Lists.newArrayList(json));
+            jsonResult = getMapper().writeValueAsString(json);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return jsonResult;
+    }
+
+    public static boolean isJSONValid(Object jsonObject) {
+        String jsonString = serialize(jsonObject);
+        return isJSONValid(jsonString);
+    }
+
+    public static boolean isJSONValid(String json) {
+        try {
+            new JSONObject(json);
+        } catch (JSONException ex) {
+            try {
+                new JSONArray(json);
+            } catch (JSONException ex1) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -49,12 +75,22 @@ public class JsonUtils {
      */
     public static String getJSONFromFile(String fileName) {
         String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat("jsons").concat(File.separator).concat(fileName).concat(".json");
+        return getJSONFromPath(path);
+    }
+
+    public static String getJSONFromPath(String path) {
         return getJSON(Paths.get(path));
     }
 
     public static <T> T getJSONFromFileAsObject(String file, Class<T> valueType) throws IOException {
         String json = getJSONFromFile(file);
-        return new ObjectMapper().readValue(json, valueType);
+        return getMapper().readValue(json, valueType);
+    }
+
+    public static <T> List<T> getListJSONFromFileAsObject(String file, Class<T> valueType) throws IOException {
+        TypeFactory typeFactory = getMapper().getTypeFactory();
+        String json = getJSONFromFile(file);
+        return getMapper().readValue(json, typeFactory.constructCollectionType(List.class, valueType));
     }
 
     /**

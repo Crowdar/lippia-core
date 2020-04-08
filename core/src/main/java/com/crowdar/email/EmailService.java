@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * Configuration and sending of mail by TLS attaching a file.
  */
-public class EmailUtil {
+public class EmailService {
     private static final String DEFAULT_EMAIL_FOLDER = "INBOX";
     private static Session session;
 
@@ -42,7 +42,7 @@ public class EmailUtil {
 
         try {
             System.out.println("Sending Email...");
-            Session session = Session.getDefaultInstance(EmailUtil.getProperties());
+            Session session = Session.getDefaultInstance(EmailService.getProperties());
 
             MimeMessage message = new MimeMessage(session);
 
@@ -239,11 +239,11 @@ public class EmailUtil {
     }
 
     private static Store getConnection(String email, String password) throws MessagingException {
-        session = Session.getDefaultInstance(EmailUtil.getProperties(), null);
+        session = Session.getDefaultInstance(EmailService.getProperties(), null);
         Store store;
-
-        store = session.getStore(PropertyManager.getProperty("email.protocol"));
-        store.connect(PropertyManager.getProperty("email.host"), Integer.parseInt(PropertyManager.getProperty("email.port")), email, password);
+        String protocol = PropertyManager.getProperty("email.protocol");
+        store = session.getStore(protocol);
+        store.connect(session.getProperty("mail.".concat(protocol).concat(".host")), Integer.parseInt(session.getProperty("mail.".concat(protocol).concat(".port"))), email, password);
         return store;
     }
 
@@ -277,10 +277,6 @@ public class EmailUtil {
         } finally {
             session.getTransport().close();
         }
-    }
-
-    public static Document getTextFromHtml(String html) {
-        return Jsoup.parse(html);
     }
 
     public static String getMailContent(String email, String password, String subject) throws IOException, MessagingException {
@@ -319,7 +315,6 @@ public class EmailUtil {
         deleteAllMessages(DEFAULT_EMAIL_FOLDER, email, password);
     }
 
-
     /**
      * Pattern for recognizing a URL, based off RFC 3986
      */
@@ -328,6 +323,4 @@ public class EmailUtil {
                     + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
                     + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-
-
 }
