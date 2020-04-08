@@ -5,6 +5,7 @@ import com.crowdar.core.PropertyManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class APIManager {
 
@@ -21,5 +22,9 @@ public class APIManager {
 
     public static <T> T getResponseFromJsonFile(String jsonFileName, Class<T> valueType) throws IOException {
         return JsonUtils.getJSONFromFileAsObject("response".concat(File.separator).concat(jsonFileName), valueType);
+    }
+
+    public static <T> List<T> getListResponseFromJsonFile(String jsonFileName, Class<T> valueType) throws IOException {
+        return JsonUtils.getListJSONFromFileAsObject("response".concat(File.separator).concat(jsonFileName), valueType);
     }
 }

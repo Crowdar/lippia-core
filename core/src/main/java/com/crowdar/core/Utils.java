@@ -1,8 +1,8 @@
 package com.crowdar.core;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 
 /**
  * this class represent all sorts of utility functions i need
@@ -34,6 +33,18 @@ public class Utils {
      */
     public static String getRandomNumber(int amount) {
         return RandomStringUtils.randomNumeric(amount);
+    }
+
+    public static String getRandomLetters(int amount) {
+        return RandomStringUtils.randomAlphabetic(amount);
+    }
+
+    public static String getRandom(int amount, boolean letters, boolean numbers) {
+        return RandomStringUtils.random(amount, letters, numbers);
+    }
+
+    public static String removeFirstAndLastChar(String text) {
+        return text.substring(0, text.length() - 1).substring(1);
     }
 
     /**
@@ -84,45 +95,6 @@ public class Utils {
             ((JavascriptExecutor) driver)
                     .executeScript("document.getElementById('" + inputId + "').value='" + valueToSet + "'");
         }
-    }
-
-    /**
-     * @param element
-     * @return the html of the element
-     */
-    public static String getHtml(WebElement element) {
-        return element.getAttribute("innerHTML");
-    }
-
-
-    public static WebElement searchElementByText(List<WebElement> elements, String elementTextToSearch) {
-        WebElement elementToReturn = null;
-
-        for (WebElement element : elements) {
-            try {
-                if (element.getText().equals(elementTextToSearch)) {
-                    elementToReturn = element;
-                }
-            } catch (StaleElementReferenceException e) {
-
-            }
-        }
-        return elementToReturn;
-    }
-
-    public static WebElement searchElementStartWithText(List<WebElement> elements, String elementTextToSearch) {
-        WebElement elementToReturn = null;
-
-        for (WebElement element : elements) {
-            try {
-                if (element.getText().startsWith(elementTextToSearch)) {
-                    elementToReturn = element;
-                }
-            } catch (StaleElementReferenceException e) {
-
-            }
-        }
-        return elementToReturn;
     }
 
     public static int getOnlyNumbersFromString(String stringToReplace) {

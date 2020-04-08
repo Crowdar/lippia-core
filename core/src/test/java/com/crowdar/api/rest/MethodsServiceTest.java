@@ -38,7 +38,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 		request.setHeaders("");
 				
 		PowerMockito.mockStatic(RestClient.class);
-        when(RestClient.class, "getRestclientInstance").thenReturn(restClient);
+        when(RestClient.class, "getRestClient").thenReturn(restClient);
 		
         PowerMockito.mockStatic(PropertyManager.class);
 		when(PropertyManager.class, "getProperty", Mockito.anyString())
