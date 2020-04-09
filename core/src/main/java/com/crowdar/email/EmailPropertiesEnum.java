@@ -1,42 +1,49 @@
 package com.crowdar.email;
 
-import java.util.Properties;
-
+import com.crowdar.core.JsonUtils;
 import com.crowdar.core.PropertyManager;
+import org.json.JSONObject;
+
+import java.nio.file.Paths;
+import java.util.Properties;
+import java.util.Set;
 
 public enum EmailPropertiesEnum {
 
     SMTP {
         @Override
         public Properties getProperties(Properties properties) {
-            basicConfiguration(properties);
-            properties.put("mail.smtp.host", PropertyManager.getProperty("email.host"));
-            properties.put("mail.smtp.port", PropertyManager.getProperty("email.port"));
+            setProperties("smtp", properties);
             return properties;
         }
     },
     POP3S {
         @Override
         public Properties getProperties(Properties properties) {
-            basicConfiguration(properties);
-            properties.put("mail.pop3s.host", PropertyManager.getProperty("email.host"));
-            properties.put("mail.pop3s.port", PropertyManager.getProperty("email.port"));
+            setProperties("pop3s", properties);
             return properties;
         }
     },
     IMAP {
         @Override
         public Properties getProperties(Properties properties) {
-            basicConfiguration(properties);
-            properties.put("mail.imap.host", PropertyManager.getProperty("email.host"));
-            properties.put("mail.imap.port", PropertyManager.getProperty("email.port"));
+            setProperties("imap", properties);
             return properties;
         }
     };
 
-    protected void basicConfiguration(Properties properties) {
-        properties.put("mail.store.protocol", PropertyManager.getProperty("email.protocol"));
-        properties.put("mail.imap.ssl.trust", "*");
+    protected void setProperties(String protocolName, Properties properties) {
+        JSONObject propertiesJson = getPropertiesJson(protocolName);
+        Set<String> propertyKeys = propertiesJson.keySet();
+        for (String propertyKey : propertyKeys) {
+            properties.put(propertyKey, propertiesJson.get(propertyKey));
+        }
+        properties.put("mail.store.protocol", protocolName);
+    }
+
+    protected JSONObject getPropertiesJson(String jsonName) {
+        String json = JsonUtils.getJSON(Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "email", jsonName.concat(".json")));
+        return new JSONObject(json);
     }
 
     public static EmailPropertiesEnum get(String key) {

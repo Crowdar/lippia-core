@@ -1,10 +1,11 @@
 package com.crowdar.api.rest;
 
+import com.crowdar.core.JsonUtils;
+import com.crowdar.core.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.HashMap;
-
-import com.crowdar.core.JsonUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Request {
 
@@ -33,12 +34,19 @@ public class Request {
         this.url = url;
     }
 
+    //TODO: hasta el momento solo soporta envio de json y text. CREO que html, xml NO, pero no estoy seguro.
     public Object getBody() {
-        return this.convertToJson(body);
+        if (body == null) {
+            return "";
+        } else if (JsonUtils.isJSONValid(body)) {
+            return JsonUtils.serialize(body);
+        } else {
+            return body.toString();
+        }
     }
 
     public Object getHeaders() {
-        return this.convertToJson(headers);
+        return JsonUtils.serialize(headers);
     }
 
     public void setHeaders(Object headers) {
@@ -50,7 +58,7 @@ public class Request {
             return new HashMap<>();
         }
         try {
-            return (HashMap) (new ObjectMapper()).readValue(this.convertToJson(urlParameters), HashMap.class);
+            return (HashMap) (new ObjectMapper()).readValue(JsonUtils.serialize(urlParameters), HashMap.class);
         } catch (IOException e) {
             System.out.println(e);
             return null;
@@ -63,12 +71,6 @@ public class Request {
 
     public void setBody(Object body) {
         this.body = body;
-    }
-
-    //TODO: moderlo a JsonUtils y un nombre mas explicativo, por ej: convertObjectToJson
-    private String convertToJson(Object jsonObject) {
-        String json = JsonUtils.serialize(jsonObject);
-        return json.substring(0, json.length() - 1).substring(1);
     }
 
     public String getEndpoint() {

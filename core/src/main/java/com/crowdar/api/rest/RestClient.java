@@ -1,42 +1,49 @@
 package com.crowdar.api.rest;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RestClient {
 
     private HttpHeaders headers;
-    private RestTemplate restTemplate;
+    private static RestTemplate restTemplate;
 
     public RestClient() {
-        restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        setRestTemplate(new RestTemplate(new HttpComponentsClientHttpRequestFactory()));
+        List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.ALL));
+
+        messageConverters.add(mappingJackson2HttpMessageConverter);
+        messageConverters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
     }
 
-    public static RestClient getRestclientInstance() {
-        return new RestClient();
+    private static RestTemplate getRestTemplate() {
+        return restTemplate;
     }
 
-    public HttpHeaders setHeaders(String jsonHeaders) {
+    private static void setRestTemplate(RestTemplate newRestTemplate) {
+        restTemplate = newRestTemplate;
+    }
+
+    private void setRequestHeaders(String jsonHeaders) {
         this.headers = new HttpHeaders();
         try {
             HashMap<String, String> result =
@@ -45,6 +52,9 @@ public class RestClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private HttpHeaders getRequestHeaders(){
         return headers;
     }
 
@@ -70,28 +80,31 @@ public class RestClient {
 
     private Response createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
-        HttpEntity<String> request = this.createRequest(body, this.setHeaders(headers));
+        setRequestHeaders(headers);
+        HttpEntity<String> request = this.createRequest(body, getRequestHeaders());
         try {
-            ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.exchange(uri, httpMethod, request, type);
-            return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createHeaders(response.getHeaders()));
+            ResponseEntity<Object> response = (ResponseEntity<Object>) getRestTemplate().exchange(uri, httpMethod, request, type);
+            return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
 
         } catch (HttpClientErrorException e1) {
             System.out.println(e1.getResponseBodyAsString());
-            return this.createResponse(e1.getStatusCode().value(), e1.getResponseBodyAsString(), e1.getLocalizedMessage(), createHeaders(e1.getResponseHeaders()));
+            return this.createResponse(e1.getStatusCode().value(), e1.getResponseBodyAsString(), e1.getLocalizedMessage(), createResponseHeaders(e1.getResponseHeaders()));
         } catch (HttpServerErrorException e) {
             System.out.println(e.getResponseBodyAsString());
-            return this.createResponse(e.getStatusCode().value(), e.getResponseBodyAsString(), e.getLocalizedMessage(), createHeaders(e.getResponseHeaders()));
+            return this.createResponse(e.getStatusCode().value(), e.getResponseBodyAsString(), e.getLocalizedMessage(), createResponseHeaders(e.getResponseHeaders()));
         }
     }
 
-    private Headers createHeaders(HttpHeaders headers) {
+    private Headers createResponseHeaders(HttpHeaders headers) {
         return new Headers(this.getHeaders(headers));
     }
 
     private HttpEntity<String> createRequest(String body, HttpHeaders headers) {
-        if (body.isEmpty())
+        if (body.isEmpty()) {
             return new HttpEntity<>(headers);
-        return new HttpEntity<>(body, headers);
+        } else {
+            return new HttpEntity<>(body, headers);
+        }
     }
 
     private Response createResponse(int statusCode, String message, Object response, Headers headers) {
