@@ -1,4 +1,4 @@
-package api.DataAccess;
+package com.crowdar.util;
 
 import com.crowdar.core.MyThreadLocal;
 
@@ -6,40 +6,66 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DatabaseManager {
+public class ObjectManager {
 
-    private static final String QUERYS_RESULT = "DatabseManager.Querys";
+    private static final String OBJECTS = "ObjectManager.Objects";
 
-    private static <T> List<T> getQuerysResult() {
-        List<T> querysResult = (List<T>) MyThreadLocal.getData(QUERYS_RESULT);
+    private static <T> List<T> getObjects() {
+        List<T> querysResult = (List<T>) MyThreadLocal.getData(OBJECTS);
         if (querysResult == null) {
             querysResult = new ArrayList();
-            MyThreadLocal.setData(QUERYS_RESULT, querysResult);
+            MyThreadLocal.setData(OBJECTS, querysResult);
         }
         return querysResult;
     }
 
-    public static Object getQueryResult(int position) {
-        return getQuerysResult().get(position);
+    /**
+     * Get Object in the position of the list specified
+     *
+     * @param position
+     * @return Object
+     */
+    public static Object getObject(int position) {
+        return getObjects().get(position);
     }
 
-    public static Object getQueryResult(Class queryResult) {
-        return getQuerysResult().stream()
-                .filter(query -> query.getClass().equals(queryResult))
+    /**
+     * Get the first Object that returns the filter or return null
+     *
+     * @param object
+     * @return First Object find or null
+     */
+    public static Object getObject(Class object) {
+        return getObjects().stream()
+                .filter(query -> query.getClass().equals(object))
                 .findFirst().orElse(null);
     }
 
-    public static List<Object> getQueryResults(Class queryResult) {
-        return getQuerysResult().stream()
-                .filter(query -> query.getClass().equals(queryResult))
+    /**
+     * Gets all the Objects that match with the .class
+     *
+     * @param object .class
+     * @return List of Objects
+     */
+    public static List<Object> getObjects(Class object) {
+        return getObjects().stream()
+                .filter(query -> query.getClass().equals(object))
                 .collect(Collectors.toList());
     }
 
-    public static void addQueryResult(Object query) {
-        getQuerysResult().add(query);
+    /**
+     * Add a new Object to the list.
+     *
+     * @param object
+     */
+    public static void addObject(Object object) {
+        getObjects().add(object);
     }
 
-    public static void cleanQueryResults() {
-        MyThreadLocal.setData(QUERYS_RESULT, null);
+    /**
+     * Set Objects List to null. Recommend to use in After or Before methods.
+     */
+    public static void cleanObjects() {
+        MyThreadLocal.setData(OBJECTS, null);
     }
 }
