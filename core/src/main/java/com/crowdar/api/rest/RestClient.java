@@ -83,7 +83,7 @@ public class RestClient {
         setRequestHeaders(headers);
         HttpEntity<String> request = this.createRequest(body, getRequestHeaders());
         try {
-            ResponseEntity<Object> response = (ResponseEntity<Object>) getRestTemplate().exchange(uri, httpMethod, request, type);
+            ResponseEntity<List<Object>> response = getRestTemplate().exchange(uri, httpMethod, request, (Class<List<Object>>) type);
             return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
 
         } catch (HttpClientErrorException e1) {
