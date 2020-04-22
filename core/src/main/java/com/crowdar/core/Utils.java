@@ -1,7 +1,6 @@
 package com.crowdar.core;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,7 +15,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * this class represent all sorts of utility functions i need
@@ -117,6 +118,10 @@ public class Utils {
 
     public static boolean isTextFieldEmpty(WebElement element, String placeholder) {
         return element.getText().equals(placeholder);
+    }
+
+    public static List<Object> parseArrayToList(Object[] array) {
+        return Arrays.asList(array);
     }
 
 }
