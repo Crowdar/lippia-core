@@ -210,7 +210,7 @@ public enum ProjectTypeEnum {
 			return properties;
 		}
     },
-    BD{
+    DATABASE{
         @Override
         public Class<? extends RemoteWebDriver> getLocalDriverImplementation() {
             return null;
@@ -265,7 +265,7 @@ public enum ProjectTypeEnum {
     public DesiredCapabilities getDesiredCapabilities() {
         String path = PropertyManager.getProperty("crowdar.projectType.driverCapabilities.jsonFile");
         if (path == null || path.isEmpty()) {
-            String msg = String.format("Error creating driver -- Please define property crowdar.driver.capabilities.json.path in config.property properly");
+            String msg = String.format("Error creating driver -- Please define property crowdar.projectType.driverCapabilities.jsonFile in config.property properly");
             logger.error(msg);
             throw new RuntimeException(msg);
         }

@@ -1,30 +1,35 @@
 package com.crowdar.driver;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import com.crowdar.core.PropertyManager;
+import com.crowdar.driver.setupStrategy.SetupStrategy;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
-import com.crowdar.core.PropertyManager;
-import com.crowdar.driver.setupStrategy.SetupStrategy;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 class DriverFactory {
 
     private static Logger logger = Logger.getLogger(DriverFactory.class);
-
+    private static final String DEFAULT_STRATEGY = "NoneStrategy";
+    private static final String STRATEGY_CLASS = "com.crowdar.driver.setupStrategy.%s";
 
     protected static RemoteWebDriver createDriver() {
         try {
 
             ProjectTypeEnum projectType = ProjectTypeEnum.get(PropertyManager.getProperty(ProjectTypeEnum.PROJECT_TYPE_KEY));
-
-            Class<?> StrategyClass = Class.forName("com.crowdar.driver.setupStrategy." + PropertyManager.getProperty("crowdar.setupStrategy"));
+            String strategy = PropertyManager.getProperty("crowdar.setupStrategy");
+            Class<?> StrategyClass;
+            if (StringUtils.isEmpty(strategy)) {
+                StrategyClass = Class.forName(String.format(STRATEGY_CLASS, DEFAULT_STRATEGY));
+            } else {
+                StrategyClass = Class.forName(String.format(STRATEGY_CLASS, strategy));
+            }
             SetupStrategy setupStrategy = (SetupStrategy) StrategyClass.getDeclaredConstructor().newInstance();
 
             setupStrategy.beforeDriverStartSetup(projectType);
