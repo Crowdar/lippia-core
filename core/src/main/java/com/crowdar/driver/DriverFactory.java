@@ -16,27 +16,33 @@ import java.net.URL;
 class DriverFactory {
 
     private static Logger logger = Logger.getLogger(DriverFactory.class);
-
+    private static final String DEFAULT_STRATEGY = "NoneStrategy";
+    private static final String STRATEGY_CLASS = "com.crowdar.driver.setupStrategy.%s";
 
     protected static RemoteWebDriver createDriver() {
         try {
 
-            ProjectTypeEnum projectType = ProjectTypeEnum.get(PropertyManager.getProperty("crowdar.projectType"));
-
-            Class<?> StrategyClass = Class.forName("com.crowdar.driver.setupStrategy." + PropertyManager.getProperty("crowdar.setupStrategy"));
+            ProjectTypeEnum projectType = ProjectTypeEnum.get(PropertyManager.getProperty(ProjectTypeEnum.PROJECT_TYPE_KEY));
+            String strategy = PropertyManager.getProperty("crowdar.setupStrategy");
+            Class<?> StrategyClass;
+            if (StringUtils.isEmpty(strategy)) {
+                StrategyClass = Class.forName(String.format(STRATEGY_CLASS, DEFAULT_STRATEGY));
+            } else {
+                StrategyClass = Class.forName(String.format(STRATEGY_CLASS, strategy));
+            }
             SetupStrategy setupStrategy = (SetupStrategy) StrategyClass.getDeclaredConstructor().newInstance();
 
-            setupStrategy.beforeDriverStartSetup(projectType.getDriverConfig());
+            setupStrategy.beforeDriverStartSetup(projectType);
 
             RemoteWebDriver driver;
 
             if (StringUtils.isEmpty(PropertyManager.getProperty("crowdar.driverHub"))) {
                 Constructor<?> constructor = projectType.getLocalDriverImplementation().getDeclaredConstructor(Capabilities.class);
-                driver = (RemoteWebDriver) constructor.newInstance(projectType.getDriverConfig().getDesiredCapabilities());
+                driver = (RemoteWebDriver) constructor.newInstance(projectType.getDesiredCapabilities());
             } else {
                 Constructor<?> constructor = projectType.getRemoteDriverImplementation().getDeclaredConstructor(URL.class, Capabilities.class);
                 URL url = new URL(PropertyManager.getProperty("crowdar.driverHub"));
-                driver = (RemoteWebDriver) constructor.newInstance(url, projectType.getDriverConfig().getDesiredCapabilities());
+                driver = (RemoteWebDriver) constructor.newInstance(url, projectType.getDesiredCapabilities());
             }
 
             setupStrategy.afterDriverStartSetup(driver);

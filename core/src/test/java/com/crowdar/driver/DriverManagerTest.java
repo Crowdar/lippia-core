@@ -1,6 +1,7 @@
 package com.crowdar.driver;
 
-import com.crowdar.core.PropertyManager;
+import static org.mockito.Mockito.when;
+
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -9,7 +10,8 @@ import org.powermock.modules.testng.PowerMockTestCase;
 import org.springframework.util.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.mockito.Mockito.when;
+
+import com.crowdar.core.PropertyManager;
 
 @PrepareForTest(PropertyManager.class)
 @PowerMockIgnore({ "javax.net.ssl.*", "org.apache.log4j.*", "org.slf4j.*", "org.apache.xerces.*", "org.w3c.*",

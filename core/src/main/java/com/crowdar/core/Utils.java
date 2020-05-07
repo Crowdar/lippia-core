@@ -120,7 +120,7 @@ public class Utils {
         return element.getText().equals(placeholder);
     }
 
-    public static List<Object> parseArrayToList(Object[] array) {
+    public static <T> List<T> parseArrayToList(T[] array) {
         return Arrays.asList(array);
     }
 

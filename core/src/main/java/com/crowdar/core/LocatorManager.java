@@ -5,12 +5,12 @@
 
 package com.crowdar.core;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.properties.EncryptableProperties;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.properties.EncryptableProperties;
 
 public class LocatorManager {
     private static final String LOCATORS_PROPERTY_KEY = "crowdar.locatorsProperties";

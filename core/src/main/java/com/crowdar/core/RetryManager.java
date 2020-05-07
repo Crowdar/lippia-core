@@ -1,10 +1,11 @@
 package com.crowdar.core;
 
-import com.crowdar.bdd.RetryAnalyzerImpl;
+import java.util.List;
+
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 
-import java.util.List;
+import com.crowdar.bdd.RetryAnalyzerImpl;
 
 public class RetryManager {
 

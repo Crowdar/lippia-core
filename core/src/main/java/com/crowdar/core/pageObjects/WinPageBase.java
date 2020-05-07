@@ -1,10 +1,11 @@
 package com.crowdar.core.pageObjects;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.HWND;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public abstract class WinPageBase extends PageBase {
     /**

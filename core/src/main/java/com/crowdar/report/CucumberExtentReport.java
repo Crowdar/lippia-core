@@ -1,16 +1,21 @@
 package com.crowdar.report;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cucumber.api.PickleStepTestStep;
 import cucumber.api.TestCase;
-import cucumber.api.event.*;
+import cucumber.api.event.EmbedEvent;
+import cucumber.api.event.TestCaseStarted;
+import cucumber.api.event.TestSourceRead;
+import cucumber.api.event.TestStepFinished;
+import cucumber.api.event.TestStepStarted;
+import cucumber.api.event.WriteEvent;
 import gherkin.ast.Examples;
 import gherkin.ast.Feature;
 import gherkin.ast.ScenarioOutline;
 import gherkin.ast.Step;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CucumberExtentReport extends CucumberEventListener {

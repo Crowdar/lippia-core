@@ -1,13 +1,14 @@
 package com.crowdar.core;
 
-import com.crowdar.core.pageObjects.PageBase;
-import com.crowdar.driver.DriverManager;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import com.crowdar.core.pageObjects.PageBase;
+import com.crowdar.driver.DriverManager;
 
 public class Injector {
 

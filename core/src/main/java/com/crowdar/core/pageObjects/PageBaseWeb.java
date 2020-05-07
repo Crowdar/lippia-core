@@ -1,8 +1,8 @@
 package com.crowdar.core.pageObjects;
 
-import com.crowdar.bdd.cukes.SharedDriver;
-import com.crowdar.core.Constants;
-import com.paulhammant.ngwebdriver.NgWebDriver;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -11,8 +11,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import com.crowdar.bdd.cukes.SharedDriver;
+import com.crowdar.core.Constants;
+import com.paulhammant.ngwebdriver.NgWebDriver;
 
 /**
  * This class represents the things in common between Web projects

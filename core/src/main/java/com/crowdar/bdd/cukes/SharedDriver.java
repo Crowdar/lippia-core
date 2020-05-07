@@ -1,11 +1,13 @@
 package com.crowdar.bdd.cukes;
 
-import com.crowdar.driver.DriverManager;
-import cucumber.api.Scenario;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+
+import com.crowdar.driver.DriverManager;
+
+import cucumber.api.Scenario;
 
 /**
  * <p>

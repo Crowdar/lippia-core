@@ -1,30 +1,33 @@
 package com.crowdar.driver.setupStrategy.web;
 
-import com.crowdar.driver.config.AutomationConfiguration;
-import com.crowdar.driver.config.BrowserConfiguration;
-import com.crowdar.driver.setupStrategy.SetupStrategy;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
 import java.io.File;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import com.crowdar.driver.ProjectTypeEnum;
+import com.crowdar.driver.setupStrategy.SetupStrategy;
+
+@Deprecated
 public class LocalWebExecutionStrategy implements SetupStrategy {
 
     @Override
-    public void beforeDriverStartSetup(AutomationConfiguration contextConfiguration) {
+    public void beforeDriverStartSetup(ProjectTypeEnum configuration) {
 
-        switch ((BrowserConfiguration) contextConfiguration) {
-            case FIREFOX:
-                System.setProperty("webdriver.gecko.driver", getWebDriverPath().concat("geckodriver.exe"));
-                break;
-            case CHROME:
-                System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver2.37.exe"));
-                break;
-            case EDGE:
-                System.setProperty("webdriver.edge.driver", getWebDriverPath().concat("MicrosoftWebDriver.exe"));
-                break;
-            case IE:
-                System.setProperty("webdriver.ie.driver", getWebDriverPath().concat("IEDriverServer.exe"));
-        }
+//    	En este caso se toma el ejecutable del driver desde el projecto, no se usa por el grado de mantenibilidad que requiere 	
+    	
+//        switch ((BrowserConfiguration) contextConfiguration) {
+//            case FIREFOX:
+//                System.setProperty("webdriver.gecko.driver", getWebDriverPath().concat("geckodriver.exe"));
+//                break;
+//            case CHROME:
+//                System.setProperty("webdriver.chrome.driver", getWebDriverPath().concat("chromedriver2.37.exe"));
+//                break;
+//            case EDGE:
+//                System.setProperty("webdriver.edge.driver", getWebDriverPath().concat("MicrosoftWebDriver.exe"));
+//                break;
+//            case IE:
+//                System.setProperty("webdriver.ie.driver", getWebDriverPath().concat("IEDriverServer.exe"));
+//        }
 
     }
 

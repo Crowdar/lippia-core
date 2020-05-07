@@ -21,6 +21,7 @@ import gherkin.ast.TableRow;
 import gherkin.ast.Tag;
 import gherkin.pickles.PickleTag;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -44,16 +45,32 @@ public class ExtentReportManager {
     private static Map<String, ExtentTest> mapFeature = new HashMap<>();
 
     private static Logger logger4j = Logger.getLogger(ExtentReportManager.class);
+    private static String reportPath;
+    private static String reportName = "CrowdarReport";
+    private static final String BASE_REPORT_PATH = "target";
 
-    private static String reportPath = "target".concat(File.separator).concat(PropertyManager.getProperty("crowdar.extent.report.path"));
+    private static void setReportPath(String newReportPath) {
+        reportPath = newReportPath;
+    }
+
+    private static String getReportPath() {
+        return reportPath;
+    }
 
     private static ExtentHtmlReporter getExtentHtmlReport() {
         if (htmlReporter != null) {
             return htmlReporter;
         }
-
-        File file = new File(reportPath.concat(File.separator)
-                .concat(PropertyManager.getProperty("crowdar.extent.report.name"))
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.path"))) {
+            setReportPath(BASE_REPORT_PATH.concat(File.separator).concat(PropertyManager.getProperty("crowdar.extent.report.path")));
+        } else {
+            setReportPath(BASE_REPORT_PATH);
+        }
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.name"))) {
+            setReportName(PropertyManager.getProperty("crowdar.extent.report.name"));
+        }
+        File file = new File(getReportPath().concat(File.separator)
+                .concat(getReportName())
                 .concat(".html"));
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -67,33 +84,35 @@ public class ExtentReportManager {
     private static void htmlReporSetup() {
         // htmlReporter.config().setChartVisibilityOnOpen(true);
         // report title
-        if (PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.document.title")) {
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.document.title"))) {
             htmlReporter.config().setDocumentTitle(PropertyManager.getProperty("crowdar.extent.report.document.title"));
         }
         // encoding, default = UTF-8
-        if (PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.encoding")) {
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.encoding"))) {
             htmlReporter.config().setEncoding(PropertyManager.getProperty("crowdar.extent.report.encoding"));
         }
         // protocol (http, https)
-        if (PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.protocol")) {
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.protocol"))) {
             htmlReporter.config().setProtocol(Protocol.valueOf(PropertyManager.getProperty("crowdar.extent.report.protocol")));
         }
         // report or build name
-        if (PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.name")) {
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.name"))) {
             htmlReporter.config().setReportName(PropertyManager.getProperty("crowdar.extent.report.name"));
+        }else{
+            htmlReporter.config().setReportName(getReportName());
         }
         // chart location - top, bottom
-        /*if(PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.chart.location")) {
+        /*if(!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.chart.location"))) {
             htmlReporter.config().setTestViewChartLocation(ChartLocation.valueOf(PropertyManager.getProperty("crowdar.extent.report.chart.location")));
         }*/
 
         // theme - standard, dark
-        if (PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.theme")) {
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.theme"))) {
             htmlReporter.config().setTheme(Theme.valueOf(PropertyManager.getProperty("crowdar.extent.report.theme").toUpperCase()));
         }
 
         // set timeStamp format
-        if (PropertyManager.isPropertyPresentAndNotEmpty("crowdar.extent.report.timestampformat")) {
+        if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.extent.report.timestampformat"))) {
             htmlReporter.config().setTimeStampFormat(PropertyManager.getProperty("crowdar.extent.report.timestampformat"));
         }
         // add custom css
@@ -228,8 +247,9 @@ public class ExtentReportManager {
 
     public static void addCucumberPassStep() {
         stepTest.get().pass(Result.Type.PASSED.toString());
-        String screenShotOnSuccessStep = PropertyManager.getProperty("crowdar.extent.screenshotOnSuccess");
-        if (screenShotOnSuccessStep != null && !screenShotOnSuccessStep.isEmpty()) {
+
+        Boolean screenShotOnSuccessStep = new Boolean(PropertyManager.getProperty("crowdar.report.screenshotOnSuccess"));
+        if (screenShotOnSuccessStep) {
             try {
                 stepTest.get().addScreenCaptureFromPath(takeScreenshot());
             } catch (IOException e) {
@@ -239,21 +259,23 @@ public class ExtentReportManager {
     }
 
     public static void addCucumberFailStep(Throwable error) {
-        String stack = PropertyManager.getProperty("crowdar.extent.stacktrace.detail");
-        if (stack != null && !stack.isEmpty() && stack.equalsIgnoreCase("true")) {
+
+        Boolean stackTrace = new Boolean(PropertyManager.getProperty("crowdar.report.stackTraceDetail"));
+        if (stackTrace) {
             stepTest.get().fail(error);
         } else {
             stepTest.get().fail(error.getMessage());
         }
 
         Boolean screenshotDisable = new Boolean(PropertyManager.getProperty("crowdar.report.disable_screenshot_on_failure"));
-        if (screenshotDisable.equals(Boolean.FALSE)) {
+        if (!screenshotDisable) {
             try {
                 stepTest.get().addScreenCaptureFromPath(takeScreenshot());
             } catch (IOException e) {
                 logger4j.error(e.getStackTrace());
             }
         }
+
     }
 
     private static void addCucumberSkipStep() {
@@ -294,9 +316,16 @@ public class ExtentReportManager {
         String name = "";
         final File screenshot = ((TakesScreenshot) DriverManager.getDriverInstance()).getScreenshotAs(OutputType.FILE);
         name = "screenshot".concat(Long.toString(System.currentTimeMillis()));
-        fileLocation = reportPath.concat(File.separator).concat(name);
+        fileLocation = getReportPath().concat(File.separator).concat(name);
         FileUtils.copyFile(screenshot, new File(fileLocation));
         return name;
     }
 
+    public static String getReportName() {
+        return reportName;
+    }
+
+    public static void setReportName(String reportName) {
+        ExtentReportManager.reportName = reportName;
+    }
 }
