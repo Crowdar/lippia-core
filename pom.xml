@@ -5,7 +5,7 @@
     <url>http://maven.apache.org</url>
     <packaging>pom</packaging>
     <name>root</name>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -23,7 +23,7 @@
         <htmlunit.version>2.30.1</htmlunit.version>
         <guice.version>4.2.0</guice.version>
         <cucumber-expressions.version>6.2.0</cucumber-expressions.version>
-        <cucumber.version>4.2.0</cucumber.version>
+        <cucumber.version>4.7.4</cucumber.version>
         <datatable.version>1.0.3</datatable.version>
         <reportDirectory>target/surefire-reports</reportDirectory>
         <picocontainer.version>2.15</picocontainer.version>
@@ -146,19 +146,6 @@
 				<artifactId>pdfbox</artifactId>
 				<version>2.0.13</version>
 			</dependency>
-
-            <!-- EXTENT REPORT -->
-           <dependency>
-	            <groupId>com.aventstack</groupId>
-	            <artifactId>extentreports</artifactId>
-	            <version>4.0.9</version>
-           </dependency>
-
-           <dependency>
-                <groupId>com.aventstack.crowdar</groupId>
-                <artifactId>extentreports-cucumber4-adapter</artifactId>
-                <version>1.0.8</version>
-           </dependency>
 
             <!-- REPORTNG -->
 
