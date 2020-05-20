@@ -24,6 +24,10 @@ public class PageBaseWeb extends CucumberPageBase {
 
     protected NgWebDriver ngWebDriver;
 
+    public PageBaseWeb() {
+        super();
+    }
+    
     public PageBaseWeb(RemoteWebDriver driver) {
         super(driver);
         initConstructor();

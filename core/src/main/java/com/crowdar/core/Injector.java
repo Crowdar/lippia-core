@@ -12,16 +12,26 @@ import com.crowdar.driver.DriverManager;
 
 public class Injector {
 
-    private static Map<Class, Object> cache = new HashMap<>();
-
+    private static ThreadLocal<Map<Class, Object>> cache = new ThreadLocal<Map<Class, Object>>();
+    
     public static <T> T _page(Class<T> page) {
+    	if(cache.get()==null) {
+    		cache.set(new HashMap<Class, Object>());
+    	}
+    	
         try {
-            PageBase pageBase = (PageBase) cache.get(page);
+            PageBase pageBase = (PageBase) cache.get().get(page);
+
             if (pageBase == null || pageBase.getDriver().getSessionId() == null) {
+            	
                 Constructor<?> constructor = page.getConstructor(RemoteWebDriver.class);
                 Object o = constructor.newInstance(DriverManager.getDriverInstance());
-                cache.put(page, o);
+                cache.get().put(page, o);
             }
+
+//            String logTemplate = "######  %s - Thread id %s - objId: %s";
+//            System.out.println(logTemplate.format(logTemplate, "INJECTOR",Thread.currentThread().getId(), cache.get().get(page).toString()));
+            
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
             return null;
@@ -33,6 +43,9 @@ public class Injector {
             e.printStackTrace();
         }
 
-        return (T) cache.get(page);
+        return (T) cache.get().get(page);
+    }
+    public static void cleanThreadCache() {
+    	cache.set(null);
     }
 }
