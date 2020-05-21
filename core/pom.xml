@@ -5,13 +5,14 @@
 	<parent>
 		<groupId>com.crowdar.lippia</groupId>
 		<artifactId>root</artifactId>
-		<version>3.0.1-snapshot</version>
+		<version>3.0.1-SNAPSHOT</version>
 	</parent>
+
+	<name>core</name>
+	<artifactId>core</artifactId>
 
 	<modelVersion>4.0.0</modelVersion>
 	<url>http://maven.apache.org</url>
-	<name>core</name>
-	<artifactId>core</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
