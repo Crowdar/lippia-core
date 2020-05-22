@@ -18,7 +18,7 @@ public class DriverManager {
     private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<RemoteWebDriver>();
 
     
-    public static void initialize(Map<String, ?> extraCapabilities) throws Exception {
+    public static void initialize(Map<String, ?> extraCapabilities){
 //    	String created = String.valueOf(isDriverCreated());
     	
     	if (!isDriverCreated() || !isAValidDriver()) {
@@ -26,8 +26,6 @@ public class DriverManager {
                 localDriver.remove();
             }
             localDriver.set(DriverFactory.createDriver(extraCapabilities));
-        }else {
-        	throw new Exception("Driver initialized!");
         }
     	
 //        String logTemplate = "######  %s - Thread id %s --- isDriverCreated %s --- DriverId %s";
