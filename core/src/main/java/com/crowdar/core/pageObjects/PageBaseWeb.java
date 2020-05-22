@@ -11,7 +11,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
-import com.crowdar.bdd.cukes.SharedDriver;
 import com.crowdar.core.Constants;
 import com.paulhammant.ngwebdriver.NgWebDriver;
 
@@ -29,11 +28,6 @@ public class PageBaseWeb extends CucumberPageBase {
     }
     
     public PageBaseWeb(RemoteWebDriver driver) {
-        super(driver);
-        initConstructor();
-    }
-
-    public PageBaseWeb(SharedDriver driver) {
         super(driver);
         initConstructor();
     }
