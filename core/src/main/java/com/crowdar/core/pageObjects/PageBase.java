@@ -50,8 +50,8 @@ abstract public class PageBase {
     }
 
     public PageBase(RemoteWebDriver driver) {
-	  String logTemplate = "######  %s - Thread id %s - objId: %s --- DriverId %s ";
-      System.out.println(logTemplate.format(logTemplate, "PAGE BASE",Thread.currentThread().getId(), this.toString(), driver.getSessionId()));
+//	  String logTemplate = "######  %s - Thread id %s - objId: %s --- DriverId %s ";
+//      System.out.println(logTemplate.format(logTemplate, "PAGE BASE",Thread.currentThread().getId(), this.toString(), driver.getSessionId()));
     	
       logger = Logger.getLogger(this.getClass());
       initialize(driver);
