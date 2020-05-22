@@ -46,6 +46,6 @@ public class Injector {
         return (T) cache.get().get(page);
     }
     public static void cleanThreadCache() {
-    	cache.set(null);
+    	cache.remove();
     }
 }
