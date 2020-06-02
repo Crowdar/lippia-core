@@ -15,7 +15,6 @@ public class ZaleniumHook{
 	public void beforeScenario(Scenario scenario) throws IOException{
 		
 		Map<String, String> extraCapabilities = new HashMap<String, String>();
-		extraCapabilities.put("tz", "America/Argentina/Buenos_Aires");
 		extraCapabilities.put("testFileNameTemplate", "{testName}");
 		extraCapabilities.put("build",System.getProperty("build.identifier"));
 		extraCapabilities.put("name", scenario.getName());
