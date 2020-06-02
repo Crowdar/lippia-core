@@ -12,10 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -23,6 +20,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 
 public class FileUtils {
 
@@ -96,14 +94,6 @@ public class FileUtils {
         in.close();
     }
 
-    private static String getResourcePath(String resourceName) {
-        String resourcePath = FileUtils.class.getClassLoader().getResource(resourceName).getPath();
-        if (platformIsWindows()) {
-            resourcePath = resourcePath.substring(1);
-        }
-        return resourcePath;
-    }
-
     public static boolean platformIsWindows() {
         return File.separatorChar == '\\';
     }
@@ -141,23 +131,6 @@ public class FileUtils {
 
     private static final String fileFormat = "files/%s.json";
 
-//    public static void jsonWriter(List<Object> objects, String fileName) {
-//        try {
-//            JsonGenerator jGenerator = new JsonFactory().createJsonGenerator(new File(
-//                    String.format(fileFormat, fileName)), JsonEncoding.UTF8);
-//            jGenerator.setCodec(new ObjectMapper());
-//            jGenerator.writeStartArray();
-//            for (Object o : objects) {
-//                jGenerator.writeObject(o);
-//                jGenerator.writeRaw("\n");
-//            }
-//            jGenerator.writeEndArray();
-//            jGenerator.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public static List<Object> jsonReader(String fileName) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -188,7 +161,68 @@ public class FileUtils {
                 .stream().map(Object::toString)
                 .collect(Collectors.toCollection(LinkedList::new));
         String value = queue.remove();
-//        jsonWriter(new ArrayList<>(queue), fileName);
         return value;
+    }
+
+    public static <T> void writeListOutputs(List<T> actualList, List<T> expectedList) {
+        try {
+            String className = getClassName(actualList);
+            String random = DateUtils.getActualDateFormatted("ddmmyyHHmm-ss-SSS");
+
+            writeOutput(actualList, random, "actual".concat(className));
+
+            writeOutput(expectedList, random, "expected".concat(className));
+        } catch (Exception e) {
+            Logger.getRootLogger().error(">>> Error trying to write the output: ", e);
+        }
+    }
+
+    private static <T> void writeOutput(List<T> list, String random, String fileInitialName) throws IOException {
+        FileWriter writer = getFileWriter(random, fileInitialName.concat("_"));
+        List<String> headers = new ArrayList<>();
+        Boolean headersAdded = false;
+        for (Object object : list) {
+            List<String> outputs = new ArrayList<>();
+            Map<String, Object> sorted = MapUtils.sortMap(object);
+
+            addData(headers, headersAdded, outputs, sorted);
+            headersAdded = writeDataInFile(writer, headers, headersAdded, outputs);
+        }
+        writer.close();
+    }
+
+    private static Boolean writeDataInFile(FileWriter writer, List<String> headers, Boolean headersAdded, List<String> outputs) throws IOException {
+        if (!headersAdded) {
+            String headerActual = String.join(",", headers);
+            writer.write(headerActual.concat(System.lineSeparator()));
+            headersAdded = true;
+        }
+        String output = String.join(";", outputs);
+        writer.write(output.concat(System.lineSeparator()));
+        return headersAdded;
+    }
+
+    private static void addData(List<String> headers, Boolean headersAdded, List<String> outputs, Map<String, Object> sorted) {
+        Iterator<Map.Entry> iterator = MapUtils.getIterator(sorted);
+        while (iterator.hasNext()) {
+            Map.Entry<String, Object> entry = iterator.next();
+
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            outputs.add(String.valueOf(value));
+            if (!headersAdded) {
+                headers.add(key.toUpperCase());
+            }
+        }
+    }
+
+    private static <T> String getClassName(List<T> list) {
+        return list.iterator().next().getClass().getSimpleName();
+    }
+
+    private static FileWriter getFileWriter(String random, String fileName) throws IOException {
+        File file = new File(System.getProperty("user.dir").concat(File.separator).concat("target").concat(File.separator).concat("output"));
+        file.mkdir();
+        return new FileWriter(file.getAbsolutePath().concat(File.separator).concat(fileName + random + ".txt"));
     }
 }
