@@ -1,11 +1,13 @@
 package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
-import com.crowdar.core.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import static com.crowdar.api.rest.APIManager.BASE_URL;
 
 public class Request {
 
@@ -17,6 +19,17 @@ public class Request {
 
     public Request() {
         super();
+    }
+
+    public String getCompleteUrl() {
+        String completeUrl = url;
+        if (StringUtils.isEmpty(url)) {
+            completeUrl = BASE_URL;
+        }
+        if (!StringUtils.isEmpty(endpoint)) {
+            completeUrl = completeUrl.concat(endpoint);
+        }
+        return completeUrl;
     }
 
     public String getUrl() {

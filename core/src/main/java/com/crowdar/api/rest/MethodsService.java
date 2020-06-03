@@ -1,11 +1,10 @@
 package com.crowdar.api.rest;
 
-import static com.crowdar.api.rest.APIManager.BASE_URL;
-import static com.crowdar.api.rest.APIManager.setLastResponse;
+import com.crowdar.core.JsonUtils;
 
 import java.util.Map;
 
-import com.crowdar.core.JsonUtils;
+import static com.crowdar.api.rest.APIManager.setLastResponse;
 
 public class MethodsService {
 
@@ -19,14 +18,13 @@ public class MethodsService {
     }
 
     public static <T> Response get(Request req, Class<T> classModel) {
-        Response resp = getRestClient().get(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().get(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response get(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return get(req, classModel);
+        return get(jsonName, classModel, null);
     }
 
     public static <T> Response get(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
@@ -35,16 +33,14 @@ public class MethodsService {
     }
 
     public static <T> Response post(Request req, Class<T> classModel) {
-        Response resp = getRestClient().post(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().post(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response post(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return post(req, classModel);
+        return post(jsonName, classModel, null);
     }
-
 
     public static <T> Response post(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
         Request req = getRequest(jsonName, jsonParameters);
@@ -52,14 +48,13 @@ public class MethodsService {
     }
 
     public static <T> Response put(Request req, Class<T> classModel) {
-        Response resp = getRestClient().put(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().put(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response put(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return put(req, classModel);
+        return put(jsonName, classModel, null);
     }
 
 
@@ -69,14 +64,13 @@ public class MethodsService {
     }
 
     public static <T> Response patch(Request req, Class<T> classModel) {
-        Response resp = getRestClient().patch(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().patch(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response patch(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return patch(req, classModel);
+        return patch(jsonName, classModel, null);
     }
 
     public static <T> Response patch(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
@@ -85,14 +79,13 @@ public class MethodsService {
     }
 
     public static <T> Response delete(Request req, Class<T> classModel) {
-        Response resp = getRestClient().delete(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().delete(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response delete(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return delete(req, classModel);
+        return delete(jsonName, classModel, null);
     }
 
     public static <T> Response delete(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
@@ -108,23 +101,6 @@ public class MethodsService {
                 jsonRequest = jsonRequest.replace("{{" + key + "}}", replacementParameters.get(key));
             }
         }
-
         return JsonUtils.deserialize(jsonRequest, Request.class);
     }
-
-    private static String getURL(Request req) {
-        String url = req.getUrl();
-        String endpoint = req.getEndpoint();
-
-        if (url == null || url.isEmpty()) {
-            url = BASE_URL;
-        }
-
-        if (endpoint == null) {
-            endpoint = "";
-        }
-
-        return url + endpoint;
-    }
-
 }
