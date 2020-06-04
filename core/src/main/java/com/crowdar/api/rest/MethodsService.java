@@ -1,7 +1,9 @@
 package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
+import com.crowdar.util.ValidateUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.crowdar.api.rest.APIManager.setLastResponse;
@@ -102,5 +104,13 @@ public class MethodsService {
             }
         }
         return JsonUtils.deserialize(jsonRequest, Request.class);
+    }
+
+    public static <T> void validateFields(List<T> actualList, List<T> expectedList) throws Exception {
+        ValidateUtils.validateFields(actualList, expectedList);
+    }
+
+    public static void validateFields(Object actual, Object expected) throws Exception {
+        ValidateUtils.validateFields(actual, expected);
     }
 }
