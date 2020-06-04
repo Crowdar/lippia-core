@@ -17,6 +17,15 @@ All notable changes to this project will be documented in this file.
 * remove all sharedDriver references
 * remove timezone sended by capabilities
 
+## 3.0.0.2 (01/6/2020)
+
+* Se agrega ValidateUtils (validacion de 2 objetos o 2 listas).
+* Se agrega CommonSteps para API con steps en comun como: validar response vacio, validar status, etc.
+* Fix en API con casos de errores 500 y errores 400.
+* Refactor en MethodsService (API). Se crea metodo getCompleteUrl en Request (url + endpoint).
+* Elimino package driver.factory
+* WriteListOutputs se genera con "," separator para poder importarlo en excel como csv.
+
 ## 3.0.0.1 (28/5/2020)
 
 * Se agrega DateUtils.
