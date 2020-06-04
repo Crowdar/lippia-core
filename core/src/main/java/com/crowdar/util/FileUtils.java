@@ -195,11 +195,10 @@ public class FileUtils {
         if (!headersAdded) {
             String headerActual = String.join(",", headers);
             writer.write(headerActual.concat(System.lineSeparator()));
-            headersAdded = true;
         }
-        String output = String.join(";", outputs);
+        String output = String.join(",", outputs);
         writer.write(output.concat(System.lineSeparator()));
-        return headersAdded;
+        return true;
     }
 
     private static void addData(List<String> headers, Boolean headersAdded, List<String> outputs, Map<String, Object> sorted) {
