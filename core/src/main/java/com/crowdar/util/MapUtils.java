@@ -1,6 +1,7 @@
 package com.crowdar.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.repackaged.com.google.common.base.Splitter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -23,5 +24,13 @@ public class MapUtils {
     public static Map<String, Object> convertObjectToMap(Object object) {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(object, Map.class);
+    }
+
+    public static Map<String, String> splitIntoMap(String inputParameters, String splitter, String keyValueSeparator) {
+        Map<String, String> parameters = null;
+        if (!inputParameters.isEmpty()) {
+            parameters = Splitter.on(splitter).withKeyValueSeparator(keyValueSeparator).split(inputParameters);
+        }
+        return parameters;
     }
 }
