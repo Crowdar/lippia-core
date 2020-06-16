@@ -1,7 +1,7 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
-## 3.1.0 (2/6/2020)
+## 3.1.0 (02/06/2020)
 
 * extent dependencies extraction from core
 * related to abstraction to improove driver capabilities in execution time.
@@ -17,7 +17,13 @@ All notable changes to this project will be documented in this file.
 * remove all sharedDriver references
 * remove timezone sended by capabilities
 
-## 3.0.0.2 (01/6/2020)
+## 3.0.0.3 (01/06/2020)
+
+* Se agrega metodo splitIntoMap a MapUtils.
+* Se agregan metodos de validacion de response en CommonSteps api con entity configuration global (se pasa desde el cliente en config properties)
+* Se agregan implementacion de validateFields en MethodsService para implementar, en caso de ser necesario, en el cliente.
+
+## 3.0.0.2 (30/05/2020)
 
 * Se agrega ValidateUtils (validacion de 2 objetos o 2 listas).
 * Se agrega CommonSteps para API con steps en comun como: validar response vacio, validar status, etc.
@@ -26,14 +32,14 @@ All notable changes to this project will be documented in this file.
 * Elimino package driver.factory
 * WriteListOutputs se genera con "," separator para poder importarlo en excel como csv.
 
-## 3.0.0.1 (28/5/2020)
+## 3.0.0.1 (28/05/2020)
 
 * Se agrega DateUtils.
 * Se agrega MapUtils.
 * Fix projectTypeEnum para API y Database en seteo de properties (string en lugar de boolean).
 * Se agrega metodo writeListOutputs en FileUtils para que a partir de 2 listas, se escriba el output en archivos txt (esperado vs actual) en target/output/
 
-## 3.0.0 (7/5/2020)
+## 3.0.0 (07/05/2020)
 
 * Se agrega NoneStrategy como default strategy en caso de que el cliente no le asigne ningun valor.
 * Se ponen las properties crowdar.report.disable_screenshot_on_failure y crowdar.report.stackTraceDetail como true por default para: API y Database.
