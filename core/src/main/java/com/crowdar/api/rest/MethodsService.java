@@ -106,11 +106,155 @@ public class MethodsService {
         return JsonUtils.deserialize(jsonRequest, Request.class);
     }
 
-    public static <T> void validateFields(List<T> actualList, List<T> expectedList) throws Exception {
+    /**
+     * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
+     * Validate two lists
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     *
+     * @param actualList
+     * @param expectedList
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList, List<T> expectedList) throws Exception {
         ValidateUtils.validateFields(actualList, expectedList);
     }
 
-    public static void validateFields(Object actual, Object expected) throws Exception {
+    /**
+     * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
+     * Validate two objects
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     *
+     * @param actual
+     * @param expected
+     * @throws Exception
+     */
+    public void validateFields(Object actual, Object expected) throws Exception {
         ValidateUtils.validateFields(actual, expected);
+    }
+
+    /**
+     * Set your own expected object, modifying expected object with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param actual
+     * @param expected
+     * @param parameters
+     * @throws Exception
+     */
+    public void validateFields(Object actual, Object expected, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected list, modifying expected list with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param actualList
+     * @param expectedList
+     * @param parameters
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList, List<T> expectedList, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected object, modifying the json expected. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     *
+     * @param jsonExpectedPath
+     * @param actual
+     * @throws Exception
+     */
+    public void validateFields(String jsonExpectedPath, Object actual) throws Exception {
+    }
+
+    /**
+     * Set your own expected list, modifying the json expected. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     *
+     * @param jsonExpectedPath
+     * @param actualList
+     * @throws Exception
+     */
+    public <T> void validateFields(String jsonExpectedPath, List<T> actualList) throws Exception {
+    }
+
+    /**
+     * Set your own expected object, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param jsonExpectedPath
+     * @param actual
+     * @param parameters
+     * @throws Exception
+     */
+    public void validateFields(String jsonExpectedPath, Object actual, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected list, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param jsonExpectedPath
+     * @param actualList
+     * @param parameters
+     * @throws Exception
+     */
+    public <T> void validateFields(String jsonExpectedPath, List<T> actualList, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected object. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity>
+     * expected response is obtained in '<entity>'
+     *
+     * @param actual
+     * @throws Exception
+     */
+    public void validateFields(Object actual) throws Exception {
+    }
+
+    /**
+     * Set your own expected list. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity>
+     * expected response is obtained in '<entity>'
+     *
+     * @param actualList
+     * @param <T>
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList) throws Exception {
+    }
+
+    /**
+     * Set your own expected object with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     *
+     * @param actual
+     * @param parameters
+     * @throws Exception
+     */
+    public void validateFields(Object actual, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected list with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     *
+     * @param actualList
+     * @param parameters
+     * @param <T>
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList, Map<String, String> parameters) throws Exception {
     }
 }

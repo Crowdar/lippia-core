@@ -51,52 +51,55 @@ public class CommonSteps {
         Assert.assertEquals(actualJsonResponse.length, 0);
     }
 
-    @Then("se obtuvo el response esperado en (.*) con el (.*)")
-    @And("expected response is obtained in (.*) with (.*)")
-    public void iWillGetTheProperResponse(String entity, String jsonName) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    @Then("se obtuvo el response esperado en ([^ ]*) con el ([^ ]*)")
+    @And("expected response is obtained in '([^']*)' with '([^']*)'")
+    public void iWillGetTheProperResponse(String entity, String jsonName) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         setInjectorParameters(jsonName);
-
-        getServiceClass(entity).getMethod("validateFields", objectClass, objectClass).invoke("", expectedJsonResponse, actualJsonResponse);
+        Class service = getServiceClass(entity);
+        service.getMethod("validateFields", objectClass, objectClass).invoke(service.newInstance(), expectedJsonResponse, actualJsonResponse);
     }
 
-    @Then("con los parametros: (.*) y el (.*) se obtuvo el response esperado en (.*)")
-    @And("with the parameters (.*) and the (.*) expected response is obtained in (.*)")
-    public void iWillGetTheProperResponseWithParameters(String inputParameters, String jsonName, String entity) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    @Then("se obtuvo el response esperado en ([^ ]*) con el ([^ ]*) y sus parametros ([^ ]*)")
+    @And("expected response is obtained in '([^']*)' with '([^ ]*)' and the parameters '([^']*)'")
+    public void iWillGetTheProperResponseWithParameters(String entity, String jsonName, String inputParameters) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         setInjectorParameters(jsonName);
         Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
-        getServiceClass(entity).getMethod("validateFields", objectClass, objectClass, Map.class).invoke("", expectedJsonResponse, actualJsonResponse, parameters);
+        Class service = getServiceClass(entity);
+        service.getMethod("validateFields", objectClass, objectClass, Map.class).invoke(service.newInstance(), expectedJsonResponse, actualJsonResponse, parameters);
     }
 
-    @Then("modificando el (.*) se obtuvo el response esperado en (.*)")
-    @And("modifying the (.*) expected response is obtained in (.*) ")
-    public void iWillGetTheProperResponseModified(String expectedJsonName, String entity) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException {
+    @Then("se obtuvo el response esperado en ([^ ]*) modificando el ([^ ]*)")
+    @And("expected response is obtained in '([^']*)' with '([^']*)' modifying the '([^']*)'")
+    public void iWillGetTheProperResponseModified(String entity, String expectedJsonName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException, InstantiationException {
         setInjectorParameters(null);
-
-        getServiceClass(entity).getMethod("validateFields", String.class, objectClass).invoke("", "response/".concat(expectedJsonName), actualJsonResponse);
+        Class service = getServiceClass(entity);
+        service.getMethod("validateFields", String.class, objectClass).invoke(service.newInstance(), "response/".concat(expectedJsonName), actualJsonResponse);
     }
 
-    @Then("con los parametros (.*) y modificando el (.*) se obtuvo el response esperado en (.*)")
-    @And("with the parameters (.*) and modifying the (.*) expected response is obtained in (.*)")
-    public void iWillGetTheProperResponseModifiedWithParameters(String inputParameters, String expectedJsonName, String entity) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException {
-        setInjectorParameters(null);
-        Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
-        getServiceClass(entity).getMethod("validateFields", String.class, objectClass, Map.class).invoke("", "response/".concat(expectedJsonName), actualJsonResponse, parameters);
-    }
-
-    @Then("se obtuvo el response esperado en: (.*)")
-    @And("expected response is obtained in: (.*)")
-    public void iWillGetTheProperResponseWithObject(String entity) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        setInjectorParameters(null);
-
-        getServiceClass(entity).getMethod("validateFields", objectClass).invoke("", actualJsonResponse);
-    }
-
-    @Then("con los parametros= (.*) se obtuvo el response esperado en (.*)")
-    @And("with the parameters= (.*) is obtained expected response in (.*)")
-    public void iWillGetTheProperResponseWithObjectAndParameters(String inputParameters, String entity) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException {
+    @Then("se obtuvo el response esperado en ([^ ]*) modificando el ([^ ]*) y sus parametros ([^ ]*)")
+    @And("expected response is obtained in '([^']*)' modifying the '([^ ]*)' and the parameters '([^']*)'")
+    public void iWillGetTheProperResponseModifiedWithParameters(String entity, String expectedJsonName, String inputParameters) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException, InstantiationException {
         setInjectorParameters(null);
         Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
-        getServiceClass(entity).getMethod("validateFields", objectClass, Map.class).invoke("", actualJsonResponse, parameters);
+        Class service = getServiceClass(entity);
+        service.getMethod("validateFields", String.class, objectClass, Map.class).invoke(service.newInstance(), "response/".concat(expectedJsonName), actualJsonResponse, parameters);
+    }
+
+    @Then("se obtuvo el response esperado en ([^ ]*)")
+    @And("expected response is obtained in '([^']*)'")
+    public void iWillGetTheProperResponseWithObject(String entity) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+        setInjectorParameters(null);
+        Class service = getServiceClass(entity);
+        service.getMethod("validateFields", objectClass).invoke(service.newInstance(), actualJsonResponse);
+    }
+
+    @Then("se obtuvo el response esperado en ([^ ]*) y sus parametros ([^ ]*)")
+    @And("expected response is obtained in: '([^']*)' and the parameters '([^']*)'")
+    public void iWillGetTheProperResponseWithObjectAndParameters(String entity, String inputParameters) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException, InstantiationException {
+        setInjectorParameters(null);
+        Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
+        Class service = getServiceClass(entity);
+        service.getMethod("validateFields", objectClass, Map.class).invoke(service.newInstance(), actualJsonResponse, parameters);
     }
 
     private Class getServiceClass(String entity) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
