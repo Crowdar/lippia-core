@@ -17,7 +17,8 @@ pipelines:
             - maven # Cache any dependencies we download, speeds up build times.
           script:
             - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
-            - export PROJECT_VERSION=$(perl -e '$_ = join "", <>; m!<project[^>]*>.*\n(?:    |\t)<version[^>]*>\s*([^<]+?)\s*</version>.*</project>!s and print "$1\n"' pom.xml)
+            - apt-get install xml2
+            - export PROJECT_VERSION=$(xml2 < pom.xml  | grep /project/version= | sed 's/.*=//')
             - docker build -t crowdar/lippia:$PROJECT_VERSION .
             - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
             - docker push crowdar/lippia:$PROJECT_VERSION
@@ -33,6 +34,5 @@ pipelines:
             - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
             - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d -md sha256
             - gpg --import private-key.gpg
-            - mvn -P ossrh -B -s settings.xml verify
-            - mvn -P ossrh -B -s settings.xml deploy
-    
+            - docker run --rm -t -v $(pwd):/opt/workspace/core -w /opt/workspace/core maven:3.6.3-jdk-11 mvn -P ossrh -B -s settings.xml verify deploy
+            
