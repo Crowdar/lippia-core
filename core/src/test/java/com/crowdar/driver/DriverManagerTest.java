@@ -25,17 +25,17 @@ public class DriverManagerTest extends PowerMockTestCase {
 		when(PropertyManager.getProperty("crowdar.setupStrategy")).thenReturn("web.DownloadLatestStrategy");
 	}
 
-	@Test
-	public void CHROMEDYNAMIC_Test() {
-		RemoteWebDriver remoteWebDriver = DriverManager.getDriverInstance();
-		Assert.notNull(remoteWebDriver, "Error creating Dynamic web Driver in DriverManager");
-		DriverManager.dismissCurrentDriver();
-	}
-
-	@Test
-    public void QuitDriver_Test() {
-        RemoteWebDriver remoteWebDriver = DriverManager.getDriverInstance();
-        Assert.notNull(remoteWebDriver, "Error creating Dynamic web Driver in DriverManager");
-        remoteWebDriver.quit();
-    }
+//	@Test
+//	public void CHROMEDYNAMIC_Test() {
+//		RemoteWebDriver remoteWebDriver = DriverManager.getDriverInstance();
+//		Assert.notNull(remoteWebDriver, "Error creating Dynamic web Driver in DriverManager");
+//		DriverManager.dismissCurrentDriver();
+//	}
+//
+//	@Test
+//    public void QuitDriver_Test() {
+//        RemoteWebDriver remoteWebDriver = DriverManager.getDriverInstance();
+//        Assert.notNull(remoteWebDriver, "Error creating Dynamic web Driver in DriverManager");
+//        remoteWebDriver.quit();
+//    }
 }
