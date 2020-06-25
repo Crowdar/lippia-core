@@ -3,7 +3,7 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: atlassian/default-image:2
+image: maven:3.6.3-jdk-11
 
 pipelines:
   branches:
@@ -18,7 +18,7 @@ pipelines:
           script:
             - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
             - apt-get install xml2
-            - export PROJECT_VERSION=$(xml2 < pom.xml  | grep /project/version= | sed 's/.*=//')
+            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
             - docker build -t crowdar/lippia:$PROJECT_VERSION .
             - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
             - docker push crowdar/lippia:$PROJECT_VERSION
