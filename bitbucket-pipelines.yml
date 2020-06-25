@@ -33,5 +33,6 @@ pipelines:
             - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
             - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d -md sha256
             - gpg --import private-key.gpg
-            - docker run --rm -t -v $(pwd):/opt/workspace/core -w /opt/workspace/core image: maven:3.3.9-jdk-8 mvn -P ossrh -B -s settings.xml verify deploy
+            - mvn -P ossrh -B -s settings.xml verify
+            - mvn -P ossrh -B -s settings.xml deploy
     
