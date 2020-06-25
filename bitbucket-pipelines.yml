@@ -7,7 +7,7 @@ image: atlassian/default-image:2
 
 pipelines:
   branches:
-    releases:  
+    release:  
       - step:
           services:
             - docker
