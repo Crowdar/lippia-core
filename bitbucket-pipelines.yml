@@ -1,9 +1,30 @@
-options:
-  docker: true
+# This is a sample build configuration for Docker.
+# Check our guides at https://confluence.atlassian.com/x/O1toN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: atlassian/default-image:2
+
 pipelines:
   branches:
+    release:  
+      - step:
+          services:
+            - docker
+          name: Build and Deploy Release Artifact and Push Docker Image
+          trigger: automatic
+          caches:
+            - maven # Cache any dependencies we download, speeds up build times.
+          script:
+            - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
+            - export PROJECT_VERSION=$(perl -e '$_ = join "", <>; m!<project[^>]*>.*\n(?:    |\t)<version[^>]*>\s*([^<]+?)\s*</version>.*</project>!s and print "$1\n"' pom.xml)
+            - docker build -t crowdar/lippia:$PROJECT_VERSION .
+            - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+            - docker push crowdar/lippia:$PROJECT_VERSION
     master:  
       - step:
+          services:
+            - docker
           name: Build and Deploy Release Artifact to ossrh and publish image on dockerhub
           trigger: automatic
           caches:
@@ -12,16 +33,6 @@ pipelines:
             - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
             - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d -md sha256
             - gpg --import private-key.gpg
-            - docker run --rm -t -v $(pwd):/opt/workspace/core -w /opt/workspace/core image: maven:3.3.9-jdk-8 mvn -P ossrh -B -s settings.xml verify deploy
-    releases:  
-      - step:
-          name: Build and Deploy Release Artifact and Push Docker Image
-          trigger: automatic
-          caches:
-            - maven # Cache any dependencies we download, speeds up build times.
-          script:
-            - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
-            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
-            - docker build -t crowdar/lippia:$PROJECT_VERSION .
-            - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
-            - docker push crowdar/lippia:$PROJECT_VERSION
+            - mvn -P ossrh -B -s settings.xml verify
+            - mvn -P ossrh -B -s settings.xml deploy
+    
