@@ -19,7 +19,7 @@ ADD . ${WORKSPACE}
 WORKDIR ${WORKSPACE}
 
 RUN mvn -B -s settings.xml verify
-RUN mvn -B -s settings.xml install 
+RUN mvn -B -s settings.xml deploy 
 
 RUN rm settings.xml
 
