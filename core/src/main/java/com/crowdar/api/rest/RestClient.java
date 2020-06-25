@@ -1,6 +1,5 @@
 package com.crowdar.api.rest;
 
-import com.crowdar.core.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -25,6 +24,7 @@ public class RestClient {
 
     private HttpHeaders headers;
     private static RestTemplate restTemplate;
+	private static RestClient restClient;
 
     public RestClient() {
         setRestTemplate(new RestTemplate(new HttpComponentsClientHttpRequestFactory()));
@@ -55,40 +55,44 @@ public class RestClient {
         }
     }
 
-    private HttpHeaders getRequestHeaders() {
+    private HttpHeaders getRequestHeaders(){
         return headers;
     }
 
-    public Response get(String url, Class type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response get(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.GET);
     }
 
-    public Response post(String url, Class type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response post(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.POST);
     }
 
-    public Response put(String url, Class type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response put(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PUT);
     }
 
-    public Response patch(String url, Class type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PATCH);
     }
 
-    public Response delete(String url, Class type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.DELETE);
     }
 
-    private Response createHTTPMethod(String url, Class type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
+    private Response createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
         setRequestHeaders(headers);
         HttpEntity<String> request = this.createRequest(body, getRequestHeaders());
         try {
-            ResponseEntity<Object> response = getRestTemplate().exchange(uri, httpMethod, request, type);
+            ResponseEntity<List<Object>> response = getRestTemplate().exchange(uri, httpMethod, request, (Class<List<Object>>) type);
             return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
-        } catch (HttpClientErrorException | HttpServerErrorException error) {
-            Object responseBody = JsonUtils.deserialize(error.getResponseBodyAsString(), type);
-            return this.createResponse(error.getStatusCode().value(), error.getLocalizedMessage(), responseBody, createResponseHeaders(error.getResponseHeaders()));
+
+        } catch (HttpClientErrorException e1) {
+            System.out.println(e1.getResponseBodyAsString());
+            return this.createResponse(e1.getStatusCode().value(), e1.getResponseBodyAsString(), e1.getLocalizedMessage(), createResponseHeaders(e1.getResponseHeaders()));
+        } catch (HttpServerErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            return this.createResponse(e.getStatusCode().value(), e.getResponseBodyAsString(), e.getLocalizedMessage(), createResponseHeaders(e.getResponseHeaders()));
         }
     }
 
@@ -139,4 +143,10 @@ public class RestClient {
         }
     }
 
+	  public static RestClient getRestClient() {
+        if (restClient == null) {
+            restClient = new RestClient();
+        }
+        return restClient;
+    }
 }
