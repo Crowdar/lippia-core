@@ -4,16 +4,20 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.lippia</groupId>
-    <artifactId>root</artifactId>
-    <version>3.1.0.1</version>
-    <packaging>pom</packaging>
-    <url>http://lippia.io</url>
-    
-    <name>lippia-root</name>
+	<parent>
+		<groupId>io.lippia</groupId>
+		<artifactId>root</artifactId>
+		<version>3.1.0.1</version>
+	</parent>
 
-    <description>
-		Root project, define dependencies and build configuration.
+	<artifactId>core</artifactId>
+	<packaging>jar</packaging>
+	<url>http://lippia.io</url>
+
+	<name>lippia-core</name>
+
+	<description>
+		Core project, contains the behavior.
 	</description>
 
     <developers>
