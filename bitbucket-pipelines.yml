@@ -49,5 +49,5 @@ pipelines:
             - docker
           trigger: automatic
           script:
-            - git remote add github https://username:{token_github}@url_github.git
+            - git remote add github https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Crowdar/lippia-core.git
             - git push -u github
