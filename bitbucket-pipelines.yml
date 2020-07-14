@@ -42,3 +42,12 @@ pipelines:
             - docker build -t crowdar/lippia:$PROJECT_VERSION .
             - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
             - docker push crowdar/lippia:$PROJECT_VERSION
+            
+      - step:
+          name: Publish code to Github
+          services:
+            - docker
+          trigger: automatic
+          script:
+            - git remote add github https://username:{token_github}@url_github.git
+            - git push -u github
