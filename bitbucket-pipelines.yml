@@ -15,7 +15,7 @@ pipelines:
             - mvn -B -s settings.xml deploy 
 
     master:  
-       - step:
+      - step:
           name: Publish code to Github
           services:
             - docker
