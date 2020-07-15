@@ -1,16 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-	<name>root</name>
 
-	<groupId>com.crowdar.lippia</groupId>
-	<artifactId>root</artifactId>
-	<version>3.1.0.1</version>
+    <groupId>io.lippia</groupId>
+    <artifactId>root</artifactId>
+    <version>3.1.0.1</version>
+    <packaging>pom</packaging>
+    <url>http://lippia.io</url>
+    
+    <name>lippia-root</name>
 
-	<url>http://maven.apache.org</url>
-	<packaging>pom</packaging>
+    <description>
+		Root project, define dependencies and build configuration.
+	</description>
+
+    <developers>
+		<developer>
+			<name>Juan Manuel Carames</name>
+			<id>juan.carames</id>
+			<roles>
+				<role>Owner</role>
+			</roles>
+		</developer>
+	</developers>
+    
+    <scm>
+		<connection>scm:git:https://github.com/Crowdar/lippia-core.git</connection>
+		<developerConnection>scm:git:https://github.com/Crowdar/lippia-core.git</developerConnection>
+		<url>https://github.com/Crowdar/lippia-core</url>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -300,23 +327,81 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>private</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>crowdarNexus-snapshots</id>
-			<url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>crowdarNexus-releases</id>
-			<url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-releases/</url>
-		</repository>
-	</distributionManagement>
+			<distributionManagement>
+				<repository>
+					<id>crowdarNexus-releases</id>
+					<url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-releases/</url>
+				</repository>
+				<snapshotRepository>
+					<id>crowdarNexus-snapshots</id>
+					<url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-snapshots/</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
 
-	<repositories>
-		<repository>
-			<id>crowdarRepo</id>
-			<name>crowdar-repository</name>
-			<url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-public/</url>
-		</repository>
-	</repositories>
+		<profile>
+			<id>ossrh</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+			<distributionManagement>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+
+		</profile>
+
+	</profiles>
+
+    <repositories>
+        <repository>
+            <id>crowdarRepo</id>
+            <name>crowdar-repository</name>
+            <url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
 </project>

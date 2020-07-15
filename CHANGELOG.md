@@ -1,6 +1,16 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.1.0.1 (15/07/2020)
+* change groupId from com.crowdar to io.lippia
+* bitbucket pipeline configuration
+  - when push to staging branch
+    - deploy artifacts in private nexus repository when push over staging branch
+  - when push to master branch  
+    - deploy artifacts in OSSRH (maven central)
+    - docker image build and push to docker hub
+    - push code to github
+  
 ## 3.1.0 (02/06/2020)
 
 * extent dependencies extraction from core
