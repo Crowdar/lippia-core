@@ -15,6 +15,15 @@ pipelines:
             - mvn -B -s settings.xml deploy 
 
     master:  
+       - step:
+          name: Publish code to Github
+          services:
+            - docker
+          trigger: automatic
+          script:
+            - git remote add github https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Crowdar/lippia-core.git
+            - git push -u github
+            
       - step:
           name: Build and Deploy release artifact to OSSRH
           services:
