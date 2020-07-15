@@ -1,32 +1,24 @@
 package com.crowdar.api.rest;
 
-import static com.crowdar.api.rest.APIManager.BASE_URL;
-import static com.crowdar.api.rest.APIManager.setLastResponse;
+import com.crowdar.core.JsonUtils;
+import com.crowdar.util.ValidateUtils;
 
+import java.util.List;
 import java.util.Map;
 
-import com.crowdar.core.JsonUtils;
+import static com.crowdar.api.rest.APIManager.setLastResponse;
 
 public class MethodsService {
 
-    private static RestClient restClient;
-
-    private static RestClient getRestClient() {
-        if (restClient == null) {
-            restClient = new RestClient();
-        }
-        return restClient;
-    }
 
     public static <T> Response get(Request req, Class<T> classModel) {
-        Response resp = getRestClient().get(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().get(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response get(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return get(req, classModel);
+        return get(jsonName, classModel, null);
     }
 
     public static <T> Response get(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
@@ -35,16 +27,14 @@ public class MethodsService {
     }
 
     public static <T> Response post(Request req, Class<T> classModel) {
-        Response resp = getRestClient().post(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().post(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response post(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return post(req, classModel);
+        return post(jsonName, classModel, null);
     }
-
 
     public static <T> Response post(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
         Request req = getRequest(jsonName, jsonParameters);
@@ -52,14 +42,13 @@ public class MethodsService {
     }
 
     public static <T> Response put(Request req, Class<T> classModel) {
-        Response resp = getRestClient().put(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().put(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response put(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return put(req, classModel);
+        return put(jsonName, classModel, null);
     }
 
 
@@ -69,14 +58,13 @@ public class MethodsService {
     }
 
     public static <T> Response patch(Request req, Class<T> classModel) {
-        Response resp = getRestClient().patch(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().patch(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response patch(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return patch(req, classModel);
+        return patch(jsonName, classModel, null);
     }
 
     public static <T> Response patch(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
@@ -85,14 +73,13 @@ public class MethodsService {
     }
 
     public static <T> Response delete(Request req, Class<T> classModel) {
-        Response resp = getRestClient().delete(getURL(req), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().delete(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
         setLastResponse(resp);
         return resp;
     }
 
     public static <T> Response delete(String jsonName, Class<T> classModel) {
-        Request req = getRequest(jsonName, null);
-        return delete(req, classModel);
+        return delete(jsonName, classModel, null);
     }
 
     public static <T> Response delete(String jsonName, Class<T> classModel, Map<String, String> jsonParameters) {
@@ -108,23 +95,158 @@ public class MethodsService {
                 jsonRequest = jsonRequest.replace("{{" + key + "}}", replacementParameters.get(key));
             }
         }
-
         return JsonUtils.deserialize(jsonRequest, Request.class);
     }
 
-    private static String getURL(Request req) {
-        String url = req.getUrl();
-        String endpoint = req.getEndpoint();
-
-        if (url == null || url.isEmpty()) {
-            url = BASE_URL;
-        }
-
-        if (endpoint == null) {
-            endpoint = "";
-        }
-
-        return url + endpoint;
+    /**
+     * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
+     * Validate two lists
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     *
+     * @param actualList
+     * @param expectedList
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList, List<T> expectedList) throws Exception {
+        ValidateUtils.validateFields(actualList, expectedList);
     }
 
+    /**
+     * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
+     * Validate two objects
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     *
+     * @param actual
+     * @param expected
+     * @throws Exception
+     */
+    public void validateFields(Object actual, Object expected) throws Exception {
+        ValidateUtils.validateFields(actual, expected);
+    }
+
+    /**
+     * Set your own expected object, modifying expected object with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param actual
+     * @param expected
+     * @param parameters
+     * @throws Exception
+     */
+    public void validateFields(Object actual, Object expected, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected list, modifying expected list with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param actualList
+     * @param expectedList
+     * @param parameters
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList, List<T> expectedList, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected object, modifying the json expected. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     *
+     * @param jsonExpectedPath
+     * @param actual
+     * @throws Exception
+     */
+    public void validateFields(String jsonExpectedPath, Object actual) throws Exception {
+    }
+
+    /**
+     * Set your own expected list, modifying the json expected. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     *
+     * @param jsonExpectedPath
+     * @param actualList
+     * @throws Exception
+     */
+    public <T> void validateFields(String jsonExpectedPath, List<T> actualList) throws Exception {
+    }
+
+    /**
+     * Set your own expected object, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param jsonExpectedPath
+     * @param actual
+     * @param parameters
+     * @throws Exception
+     */
+    public void validateFields(String jsonExpectedPath, Object actual, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected list, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     *
+     * @param jsonExpectedPath
+     * @param actualList
+     * @param parameters
+     * @throws Exception
+     */
+    public <T> void validateFields(String jsonExpectedPath, List<T> actualList, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected object. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity>
+     * expected response is obtained in '<entity>'
+     *
+     * @param actual
+     * @throws Exception
+     */
+    public void validateFields(Object actual) throws Exception {
+    }
+
+    /**
+     * Set your own expected list. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity>
+     * expected response is obtained in '<entity>'
+     *
+     * @param actualList
+     * @param <T>
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList) throws Exception {
+    }
+
+    /**
+     * Set your own expected object with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     *
+     * @param actual
+     * @param parameters
+     * @throws Exception
+     */
+    public void validateFields(Object actual, Map<String, String> parameters) throws Exception {
+    }
+
+    /**
+     * Set your own expected list with parameters. Call validateFields(actual, expected); at the end.
+     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
+     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     *
+     * @param actualList
+     * @param parameters
+     * @param <T>
+     * @throws Exception
+     */
+    public <T> void validateFields(List<T> actualList, Map<String, String> parameters) throws Exception {
+    }
 }

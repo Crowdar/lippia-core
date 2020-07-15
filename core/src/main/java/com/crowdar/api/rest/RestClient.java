@@ -24,6 +24,7 @@ public class RestClient {
 
     private HttpHeaders headers;
     private static RestTemplate restTemplate;
+	private static RestClient restClient;
 
     public RestClient() {
         setRestTemplate(new RestTemplate(new HttpComponentsClientHttpRequestFactory()));
@@ -142,4 +143,10 @@ public class RestClient {
         }
     }
 
+	  public static RestClient getRestClient() {
+        if (restClient == null) {
+            restClient = new RestClient();
+        }
+        return restClient;
+    }
 }

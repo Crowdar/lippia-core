@@ -23,6 +23,7 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.crowdar.core.Constants;
+import com.crowdar.driver.DriverManager;
 
 /**
  * This class represents the things in common between Windows, Web and Mobile projects
@@ -46,12 +47,18 @@ abstract public class PageBase {
     protected Logger logger;
 
     public PageBase() {
-
     }
 
     public PageBase(RemoteWebDriver driver) {
-        logger = Logger.getLogger(this.getClass());
-        this.driver = driver;
+//	  String logTemplate = "######  %s - Thread id %s - objId: %s --- DriverId %s ";
+//      System.out.println(logTemplate.format(logTemplate, "PAGE BASE",Thread.currentThread().getId(), this.toString(), driver.getSessionId()));
+    	
+      logger = Logger.getLogger(this.getClass());
+      initialize(driver);
+    }
+    
+    private void initialize(RemoteWebDriver driver) {
+    	this.driver = driver;
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(Constants.getWaitForElementTimeout()))
                 .pollingEvery(Duration.ofMillis(10)).ignoring(NoSuchElementException.class);
@@ -63,7 +70,11 @@ abstract public class PageBase {
      * @return web driver
      */
     public RemoteWebDriver getDriver() {
-        return driver;
+    	
+    	if(driver == null) {
+    		initialize(DriverManager.getDriverInstance());
+    	}
+    	return driver;
     }
 
     /**

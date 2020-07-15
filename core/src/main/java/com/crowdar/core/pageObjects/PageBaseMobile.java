@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.crowdar.bdd.cukes.SharedDriver;
 import com.crowdar.core.Utils;
 
 import io.appium.java_client.MobileBy;
@@ -17,10 +16,6 @@ import io.appium.java_client.MobileBy;
 public class PageBaseMobile extends CucumberPageBase {
 
     public PageBaseMobile(RemoteWebDriver driver) {
-        super(driver);
-    }
-
-    public PageBaseMobile(SharedDriver driver) {
         super(driver);
     }
 
