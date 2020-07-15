@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## 3.1.0.1 (15/07/2020)
+* change groupId from com.crowdar to io.lippia
 * bitbucket pipeline configuration
   - when push to staging branch
     - deploy artifacts in private nexus repository when push over staging branch
