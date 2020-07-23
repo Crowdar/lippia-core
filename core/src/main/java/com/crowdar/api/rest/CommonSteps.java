@@ -53,7 +53,7 @@ public class CommonSteps {
     }
 
     @Then("se obtuvo el texto (.*) como response")
-    @And("text (.*) was obitained in response")
+    @And("text (.*) was obtained in response")
     public void validateTextResponse(String response) {
         Response actualResponse = APIManager.getLastResponse();
         Assert.assertEquals(actualResponse.getResponse().toString(), response);
