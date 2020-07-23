@@ -1,6 +1,14 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.1.1-SNAPSHOT (23/07/2020)
+* Add to CommonSteps 
+  - step that allows to validate response with different method (Then expected response is obtained in <entity> with the method <method>)
+  - step to validate api text response (Then text <text> was obtained in response)
+* Refactor in JsonUtils, now methods: getJson(), getJSONFromFile() and getJSONFromPath() thorws IOException
+* Update throw of getJSONFromFile() in MethodsService and EmailPropertiesEnum (catch that and assert fail)
+* Replace in Request: Object urlParameters and headers with Map (update MethodsService and RestClient for this change).
+    
 ## 3.1.0.1 (15/07/2020)
 * change groupId from com.crowdar to io.lippia
 * bitbucket pipeline configuration
