@@ -2,7 +2,10 @@ package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
 import com.crowdar.util.ValidateUtils;
+import org.apache.log4j.Logger;
+import org.testng.Assert;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +15,7 @@ public class MethodsService {
 
 
     public static <T> Response get(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().get(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().get(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -27,7 +30,7 @@ public class MethodsService {
     }
 
     public static <T> Response post(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().post(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().post(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -42,7 +45,7 @@ public class MethodsService {
     }
 
     public static <T> Response put(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().put(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().put(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -58,7 +61,7 @@ public class MethodsService {
     }
 
     public static <T> Response patch(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().patch(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().patch(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -73,7 +76,7 @@ public class MethodsService {
     }
 
     public static <T> Response delete(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().delete(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = RestClient.getRestClient().delete(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -88,7 +91,13 @@ public class MethodsService {
     }
 
     protected static Request getRequest(String jsonFileName, Map<String, String> replacementParameters) {
-        String jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
+        String jsonRequest = null;
+        try {
+            jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
+        } catch (IOException e) {
+            Logger.getRootLogger().error(e.getMessage());
+            Assert.fail(e.getMessage());
+        }
 
         if (replacementParameters != null) {
             for (String key : replacementParameters.keySet()) {

@@ -1,6 +1,5 @@
 package com.crowdar.api.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -11,7 +10,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -24,7 +22,7 @@ public class RestClient {
 
     private HttpHeaders headers;
     private static RestTemplate restTemplate;
-	private static RestClient restClient;
+    private static RestClient restClient;
 
     public RestClient() {
         setRestTemplate(new RestTemplate(new HttpComponentsClientHttpRequestFactory()));
@@ -44,42 +42,36 @@ public class RestClient {
         restTemplate = newRestTemplate;
     }
 
-    private void setRequestHeaders(String jsonHeaders) {
+    private void setRequestHeaders(Map<String, String> headers) {
         this.headers = new HttpHeaders();
-        try {
-            HashMap<String, String> result =
-                    new ObjectMapper().readValue(jsonHeaders, HashMap.class);
-            this.headers.setAll(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.headers.setAll(headers);
     }
 
-    private HttpHeaders getRequestHeaders(){
+    private HttpHeaders getRequestHeaders() {
         return headers;
     }
 
-    public Response get(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response get(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.GET);
     }
 
-    public Response post(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response post(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.POST);
     }
 
-    public Response put(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response put(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PUT);
     }
 
-    public Response patch(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response patch(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PATCH);
     }
 
-    public Response delete(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers) {
+    public Response delete(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.DELETE);
     }
 
-    private Response createHTTPMethod(String url, Class<?> type, String body, HashMap<String, String> urlParameters, String headers, HttpMethod httpMethod) {
+    private Response createHTTPMethod(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
         setRequestHeaders(headers);
         HttpEntity<String> request = this.createRequest(body, getRequestHeaders());
@@ -120,7 +112,7 @@ public class RestClient {
         return map;
     }
 
-    private URI getURIWithURLQueryParameters(String url, HashMap<String, String> urlParameters) {
+    private URI getURIWithURLQueryParameters(String url, Map<String, String> urlParameters) {
         if (urlParameters.isEmpty())
             return this.getUriFromUrl(url);
 
@@ -143,7 +135,7 @@ public class RestClient {
         }
     }
 
-	  public static RestClient getRestClient() {
+    public static RestClient getRestClient() {
         if (restClient == null) {
             restClient = new RestClient();
         }
