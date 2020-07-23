@@ -5,6 +5,7 @@ import com.crowdar.core.Utils;
 import com.crowdar.util.MapUtils;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
 
@@ -49,6 +50,13 @@ public class CommonSteps {
     public void verifyEmptyArrayResponse() {
         Object[] actualJsonResponse = (Object[]) getActualResponse();
         Assert.assertEquals(actualJsonResponse.length, 0);
+    }
+
+    @Then("se obtuvo el texto (.*) como response")
+    @And("text (.*) was obitained in response")
+    public void validateTextResponse(String response) {
+        Response actualResponse = APIManager.getLastResponse();
+        Assert.assertEquals(actualResponse.getResponse().toString(), response);
     }
 
     @Then("se obtuvo el response esperado en ([^ ]*) con el ([^ ]*)")
@@ -100,6 +108,14 @@ public class CommonSteps {
         Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
         Class service = getServiceClass(entity);
         service.getMethod("validateFields", objectClass, Map.class).invoke(service.newInstance(), actualJsonResponse, parameters);
+    }
+
+    @Then("se obtuvo el response esperado en ([^ ]*) con el metodo ([^ ]*)")
+    @And("expected response is obtained in '([^']*)' with the method '([^']*)'")
+    public void iWillGetTheProperResponseWithObject(String entity, String method) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+        this.setInjectorParameters(null);
+        Class service = this.getServiceClass(entity);
+        service.getMethod(method, this.objectClass).invoke(service.newInstance(), this.actualJsonResponse);
     }
 
     private Class getServiceClass(String entity) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {

@@ -2,10 +2,12 @@ package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.crowdar.api.rest.APIManager.BASE_URL;
 
@@ -14,12 +16,8 @@ public class Request {
     private Object body;
     private String url;
     private String endpoint;
-    private Object headers;
-    private Object urlParameters;
-
-    public Request() {
-        super();
-    }
+    private Map<String, String> headers;
+    private Map<String, String> urlParameters;
 
     public String getCompleteUrl() {
         String completeUrl = url;
@@ -58,27 +56,33 @@ public class Request {
         }
     }
 
-    public Object getHeaders() {
-        return JsonUtils.serialize(headers);
+    public Map<String, String> getHeaders() {
+        if(MapUtils.isEmpty(headers)){
+            headers = new HashMap<>();
+        }
+        return headers;
     }
 
-    public void setHeaders(Object headers) {
+    public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
     }
 
-    public HashMap<String, String> getUrlParameters() {
-        if (urlParameters == null || urlParameters.toString().isEmpty()) {
-            return new HashMap<>();
-        }
-        try {
-            return (HashMap) (new ObjectMapper()).readValue(JsonUtils.serialize(urlParameters), HashMap.class);
-        } catch (IOException e) {
-            System.out.println(e);
-            return null;
-        }
+    public void addHeader(String key, String value){
+        getHeaders().put(key, value);
     }
 
-    public void setUrlParameters(Object urlParameters) {
+    public Map<String, String> getUrlParameters() {
+        if (MapUtils.isEmpty(urlParameters)) {
+            urlParameters =  new HashMap<>();
+        }
+        return urlParameters;
+    }
+
+    public void addUrlParameter(String key, String value){
+        getUrlParameters().put(key, value);
+    }
+
+    public void setUrlParameters(Map<String, String> urlParameters) {
         this.urlParameters = urlParameters;
     }
 
