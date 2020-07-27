@@ -1,5 +1,7 @@
 package com.crowdar.api.rest;
 
+import com.crowdar.core.JsonUtils;
+import org.apache.log4j.Logger;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -9,6 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.testng.Assert;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,13 +25,12 @@ public class RestClient {
 
     private HttpHeaders headers;
     private static RestTemplate restTemplate;
-    private static RestClient restClient;
 
     public RestClient() {
         setRestTemplate(new RestTemplate(new HttpComponentsClientHttpRequestFactory()));
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.ALL));
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.ALL));
 
         messageConverters.add(mappingJackson2HttpMessageConverter);
         messageConverters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
@@ -76,15 +78,16 @@ public class RestClient {
         setRequestHeaders(headers);
         HttpEntity<String> request = this.createRequest(body, getRequestHeaders());
         try {
-            ResponseEntity<List<Object>> response = getRestTemplate().exchange(uri, httpMethod, request, (Class<List<Object>>) type);
+            ResponseEntity response = getRestTemplate().exchange(uri, httpMethod, request, type);
+            Logger.getRootLogger().info(">>>Response: " + response.toString());
             return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
-
-        } catch (HttpClientErrorException e1) {
-            System.out.println(e1.getResponseBodyAsString());
-            return this.createResponse(e1.getStatusCode().value(), e1.getResponseBodyAsString(), e1.getLocalizedMessage(), createResponseHeaders(e1.getResponseHeaders()));
-        } catch (HttpServerErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            return this.createResponse(e.getStatusCode().value(), e.getResponseBodyAsString(), e.getLocalizedMessage(), createResponseHeaders(e.getResponseHeaders()));
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            Logger.getRootLogger().info(">>>Error Response: " + e.toString());
+            Object responseBody = JsonUtils.deserialize(e.getResponseBodyAsString(), type);
+            if(responseBody == null){
+                Assert.fail("Cannot cast error response in: " + type.getName() + ". Actual response: " + e.getStatusCode().value() + ", " + e.getResponseBodyAsString());
+            }
+            return this.createResponse(e.getStatusCode().value(), e.getLocalizedMessage(), responseBody, createResponseHeaders(e.getResponseHeaders()));
         }
     }
 
@@ -133,12 +136,5 @@ public class RestClient {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static RestClient getRestClient() {
-        if (restClient == null) {
-            restClient = new RestClient();
-        }
-        return restClient;
     }
 }
