@@ -1,6 +1,8 @@
 package com.crowdar.email;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,17 +10,9 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.mail.BodyPart;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.SearchTerm;
@@ -112,6 +106,24 @@ public class EmailService {
         } finally {
             session.getTransport().close();
         }
+    }
+
+    public static void downloadAttachmentFile(String subject, String pathToDownload) throws MessagingException, IOException {
+        Message[] messages = getMessages(DEFAULT_EMAIL_FOLDER, PropertyManager.getProperty("email.user"), PropertyManager.getProperty("email.password"), subject);
+        Multipart multiPart = (Multipart) messages[0].getContent();
+        for (int i = 0; i < multiPart.getCount(); i++) {
+            MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);
+            if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
+                part.saveFile(pathToDownload + File.separator + part.getFileName());
+            }
+        }
+    }
+    public static void downloadAttachmentFile(String subject) throws MessagingException, IOException {
+        File folderPath = Paths.get("target", "downloads").toFile();
+        if(!folderPath.exists()){
+            folderPath.mkdir();
+        }
+        downloadAttachmentFile(subject, folderPath.toString());
     }
 
     /**

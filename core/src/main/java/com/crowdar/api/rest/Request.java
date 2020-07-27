@@ -97,4 +97,22 @@ public class Request {
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
     }
+
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(getCompleteUrl());
+        if(!getUrlParameters().isEmpty()){
+            builder.append(", ");
+            builder.append(getUrlParameters());
+        }
+        if(!getHeaders().isEmpty()){
+            builder.append(", ");
+            builder.append(getHeaders());
+        }
+        if(!getBody().toString().isEmpty()){
+            builder.append(", ");
+            builder.append(getBody());
+        }
+        return builder.toString();
+    }
 }

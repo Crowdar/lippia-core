@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.TagType;
 import com.github.jknack.handlebars.Template;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,8 +34,8 @@ public class JsonUtils {
         try {
             TypeFactory typeFactory = getMapper().getTypeFactory();
             return (T) mapper.readValue(json, typeFactory.constructType(type));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Logger.getRootLogger().error(e.getMessage());
         }
         return null;
     }
@@ -43,8 +44,8 @@ public class JsonUtils {
         String jsonResult = null;
         try {
             jsonResult = getMapper().writeValueAsString(json);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Logger.getRootLogger().error(e.getMessage());
         }
         return jsonResult;
     }
