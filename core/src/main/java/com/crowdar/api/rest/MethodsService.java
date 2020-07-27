@@ -10,16 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.crowdar.api.rest.APIManager.setLastResponse;
+import static com.crowdar.api.rest.RestClient.getRestClient;
 
 public class MethodsService {
-    private static RestClient restClient;
 
-    private static RestClient getRestClient() {
-        if (restClient == null) {
-            restClient = new RestClient();
-        }
-        return restClient;
-    }
 
     public static <T> Response get(Request req, Class<T> classModel) {
         Response resp = getRestClient().get(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
