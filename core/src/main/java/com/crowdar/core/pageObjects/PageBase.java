@@ -1,29 +1,22 @@
 package com.crowdar.core.pageObjects;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
+import com.crowdar.core.Constants;
+import com.crowdar.driver.DriverManager;
 import org.apache.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.crowdar.core.Constants;
-import com.crowdar.driver.DriverManager;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * This class represents the things in common between Windows, Web and Mobile projects
@@ -50,9 +43,6 @@ abstract public class PageBase {
     }
 
     public PageBase(RemoteWebDriver driver) {
-//	  String logTemplate = "######  %s - Thread id %s - objId: %s --- DriverId %s ";
-//      System.out.println(logTemplate.format(logTemplate, "PAGE BASE",Thread.currentThread().getId(), this.toString(), driver.getSessionId()));
-    	
       logger = Logger.getLogger(this.getClass());
       initialize(driver);
     }
@@ -323,20 +313,6 @@ abstract public class PageBase {
     }
 
     /**
-     * Method that drag and drop some element over other element
-     *
-     * @param elementToDrag
-     * @param elementToReplace
-     */
-    public void dragAndDrop(WebElement elementToDrag, WebElement elementToReplace) {
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-
-        jse.executeScript("arguments[0].scrollIntoView()", elementToReplace);
-
-        new Actions(driver).dragAndDrop(elementToDrag, elementToReplace).perform();
-    }
-
-    /**
      * Wait until an element disappear
      */
     public void waitForElementDisappears(By locator) {
@@ -355,6 +331,13 @@ abstract public class PageBase {
      */
     public void waitForElementInvisibility(By locator) {
         getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    /**
+     * Wait until an element is clickable
+     */
+    public void waitForElementClickable(By locator) {
+        getFluentWait().until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     /**
@@ -394,7 +377,7 @@ abstract public class PageBase {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            System.out.println("Error in sleep: ".concat(e.getMessage()));
+            getLogger().error("Error in sleep: ".concat(e.getMessage()));
             e.printStackTrace();
         }
     }

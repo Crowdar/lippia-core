@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -203,4 +204,17 @@ public class PageBaseWeb extends CucumberPageBase {
         return isPresent;
     }
 
+    /**
+     * Method that drag and drop some element over other element
+     *
+     * @param elementToDrag
+     * @param elementToReplace
+     */
+    public void dragAndDrop(WebElement elementToDrag, WebElement elementToReplace) {
+        JavascriptExecutor jse = driver;
+
+        jse.executeScript("arguments[0].scrollIntoView()", elementToReplace);
+
+        new Actions(driver).dragAndDrop(elementToDrag, elementToReplace).perform();
+    }
 }

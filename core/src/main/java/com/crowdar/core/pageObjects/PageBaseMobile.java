@@ -1,12 +1,13 @@
 package com.crowdar.core.pageObjects;
 
+import com.crowdar.core.Utils;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.crowdar.core.Utils;
-
-import io.appium.java_client.MobileBy;
+import java.util.HashMap;
 
 /**
  * This class represents the things in common between Mobile projects
@@ -40,36 +41,36 @@ public class PageBaseMobile extends CucumberPageBase {
     }
 
     public void selectOptionSpinner(String option) {
-        String uiSelector = "new UiSelector().textContains(\"" + option
-                + "\")";
-
-        String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
-                + uiSelector + ");";
-
-        WebElement element = driver.findElement(MobileBy.AndroidUIAutomator(command));
-
+        WebElement element = scrollAndroid("textContains", option, 0);
         this.clickElement(element);
     }
 
-    public void scrollToElementByResourceId(String id) {
-        String uiSelector = "new UiSelector().resourceId(\"" + id
-                + "\")";
-
-        String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
-                + uiSelector + ");";
-
-        driver.findElement(MobileBy.AndroidUIAutomator(command));
+    private WebElement scrollAndroid(String locatorType, String locatorValue, int index){
+        String locator = String.format("new UiScrollable(new UiSelector().scrollable(true).instance(3)).scrollIntoView(new UiSelector().%s(\"%s\").instance(0).index(%d))", locatorType, locatorValue, index);
+        return ((AndroidDriver)driver).findElementByAndroidUIAutomator(locator);
     }
 
-
-    public void scrollToElementByAccessibilityId(String accessibilityId) {
-        String uiSelector = "new UiSelector().description(\"" + accessibilityId
-                + "\")";
-
-        String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
-                + uiSelector + ");";
-
-        driver.findElement(MobileBy.AndroidUIAutomator(command));
+    public void scrollAndroidByResourceId(String id) {
+        scrollAndroid("resourceId", id, 0);
     }
 
+    public void scrollAndroidByText(String id) {
+        scrollAndroid("text", id, 0);
+    }
+
+    public void scrollAndroidByAccessibilityId(String accessibilityId) {
+        scrollAndroid("description", accessibilityId, 0);
+    }
+
+    public void scrollAndroidByClassName(String className, int index) {
+        scrollAndroid("className", className, index);
+    }
+
+    public void scrollIOS(IOSElement element){
+        String elementID = element.getId();
+        HashMap<String, String> scrollObject = new HashMap();
+        scrollObject.put("element", elementID);
+        scrollObject.put("direction", "down");
+        driver.executeScript("mobile:scroll", scrollObject);
+    }
 }
