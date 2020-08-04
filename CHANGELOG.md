@@ -1,6 +1,11 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.1.2 (04/08/2020)
+* Move dragAndDrop method from PageBase to PageBaseWeb: these methods is specific for web project.
+* Add waitForElementClickable to PageBase.
+* Add scroll methods in PageBaseMobile: scroll android with text, accessibility id, resource id and class name; scroll ios.
+
 ## 3.1.1 (27/07/2020)
 * Add to CommonSteps 
   - step that allows to validate response with different method (Then expected response is obtained in <entity> with the method <method>)
