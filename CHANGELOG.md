@@ -2,7 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 ## 3.2.0 (10/08/2020)
-* 
+* LocatorManager refactor
+  - catch exceptions
+  - split and find locator file (max 1 folder in locators folder)
+  - getProperty method, if is another locator file loaded, load the requested
+* Add LocatorTypesEnum
+* Method loadLocators in constructor PageBase and getLocator that returns By searching in LocatorTypesEnum
+* Refactor PageBase, PageBaseMobile and PageBaseWeb in methods to support parameter String locatorName and deprecated in old methods.
+* Api fix in CommonSteps (Delete ':')
 
 ## 3.1.2 (04/08/2020)
 * Move dragAndDrop method from PageBase to PageBaseWeb: these methods is specific for web project.
