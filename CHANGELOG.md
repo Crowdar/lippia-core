@@ -1,6 +1,9 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.0 (10/08/2020)
+* 
+
 ## 3.1.2 (04/08/2020)
 * Move dragAndDrop method from PageBase to PageBaseWeb: these methods is specific for web project.
 * Add waitForElementClickable to PageBase.

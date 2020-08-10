@@ -96,7 +96,7 @@ public class CommonSteps {
     }
 
     @Then("se obtuvo el response esperado en ([^ ]*) y sus parametros ([^ ]*)")
-    @And("expected response is obtained in: '([^']*)' and the parameters '([^']*)'")
+    @And("expected response is obtained in '([^']*)' and the parameters '([^']*)'")
     public void iWillGetTheProperResponseWithObjectAndParameters(String entity, String inputParameters) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException, InstantiationException {
         setInjectorParameters(null);
         Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
