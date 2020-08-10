@@ -3,6 +3,7 @@ package com.crowdar.driver;
 import java.net.URL;
 import java.util.Map;
 
+import com.crowdar.core.PropertyManager;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.crowdar.driver.setupStrategy.SetupStrategy;
@@ -89,5 +90,7 @@ public class DriverManager {
         dismissCurrentDriver();
     }
 
-
+    public static String getName(){
+        return ProjectTypeEnum.get(PropertyManager.getProperty("crowdar.projectType")).getName();
+    }
 }
