@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
   - split and find locator file (max 1 folder in locators folder)
   - getProperty method, if is another locator file loaded, load the requested
 * Add LocatorTypesEnum
+* Add getName() method in ProjectTypeEnum with name of driver instance + call it in DriverManager.getName()
 * Method loadLocators in constructor PageBase and getLocator that returns By searching in LocatorTypesEnum
 * Refactor PageBase, PageBaseMobile and PageBaseWeb in methods to support parameter String locatorName and deprecated in old methods.
 * Api fix in CommonSteps (Delete ':')
