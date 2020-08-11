@@ -3,6 +3,7 @@ package com.crowdar.core.pageObjects;
 import com.crowdar.core.Constants;
 import com.crowdar.core.LocatorManager;
 import com.crowdar.driver.DriverManager;
+import com.crowdar.util.LoggerService;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -39,13 +40,10 @@ abstract public class PageBase {
     protected WebDriverWait wait;
     protected FluentWait<RemoteWebDriver> fluentWait;
 
-    protected Logger logger;
-
     public PageBase() {
     }
 
     public PageBase(RemoteWebDriver driver) {
-        logger = Logger.getLogger(this.getClass());
         initialize(driver);
     }
 
@@ -54,10 +52,6 @@ abstract public class PageBase {
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(Constants.getWaitForElementTimeout()))
                 .pollingEvery(Duration.ofMillis(10)).ignoring(NoSuchElementException.class);
-        this.loadLocators();
-    }
-
-    private void loadLocators() {
         LocatorManager.loadProperties(getLocatorClass().getName());
     }
 
@@ -66,7 +60,6 @@ abstract public class PageBase {
         String[] locatorProperty = new String[2];
         locatorProperty = getLocatorProperty(locatorName, locatorClass, locatorProperty);
         return getLocatorInEnum(locatorProperty);
-
     }
 
     private Class<? extends PageBase> getLocatorClass() {
@@ -77,7 +70,7 @@ abstract public class PageBase {
         try {
             locatorProperty = LocatorManager.getProperty(locatorName, locatorClass.getName()).split(":");
         } catch (NullPointerException e) {
-            Logger.getRootLogger().error(e.getMessage());
+            getLogger().error(e.getMessage());
             Assert.fail(String.format("Locator property %s was not found in: %s", locatorName, locatorClass.getSimpleName()));
         }
         return locatorProperty;
@@ -90,7 +83,7 @@ abstract public class PageBase {
             type = locatorProperty[0].toUpperCase();
             value = locatorProperty[1];
         } catch (IndexOutOfBoundsException e) {
-            Logger.getRootLogger().error(e.getMessage());
+            getLogger().error(e.getMessage());
             Assert.fail("Locator property format is invalid. Example: css:#loginButton");
         }
         return LocatorTypesEnum.get(type).getLocator(value);
@@ -691,6 +684,6 @@ abstract public class PageBase {
     }
 
     public Logger getLogger() {
-        return logger;
+        return LoggerService.getLogger(this.getClass().asSubclass(this.getClass()));
     }
 }

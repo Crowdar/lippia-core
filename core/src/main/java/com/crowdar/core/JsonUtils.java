@@ -1,5 +1,6 @@
 package com.crowdar.core;
 
+import com.crowdar.util.LoggerService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -35,7 +36,7 @@ public class JsonUtils {
             TypeFactory typeFactory = getMapper().getTypeFactory();
             return (T) mapper.readValue(json, typeFactory.constructType(type));
         } catch (IOException e) {
-            Logger.getRootLogger().error(e.getMessage());
+            LoggerService.getLogger(JsonUtils.class).error(e.getMessage());
         }
         return null;
     }
@@ -45,7 +46,7 @@ public class JsonUtils {
         try {
             jsonResult = getMapper().writeValueAsString(json);
         } catch (IOException e) {
-            Logger.getRootLogger().error(e.getMessage());
+            LoggerService.getLogger(JsonUtils.class).error(e.getMessage());
         }
         return jsonResult;
     }

@@ -5,6 +5,7 @@
 
 package com.crowdar.core;
 
+import com.crowdar.util.LoggerService;
 import org.apache.log4j.Logger;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
@@ -52,10 +53,10 @@ public class LocatorManager {
             properties.load(inputStream);
             actualLocatorLoaded = locatorPath;
         } catch (IOException e) {
-            Logger.getRootLogger().error(e.getMessage());
+            LoggerService.getLogger(LocatorManager.class).error(e.getMessage());
             Assert.fail(e.getMessage());
         } catch (NullPointerException e){
-            Logger.getRootLogger().error(e.getMessage());
+            LoggerService.getLogger(LocatorManager.class).error(e.getMessage());
             Assert.fail(String.format("Locator file %s was not found: ", locatorFilename));
         }
     }

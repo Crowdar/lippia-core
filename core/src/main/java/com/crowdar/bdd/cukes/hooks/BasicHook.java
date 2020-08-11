@@ -2,6 +2,7 @@ package com.crowdar.bdd.cukes.hooks;
 
 import java.io.IOException;
 
+import com.crowdar.util.LoggerService;
 import org.apache.log4j.Logger;
 
 import com.crowdar.core.Injector;
@@ -17,7 +18,7 @@ public class BasicHook {
 
 	@Before()
 	public void beforeScenario(Scenario scenario) throws IOException{
-		Logger.getRootLogger().info("------ Starting -----" + scenario.getName() + "-----");
+		LoggerService.getLogger(this.getClass()).info("------ Starting -----" + scenario.getName() + "-----");
 	}
 	
 	@BeforeStep
@@ -32,7 +33,7 @@ public class BasicHook {
 	
 	@After()
 	public void afterScenario(Scenario scenario) throws IllegalAccessException, NoSuchFieldException {
-		Logger.getRootLogger().info("------ Ending -----" + scenario.getName() + "-----");
+		LoggerService.getLogger(this.getClass()).info("------ Ending -----" + scenario.getName() + "-----");
 		DriverManager.dismissCurrentDriver();
 		Injector.cleanThreadCache();
 	}

@@ -1,6 +1,7 @@
 package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
+import com.crowdar.util.LoggerService;
 import org.apache.log4j.Logger;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -87,10 +88,10 @@ public class RestClient {
         HttpEntity<String> request = this.createRequest(body, getRequestHeaders());
         try {
             ResponseEntity response = getRestTemplate().exchange(uri, httpMethod, request, type);
-            Logger.getRootLogger().info(">>>Response: " + response.toString());
+            LoggerService.getLogger(this.getClass()).info(">>>Response: " + response.toString());
             return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            Logger.getRootLogger().info(">>>Error Response: " + e.toString());
+            LoggerService.getLogger(this.getClass()).info(">>>Error Response: " + e.toString());
             Object responseBody = JsonUtils.deserialize(e.getResponseBodyAsString(), type);
             if(responseBody == null){
                 Assert.fail("Cannot cast error response in: " + type.getName() + ". Actual response: " + e.getStatusCode().value() + ", " + e.getResponseBodyAsString());
