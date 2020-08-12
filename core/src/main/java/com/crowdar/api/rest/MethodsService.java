@@ -1,7 +1,6 @@
 package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
-import com.crowdar.util.LoggerService;
 import com.crowdar.util.ValidateUtils;
 import org.apache.log4j.Logger;
 import org.testng.Assert;
@@ -97,7 +96,7 @@ public class MethodsService {
         try {
             jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
         } catch (IOException e) {
-            LoggerService.getLogger(MethodsService.class).error(e.getMessage());
+            Logger.getLogger(MethodsService.class).error(e.getMessage());
             Assert.fail(e.getMessage());
         }
 
@@ -107,7 +106,7 @@ public class MethodsService {
             }
         }
         Request request = JsonUtils.deserialize(jsonRequest, Request.class);
-        LoggerService.getLogger(MethodsService.class).info(">>>Request: " + request.toString());
+        Logger.getLogger(MethodsService.class).info(">>>Request: " + request.toString());
         return request;
     }
 

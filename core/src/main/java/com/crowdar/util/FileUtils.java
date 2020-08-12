@@ -173,7 +173,7 @@ public class FileUtils {
 
             writeOutput(expectedList, random, "expected".concat(className));
         } catch (Exception e) {
-            LoggerService.getLogger(FileUtils.class).error(">>> Error trying to write the output: ", e);
+            Logger.getLogger(FileUtils.class).error(">>> Error trying to write the output: ", e);
         }
     }
 

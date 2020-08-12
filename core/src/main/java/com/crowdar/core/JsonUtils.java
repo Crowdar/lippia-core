@@ -1,6 +1,5 @@
 package com.crowdar.core;
 
-import com.crowdar.util.LoggerService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -14,7 +13,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,7 +34,7 @@ public class JsonUtils {
             TypeFactory typeFactory = getMapper().getTypeFactory();
             return (T) mapper.readValue(json, typeFactory.constructType(type));
         } catch (IOException e) {
-            LoggerService.getLogger(JsonUtils.class).error(e.getMessage());
+            Logger.getLogger(JsonUtils.class).error(e.getMessage());
         }
         return null;
     }
@@ -46,7 +44,7 @@ public class JsonUtils {
         try {
             jsonResult = getMapper().writeValueAsString(json);
         } catch (IOException e) {
-            LoggerService.getLogger(JsonUtils.class).error(e.getMessage());
+            Logger.getLogger(JsonUtils.class).error(e.getMessage());
         }
         return jsonResult;
     }

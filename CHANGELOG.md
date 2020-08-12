@@ -8,9 +8,9 @@ All notable changes to this project will be documented in this file.
   - getProperty method, if is another locator file loaded, load the requested
 * Add LocatorTypesEnum
 * Add getName() method in ProjectTypeEnum with name of driver instance + call it in DriverManager.getName()
-* Method loadLocators in constructor PageBase and getLocator that returns By searching in LocatorTypesEnum
+* Method loadLocators in the constructor PageBase and getLocator that returns By searching in LocatorTypesEnum
 * Refactor PageBase, PageBaseMobile and PageBaseWeb in methods to support parameter String locatorName and deprecated in old methods.
-* Add LoggerService to get the logger. Replace in places that were using getRootLogger().
+* Replace in places that were using getRootLogger() for Logger.getLogger(class).
 * Api fix in CommonSteps (Delete ':')
 
 ## 3.1.2 (04/08/2020)
