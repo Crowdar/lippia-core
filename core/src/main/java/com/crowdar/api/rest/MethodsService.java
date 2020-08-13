@@ -113,8 +113,8 @@ public class MethodsService {
     /**
      * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
      * Validate two lists
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath
+     * expected response is obtained in 'entity' with 'jsonResponsePath'
      *
      * @param actualList
      * @param expectedList
@@ -127,8 +127,8 @@ public class MethodsService {
     /**
      * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
      * Validate two objects
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath'
+     * expected response is obtained in 'entity' with 'jsonResponsePath'
      *
      * @param actual
      * @param expected
@@ -140,8 +140,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object, modifying expected object with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' with 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param actual
      * @param expected
@@ -153,8 +153,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list, modifying expected list with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath' y sus parametros 'parameters
+     * expected response is obtained in 'entity' with 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param actualList
      * @param expectedList
@@ -166,8 +166,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object, modifying the json expected. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath'
      *
      * @param jsonExpectedPath
      * @param actual
@@ -178,8 +178,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list, modifying the json expected. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath'
      *
      * @param jsonExpectedPath
      * @param actualList
@@ -190,8 +190,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param jsonExpectedPath
      * @param actual
@@ -203,8 +203,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param jsonExpectedPath
      * @param actualList
@@ -216,8 +216,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity>
-     * expected response is obtained in '<entity>'
+     * Step: se obtuvo el response esperado en 'entity'
+     * expected response is obtained in 'entity'
      *
      * @param actual
      * @throws Exception
@@ -227,8 +227,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity>
-     * expected response is obtained in '<entity>'
+     * Step: se obtuvo el response esperado en 'entity'
+     * expected response is obtained in 'entity'
      *
      * @param actualList
      * @param <T>
@@ -239,8 +239,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' y sus parametros 'parameters
+     * expected response is obtained in 'entity' and the parameters 'parameters'
      *
      * @param actual
      * @param parameters
@@ -251,8 +251,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' and the parameters 'parameters'
      *
      * @param actualList
      * @param parameters

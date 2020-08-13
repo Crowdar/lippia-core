@@ -1,5 +1,14 @@
 package com.crowdar.email;
 
+import com.crowdar.core.PropertyManager;
+import org.jsoup.Jsoup;
+
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.search.SearchTerm;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -9,18 +18,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.search.SearchTerm;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import com.crowdar.core.PropertyManager;
 
 /**
  * Configuration and sending of mail by TLS attaching a file.
@@ -77,7 +74,7 @@ public class EmailService {
      * @param email       is the email target
      * @param password    is the email's password
      * @param subject     is the subject that we are looking
-     * @throws NoSuchProviderException,MessagingException errors getting messages from target email
+     * @throws MessagingException errors getting messages from target email
      * @author Dario Vallejos
      */
     public static Message[] getMessages(String folderParam, String email, String password, String subject) throws MessagingException {
@@ -100,9 +97,7 @@ public class EmailService {
                     return false;
                 }
             };
-            Message[] messages = folder.search(bySubject);
-
-            return messages;
+            return folder.search(bySubject);
         } finally {
             session.getTransport().close();
         }
@@ -165,7 +160,7 @@ public class EmailService {
     }
 
     /**
-     * Get links from email account target folder that matches subject, from, sentDate(day&hour) @param
+     * Get links from email account target folder that matches subject
      *
      * @param folder   is the folder
      * @param email    is the email target
@@ -175,12 +170,12 @@ public class EmailService {
      */
     public static List<String> getLinksFromEmail(String folder, String email, String password, String subject) throws MessagingException {
         String urlResetPassword;
-        List<String> links = new ArrayList<String>();
+        List<String> links = new ArrayList<>();
         Message[] messages = getMessages(folder, email, password, subject);
         if (messages == null || messages.length == 0) {
             return null;
         }
-        List<Message> messageList = new ArrayList<Message>();
+        List<Message> messageList = new ArrayList<>();
         messageList.add(messages[messages.length - 1]);
         for (Message m : messageList) {
             try {
@@ -312,7 +307,7 @@ public class EmailService {
      * @param folderParam is the folder
      * @param email       is the email target
      * @param password    is the email's password
-     * @throws NoSuchProviderException,MessagingException errors getting messages from target email
+     * @throws MessagingException errors getting messages from target email
      * @author Guillermo Aguirre
      */
     public static void deleteAllMessages(String folderParam, String email, String password) throws MessagingException {
@@ -342,8 +337,8 @@ public class EmailService {
      * Pattern for recognizing a URL, based off RFC 3986
      */
     private static final Pattern urlPattern = Pattern.compile(
-            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
-                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            "(?:^|[\\W])((ht|f)tp(s?)://|www\\.)"
+                    + "(([\\w\\-]+\\.)+?([\\w\\-.~]+/?)*"
+                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]*$~@!:/{};']*)",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 }

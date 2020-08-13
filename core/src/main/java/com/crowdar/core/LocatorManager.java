@@ -5,63 +5,88 @@
 
 package com.crowdar.core;
 
-import com.crowdar.util.LoggerService;
+import com.crowdar.core.pageObjects.LocatorTypesEnum;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.properties.EncryptableProperties;
-import org.testng.Assert;
+import org.openqa.selenium.By;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class LocatorManager {
-    private static final String LOCATORS_FOLDER = "locators";
-    private static Properties properties;
-    private static String actualLocatorLoaded;
+    private static Map<String, Properties> properties;
 
-    private LocatorManager() {
-    }
-
-    private static Properties getProperties() {
+    private static Map<String, Properties> getProperties() {
+        if (properties == null) {
+            loadProperties();
+        }
         return properties;
     }
 
-    public static String getProperty(String propertyKey, String locatorPath) {
-        if(!actualLocatorLoaded.equals(locatorPath)){
-            loadProperties(locatorPath);
-        }
-        return getProperty(propertyKey);
+    private static String getProperty(String property) {
+        String[] split = property.split("\\.");
+        String viewName = split[0].toUpperCase();
+        String propertyKey = split[1];
+        return getProperties().get(viewName).getProperty(propertyKey);
     }
 
-    public static String getProperty(String propertyKey) {
-        return getProperties().getProperty(propertyKey);
-    }
-
-    public static void loadProperties(String locatorPath) {
-        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        properties = new EncryptableProperties(encryptor);
-        String[] locatorPathSplit = locatorPath.split("\\.");
-        String locatorFilename = locatorPathSplit[locatorPathSplit.length - 1].concat(".properties");
+    public static void loadProperties(String locatorsFolderPath) {
+        properties = new HashMap<>();
+        File dir = new File(locatorsFolderPath);
+        String[] extensions = {"properties"};
         try {
-            InputStream inputStream = getLocatorResourceAsStream(Paths.get(LOCATORS_FOLDER, locatorFilename));
-            if (inputStream == null) {
-                inputStream = getLocatorResourceAsStream(Paths.get(LOCATORS_FOLDER, locatorPathSplit[locatorPathSplit.length - 2], locatorFilename));
-            }
-            properties.load(inputStream);
-            actualLocatorLoaded = locatorPath;
+            Collection<File> files = FileUtils.listFiles(dir, extensions, true);
+            putProperties(files);
         } catch (IOException e) {
-            LoggerService.getLogger(LocatorManager.class).error(e.getMessage());
-            Assert.fail(e.getMessage());
-        } catch (NullPointerException e){
-            LoggerService.getLogger(LocatorManager.class).error(e.getMessage());
-            Assert.fail(String.format("Locator file %s was not found: ", locatorFilename));
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
-    private static InputStream getLocatorResourceAsStream(Path path) {
-        return LocatorManager.class.getClassLoader().getResourceAsStream(path.toString());
+    private static void loadProperties() {
+        loadProperties(Paths.get("src", "main", "resources", "locators").toString());
+    }
+
+    public static void loadProperties(Path locatorsFolderPath) {
+        loadProperties(locatorsFolderPath.toString());
+    }
+
+    private static void putProperties(Collection<File> files) throws IOException {
+        for (File file : files) {
+            Properties newProperties = new Properties();
+            InputStream inputStream = new FileInputStream(file);
+
+            newProperties.load(inputStream);
+            getProperties().put(file.getName().replace(".properties", "").toUpperCase(), newProperties);
+        }
+    }
+
+    public static By getLocator(String locatorName) {
+        try {
+            String[] locatorProperty = getProperty(locatorName).split(":");
+            return getLocatorInEnum(locatorProperty);
+        } catch (NullPointerException e){
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
+            throw new RuntimeException(String.format("Locator property %s was not found", locatorName));
+        }
+    }
+
+    private static By getLocatorInEnum(String[] locatorProperty) {
+        try {
+            String type = locatorProperty[0].toUpperCase();
+            String value = locatorProperty[1];
+            return LocatorTypesEnum.get(type).getLocator(value);
+        } catch (IndexOutOfBoundsException e) {
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
+            throw new RuntimeException("Locator property format is invalid. Example: css:#loginButton");
+        }
     }
 }

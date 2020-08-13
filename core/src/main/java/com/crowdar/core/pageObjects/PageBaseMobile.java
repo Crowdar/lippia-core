@@ -16,6 +16,7 @@ import java.util.HashMap;
  *
  * @author: Juan Manuel Spoleti
  */
+@Deprecated
 public class PageBaseMobile extends CucumberPageBase {
 
     public PageBaseMobile(RemoteWebDriver driver) {
@@ -25,7 +26,7 @@ public class PageBaseMobile extends CucumberPageBase {
     /**
      * Set the input field with a value specific and check if its empty, if true: clear the field
      * First: cleans the field if its not empty, Second: completes the field.
-     * @Deprecated use setInput(locatorName, value, placeholder)
+     * @deprecated use setInput(locatorName, value, placeholder)
      * @param element     to be completed
      * @param value       to write in the field
      * @param placeholder

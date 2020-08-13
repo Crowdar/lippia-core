@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 * Refactor PageBase, PageBaseMobile and PageBaseWeb in methods to support parameter String locatorName and deprecated in old methods.
 * Replace in places that were using getRootLogger() for Logger.getLogger(class).
 * Api fix in CommonSteps (Delete ':')
+* Remove unused methods in Utils class.
+* Add ActionManager, WebActionManager and MobileActionManager with all static methods and using locator manager. (This replaces PageBase).
+* Fix fluent time in Constants and remove constants without use.
+* 
 
 ## 3.1.2 (04/08/2020)
 * Move dragAndDrop method from PageBase to PageBaseWeb: these methods is specific for web project.

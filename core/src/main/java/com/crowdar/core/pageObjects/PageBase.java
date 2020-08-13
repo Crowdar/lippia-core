@@ -3,7 +3,6 @@ package com.crowdar.core.pageObjects;
 import com.crowdar.core.Constants;
 import com.crowdar.core.LocatorManager;
 import com.crowdar.driver.DriverManager;
-import com.crowdar.util.LoggerService;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -26,6 +25,7 @@ import java.util.function.Function;
  *
  * @author: Juan Manuel Spoleti
  */
+@Deprecated
 abstract public class PageBase {
     /**
      * This is the Base url for all system to be tested
@@ -52,41 +52,10 @@ abstract public class PageBase {
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(Constants.getWaitForElementTimeout()))
                 .pollingEvery(Duration.ofMillis(10)).ignoring(NoSuchElementException.class);
-        LocatorManager.loadProperties(getLocatorClass().getName());
     }
 
-    private By getLocator(String locatorName) {
-        Class locatorClass = getLocatorClass();
-        String[] locatorProperty = new String[2];
-        locatorProperty = getLocatorProperty(locatorName, locatorClass, locatorProperty);
-        return getLocatorInEnum(locatorProperty);
-    }
-
-    private Class<? extends PageBase> getLocatorClass() {
-        return this.getClass().asSubclass(this.getClass());
-    }
-
-    private String[] getLocatorProperty(String locatorName, Class locatorClass, String[] locatorProperty) {
-        try {
-            locatorProperty = LocatorManager.getProperty(locatorName, locatorClass.getName()).split(":");
-        } catch (NullPointerException e) {
-            getLogger().error(e.getMessage());
-            Assert.fail(String.format("Locator property %s was not found in: %s", locatorName, locatorClass.getSimpleName()));
-        }
-        return locatorProperty;
-    }
-
-    private By getLocatorInEnum(String[] locatorProperty) {
-        String type = null;
-        String value = null;
-        try {
-            type = locatorProperty[0].toUpperCase();
-            value = locatorProperty[1];
-        } catch (IndexOutOfBoundsException e) {
-            getLogger().error(e.getMessage());
-            Assert.fail("Locator property format is invalid. Example: css:#loginButton");
-        }
-        return LocatorTypesEnum.get(type).getLocator(value);
+    public Logger getLogger() {
+        return Logger.getLogger(this.getClass().asSubclass(this.getClass()));
     }
 
     /**
@@ -186,12 +155,12 @@ abstract public class PageBase {
      * @return
      */
     public WebElement getElement(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         return getElement(locator);
     }
 
     public List<WebElement> getElements(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         return getElements(locator);
     }
 
@@ -202,12 +171,12 @@ abstract public class PageBase {
      * @return web element
      */
     public WebElement waitVisibility(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         return getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public List<WebElement> waitVisibilities(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         return getFluentWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
 
@@ -218,12 +187,12 @@ abstract public class PageBase {
      * @return web element
      */
     public WebElement waitPresence(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         return getFluentWait().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     public List<WebElement> waitPresences(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         return getFluentWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
 
@@ -234,7 +203,7 @@ abstract public class PageBase {
      * @return web element
      */
     public WebElement waitClickable(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         return getFluentWait().until(ExpectedConditions.elementToBeClickable(locator));
     }
 
@@ -244,7 +213,7 @@ abstract public class PageBase {
      * @param locatorName
      */
     public void waitInvisibility(String locatorName) {
-        By locator = getLocator(locatorName);
+        By locator = LocatorManager.getLocator(locatorName);
         getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
@@ -337,7 +306,7 @@ abstract public class PageBase {
      *
      * @param locator of the element; could be by xpath, id, name, etc
      * @return web element
-     * @Deprecated use waitPresence(locatorName)
+     * @deprecated use waitPresence(locatorName)
      */
     @Deprecated
     public WebElement getWebElement(By locator) {
@@ -353,7 +322,7 @@ abstract public class PageBase {
      * Method that clicks the element specific
      *
      * @param locator of the element to be clickable
-     * @Deprecated use click(String locatorName) method
+     * @deprecated use click(String locatorName) method
      */
     @Deprecated
     public void clickElement(By locator) {
@@ -365,9 +334,10 @@ abstract public class PageBase {
      * Method that clicks the element specific
      *
      * @param element to be clickable
-     * @Deprecated use click(String locatorName) method
+     * @deprecated
+     * use click(String locatorName) method
      */
-    @Deprecated
+    @Deprecated()
     public void clickElement(WebElement element) {
         element.click();
     }
@@ -379,7 +349,7 @@ abstract public class PageBase {
      *
      * @param locator of the element to be completed
      * @param value   that i want to write in the field
-     * @Deprecated use setInput(String locatorName, String value) method
+     * @deprecated use setInput(String locatorName, String value) method
      */
     @Deprecated
     public void completeField(By locator, String value) {
@@ -400,7 +370,7 @@ abstract public class PageBase {
      *
      * @param locator of the element to be completed
      * @param value   that i want to write in the field
-     * @Deprecated use setInput(String locatorName, String value) method
+     * @deprecated use setInput(String locatorName, String value) method
      */
     @Deprecated
     public void completeFieldWithoutClear(By locator, String value) {
@@ -415,7 +385,7 @@ abstract public class PageBase {
      *
      * @param locator of the element to be completed
      * @param value   that i want to write in the field
-     * @Deprecated use setInput(String locatorName, String value) method
+     * @deprecated use setInput(String locatorName, String value) method
      */
     @Deprecated
     public void completeFieldWithoutClick(By locator, String value) {
@@ -439,7 +409,7 @@ abstract public class PageBase {
      * Method that get the text of a element.
      *
      * @param locator of the element to be completed
-     * @Deprecated use getText(String locatorName)
+     * @deprecated use getText(String locatorName)
      */
     @Deprecated
     public String getElementText(By locator) {
@@ -456,7 +426,7 @@ abstract public class PageBase {
      * Method that get the attribute 'value' of a element, usually an input.
      *
      * @param locator of the element to be completed
-     * @Deprecated use getAttribute(String locatorName, "value")
+     * @deprecated use getAttribute(String locatorName, "value")
      */
     @Deprecated
     public String getInputValue(By locator) {
@@ -473,7 +443,7 @@ abstract public class PageBase {
      * Method that checks the option specific if it is not selected
      *
      * @param locator of the checkbox
-     * @Deprecated use setCheckbox(locator, true)
+     * @deprecated use setCheckbox(locator, true)
      */
     @Deprecated
     public void selectCheckbox(By locator) {
@@ -487,7 +457,7 @@ abstract public class PageBase {
      * Method that un checks the option specific if it is not unselected
      *
      * @param locator of the checkbox
-     * @Deprecated use setCheckbox(locator, false)
+     * @deprecated use setCheckbox(locator, false)
      */
     @Deprecated
     public void deselectCheckbox(By locator) {
@@ -502,7 +472,7 @@ abstract public class PageBase {
      *
      * @param locator of the element specific
      * @return true if the element is present, false otherwise
-     * @Deprecated use isPresent(locatorName)
+     * @deprecated use isPresent(locatorName)
      */
     @Deprecated
     public boolean isElementPresent(By locator) {
@@ -532,7 +502,7 @@ abstract public class PageBase {
      *
      * @param locator of the element specific
      * @return true if the element is present, false otherwise
-     * @Deprecated use waitPresence(locatorName) and the isPresent(locatorName)
+     * @deprecated use waitPresence(locatorName) and the isPresent(locatorName)
      */
     @Deprecated
     public boolean waitAndCheckElementPresent(By locator) {
@@ -568,7 +538,7 @@ abstract public class PageBase {
      *
      * @param inputLocator
      * @return true if the input is empty, false otherwise
-     * @Deprecated use getAttribute("value").isEmpty()
+     * @deprecated use getAttribute("value").isEmpty()
      */
     @Deprecated
     public boolean isInputElementEmpty(By inputLocator) {
@@ -585,7 +555,7 @@ abstract public class PageBase {
      *
      * @param locator
      * @return true if the element is empty, false otherwise
-     * @Deprecated use getText(locatorName).isEmpty()
+     * @deprecated use getText(locatorName).isEmpty()
      */
     @Deprecated
     public boolean isElementEmpty(By locator) {
@@ -600,7 +570,7 @@ abstract public class PageBase {
     /**
      * Wait until an element disappear
      *
-     * @Deprecated use waitInvisibility
+     * @deprecated use waitInvisibility
      */
     @Deprecated
     public void waitForElementDisappears(By locator) {
@@ -610,7 +580,7 @@ abstract public class PageBase {
     /**
      * Wait until an element is visible
      *
-     * @Deprecated use waitInvisibility
+     * @deprecated use waitInvisibility
      */
     @Deprecated
     public void waitForElementVisibility(By locator) {
@@ -620,7 +590,7 @@ abstract public class PageBase {
     /**
      * Wait until an element is not visible
      *
-     * @Deprecated use waitInvisibility
+     * @deprecated use waitInvisibility
      */
     @Deprecated
     public void waitForElementInvisibility(By locator) {
@@ -630,7 +600,7 @@ abstract public class PageBase {
     /**
      * Wait until an element is clickable
      *
-     * @Deprecated use waitInvisibility
+     * @deprecated use waitInvisibility
      */
     @Deprecated
     public void waitForElementClickable(By locator) {
@@ -640,7 +610,7 @@ abstract public class PageBase {
     /**
      * Wait until an element is presence
      *
-     * @Deprecated use waitInvisibility
+     * @deprecated use waitInvisibility
      */
     @Deprecated
     public void waitForElementPresence(By locator) {
@@ -681,9 +651,5 @@ abstract public class PageBase {
             getLogger().error("Error in sleep: ".concat(e.getMessage()));
             e.printStackTrace();
         }
-    }
-
-    public Logger getLogger() {
-        return LoggerService.getLogger(this.getClass().asSubclass(this.getClass()));
     }
 }

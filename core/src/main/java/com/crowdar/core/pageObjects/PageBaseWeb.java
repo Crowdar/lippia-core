@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author: Juan Manuel Spoleti
  */
+@Deprecated
 public class PageBaseWeb extends CucumberPageBase {
 
     protected NgWebDriver ngWebDriver;
@@ -102,8 +103,6 @@ public class PageBaseWeb extends CucumberPageBase {
     /**
      * Method is used to navigated to page complete url
      * BASE_URL + url
-     *
-     * @return String complete
      */
     public void navigateToCompleteURL() {
         driver.get(getCompleteURL());
@@ -113,7 +112,6 @@ public class PageBaseWeb extends CucumberPageBase {
      * Method is used to navigated to certain page
      *
      * @param url to go. Example: https://crowdar.com.ar
-     * @return String complete
      */
     public void navigateTo(String url) {
         driver.get(url);
