@@ -100,10 +100,7 @@ class DriverFactory {
         }
     }
 
-
-
     private static URL getDriverHub() throws MalformedURLException {
-		//driver Hub Configuration
 		URL driverHub = null;
 		if (!StringUtils.isEmpty(PropertyManager.getProperty("crowdar.driverHub"))) {
 			driverHub = new URL(PropertyManager.getProperty("crowdar.driverHub"));
@@ -113,7 +110,6 @@ class DriverFactory {
 
 	private static SetupStrategy getStrategy() throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		// Strategy to Execute 
 		String strategy = PropertyManager.getProperty("crowdar.setupStrategy");
 		Class<?> StrategyClass;
 		if (StringUtils.isEmpty(strategy)) {
@@ -126,21 +122,14 @@ class DriverFactory {
 	}
 
 	private static ProjectTypeEnum getProjectType() {
-		//project type configuration 
 		ProjectTypeEnum projectType = ProjectTypeEnum.get(PropertyManager.getProperty(ProjectTypeEnum.PROJECT_TYPE_KEY));
 		return projectType;
 	}
-    
-    
-    
+
 	private static DesiredCapabilities getCapabilities(DesiredCapabilities desiredCapabilities, Map<String, ?> extraCapabilities) {
-		
 		if(extraCapabilities!=null) {
 			desiredCapabilities = desiredCapabilities.merge(new DesiredCapabilities(extraCapabilities));
 		}
-		
 		return desiredCapabilities;
 	}
-    
-
 }

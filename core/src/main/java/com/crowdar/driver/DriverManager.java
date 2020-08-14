@@ -3,6 +3,7 @@ package com.crowdar.driver;
 import java.net.URL;
 import java.util.Map;
 
+import com.crowdar.core.PropertyManager;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.crowdar.driver.setupStrategy.SetupStrategy;
@@ -19,18 +20,12 @@ public class DriverManager {
 
     
     public static void initialize(Map<String, ?> extraCapabilities){
-//    	String created = String.valueOf(isDriverCreated());
-    	
     	if (!isDriverCreated() || !isAValidDriver()) {
             if (localDriver.get() != null) {
                 localDriver.remove();
             }
             localDriver.set(DriverFactory.createDriver(extraCapabilities));
         }
-    	
-//        String logTemplate = "######  %s - Thread id %s --- isDriverCreated %s --- DriverId %s";
-//        System.out.println(logTemplate.format(logTemplate, "Initialize", Thread.currentThread().getId(), created, localDriver.get().getSessionId()));
-        
     }
     
     public static void initialize(ProjectTypeEnum projectType, SetupStrategy setupStrategy, URL driverHub, Map<String, ?> extraCapabilities) throws Exception {
@@ -46,26 +41,16 @@ public class DriverManager {
     }
 
     public static RemoteWebDriver getDriverInstance() {
-    	
-//    	String created = String.valueOf(isDriverCreated());
-    	
         if (!isDriverCreated() || !isAValidDriver()) {
             if (localDriver.get() != null) {
                 localDriver.remove();
             }
             localDriver.set(DriverFactory.createDriver());
         }
-        
-//        String logTemplate = "######  %s - Thread id %s --- isDriverCreated %s --- DriverId %s";
-//        System.out.println(logTemplate.format(logTemplate, "GetInstance", Thread.currentThread().getId(), created, localDriver.get().getSessionId()));
-        
         return localDriver.get();
     }
 
     public static void dismissCurrentDriver() {
-//    	String logTemplate = "######  %s - Thread id %s --- isDriverCreated %s --- DriverId %s";
-//    	System.out.println(logTemplate.format(logTemplate, "DismissDriver", Thread.currentThread().getId(), isDriverCreated(), localDriver.get().getSessionId()));
-
     	if (isDriverCreated()) {
             localDriver.get().quit();
             localDriver.remove();
@@ -89,5 +74,7 @@ public class DriverManager {
         dismissCurrentDriver();
     }
 
-
+    public static String getName(){
+        return ProjectTypeEnum.get(PropertyManager.getProperty("crowdar.projectType")).getName();
+    }
 }
