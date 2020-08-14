@@ -24,40 +24,45 @@ public class MobileActionManager extends ActionManager {
 
     public static void clickOptionSpinner(String spinnerLocatorName, String option) {
         click(spinnerLocatorName);
-        clickOptionSpinner(option);
+        clickOptionSpinner(option, false);
+    }
+
+    public static void clickOptionSpinner(String spinnerLocatorName, String option, boolean startWith) {
+        click(spinnerLocatorName);
+        clickOptionSpinner(option, startWith);
     }
 
     public static void clickOptionSpinner(String spinnerLocator, String option, String filterLocator, String filter) {
         click(spinnerLocator);
         setInput(filterLocator, filter, true, true);
-        clickOptionSpinner(option);
+        clickOptionSpinner(option, false);
+    }
+
+    public static void clickOptionSpinner(String spinnerLocator, String option, String filterLocator, String filter, boolean startWith) {
+        click(spinnerLocator);
+        setInput(filterLocator, filter, true, true);
+        clickOptionSpinner(option, startWith);
     }
 
     public static void clickOptionSpinner(String spinnerLocator, String option, String filterLocator) {
         clickOptionSpinner(spinnerLocator, option, filterLocator, option);
     }
 
-    private static void clickOptionSpinner(String option) {
-        WebElement element = null;
-        if (isAndroid()) {
-            element = scrollAndroid("text", option, 0);
-        } else if (isIos()) {
-            element = DriverManager.getDriverInstance().findElement(MobileBy.iOSNsPredicateString("label == '" + option + "'"));
-            scrollIOS((IOSElement) element);
-        }
-        click(element);
-    }
-
     private static void clickOptionSpinner(String option, boolean startWith) {
-       /* WebElement element = null;
+        WebElement element = null;
+        String findTypeAndroid = "text";
+        String findTypeIos = "==";
+        if(startWith){
+            findTypeAndroid = "textContains";
+            findTypeIos = "BEGINSWITH";
+        }
         if (isAndroid()) {
-            element = scrollAndroid("text", option, 0);
-
+            element = scrollAndroid(findTypeAndroid, option, 0);
         } else if (isIos()) {
-            element = getDriver().findElement(MobileBy.iOSNsPredicateString("label == '" + option + "'"));
+            element =  DriverManager.getDriverInstance().findElement(MobileBy.iOSNsPredicateString("label " + findTypeIos + " '" + option + "'"));
             scrollIOS((IOSElement) element);
         }
-        element.click();*/
+        element.click();
     }
 
     private static WebElement scrollAndroid(String locatorType, String locatorValue, int index) {

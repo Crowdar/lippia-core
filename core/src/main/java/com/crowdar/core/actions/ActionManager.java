@@ -2,9 +2,7 @@ package com.crowdar.core.actions;
 
 import com.crowdar.core.Constants;
 import com.crowdar.core.LocatorManager;
-import com.crowdar.core.pageObjects.LocatorTypesEnum;
 import com.crowdar.driver.DriverManager;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -13,7 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 
 import java.time.Duration;
 import java.util.List;
