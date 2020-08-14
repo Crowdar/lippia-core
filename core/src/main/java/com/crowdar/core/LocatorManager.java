@@ -5,44 +5,88 @@
 
 package com.crowdar.core;
 
+import com.crowdar.core.pageObjects.LocatorTypesEnum;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.openqa.selenium.By;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.properties.EncryptableProperties;
-
 public class LocatorManager {
-    private static final String LOCATORS_PROPERTY_KEY = "crowdar.locatorsProperties";
-    private static Properties properties;
+    private static Map<String, Properties> properties;
 
-    private LocatorManager() {
-    }
-
-    private static Properties getProperties() {
+    private static Map<String, Properties> getProperties() {
         if (properties == null) {
-            try {
-                loadProperties();
-            } catch (IOException var1) {
-                var1.printStackTrace();
-            }
+            loadProperties();
         }
-
         return properties;
     }
 
-    public static String getProperty(String propertyKey) {
-        return getProperties().getProperty(propertyKey);
+    private static String getProperty(String property) {
+        String[] split = property.split("\\.");
+        String viewName = split[0].toUpperCase();
+        String propertyKey = split[1];
+        return getProperties().get(viewName).getProperty(propertyKey);
     }
 
-    public static boolean isPropertyPresentAndNotEmpty(String propertyKey) {
-        return getProperties().containsKey(propertyKey) && !getProperties().getProperty(propertyKey).isEmpty();
+    public static void loadProperties(String locatorsFolderPath) {
+        properties = new HashMap<>();
+        File dir = new File(locatorsFolderPath);
+        String[] extensions = {"properties"};
+        try {
+            Collection<File> files = FileUtils.listFiles(dir, extensions, true);
+            putProperties(files);
+        } catch (IOException e) {
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
-    private static void loadProperties() throws IOException {
-        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        properties = new EncryptableProperties(encryptor);
-        InputStream inputStream = LocatorManager.class.getClassLoader().getResourceAsStream(PropertyManager.getProperty(LOCATORS_PROPERTY_KEY));
-        properties.load(inputStream);
+    private static void loadProperties() {
+        loadProperties(Paths.get("src", "main", "resources", "locators").toString());
+    }
+
+    public static void loadProperties(Path locatorsFolderPath) {
+        loadProperties(locatorsFolderPath.toString());
+    }
+
+    private static void putProperties(Collection<File> files) throws IOException {
+        for (File file : files) {
+            Properties newProperties = new Properties();
+            InputStream inputStream = new FileInputStream(file);
+
+            newProperties.load(inputStream);
+            getProperties().put(file.getName().replace(".properties", "").toUpperCase(), newProperties);
+        }
+    }
+
+    public static By getLocator(String locatorName) {
+        try {
+            String[] locatorProperty = getProperty(locatorName).split(":");
+            return getLocatorInEnum(locatorProperty);
+        } catch (NullPointerException e){
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
+            throw new RuntimeException(String.format("Locator property %s was not found", locatorName));
+        }
+    }
+
+    private static By getLocatorInEnum(String[] locatorProperty) {
+        try {
+            String type = locatorProperty[0].toUpperCase();
+            String value = locatorProperty[1];
+            return LocatorTypesEnum.get(type).getLocator(value);
+        } catch (IndexOutOfBoundsException e) {
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
+            throw new RuntimeException("Locator property format is invalid. Example: css:#loginButton");
+        }
     }
 }

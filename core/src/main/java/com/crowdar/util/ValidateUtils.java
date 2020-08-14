@@ -43,7 +43,7 @@ public class ValidateUtils {
         try {
             expectedClass.getMethod(SORT_NAME_METHOD, List.class).invoke("", expectedList);
         } catch (NoSuchMethodException e) {
-            Logger.getRootLogger().warn(">>> 'sort' method was not found in ".concat(expectedClass.toGenericString()).concat(". Proceeding without sorting the list."));
+            Logger.getLogger(ValidateUtils.class).warn(">>> 'sort' method was not found in ".concat(expectedClass.toGenericString()).concat(". Proceeding without sorting the list."));
         }
     }
 
@@ -117,7 +117,7 @@ public class ValidateUtils {
         try {
             return getMethodValue(actual, actualClass, getMethodName());
         } catch (NoSuchMethodException e) {
-            Logger.getRootLogger().warn(">>> Method ".concat(getMethodName()).concat(" was not found. Trying with capitalize."));
+            Logger.getLogger(ValidateUtils.class).warn(">>> Method ".concat(getMethodName()).concat(" was not found. Trying with capitalize."));
             setMethodName(GETTER_NAME.concat(getFullKey(expectedKey)));
             return tryWithCapitalizeAndReplace(actual, actualClass);
         }

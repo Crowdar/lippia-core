@@ -69,6 +69,11 @@ public enum ProjectTypeEnum {
         }
 
         @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
         public Properties getProperties() {
             return new EncryptableProperties(new StandardPBEStringEncryptor());
         }
@@ -82,6 +87,11 @@ public enum ProjectTypeEnum {
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return RemoteWebDriver.class;
+        }
+
+        @Override
+        public String getName() {
+            return "Chrome";
         }
 
         @Override
@@ -101,6 +111,11 @@ public enum ProjectTypeEnum {
         }
 
         @Override
+        public String getName() {
+            return "Firefox";
+        }
+
+        @Override
         public Properties getProperties() {
             return new EncryptableProperties(new StandardPBEStringEncryptor());
         }
@@ -114,6 +129,11 @@ public enum ProjectTypeEnum {
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return RemoteWebDriver.class;
+        }
+
+        @Override
+        public String getName() {
+            return "Edge";
         }
 
         @Override
@@ -133,6 +153,11 @@ public enum ProjectTypeEnum {
         }
 
         @Override
+        public String getName() {
+            return "InternetExplorer";
+        }
+
+        @Override
         public Properties getProperties() {
             return new EncryptableProperties(new StandardPBEStringEncryptor());
         }
@@ -146,6 +171,11 @@ public enum ProjectTypeEnum {
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return RemoteWebDriver.class;
+        }
+
+        @Override
+        public String getName() {
+            return "Safari";
         }
 
         @Override
@@ -163,6 +193,11 @@ public enum ProjectTypeEnum {
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
             return AndroidDriver.class;
+        }
+
+        @Override
+        public String getName() {
+            return "Android";
         }
 
         @Override
@@ -184,6 +219,11 @@ public enum ProjectTypeEnum {
         }
 
         @Override
+        public String getName() {
+            return "Ios";
+        }
+
+        @Override
         public Properties getProperties() {
             return new EncryptableProperties(new StandardPBEStringEncryptor());
         }
@@ -197,6 +237,11 @@ public enum ProjectTypeEnum {
 
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
+            return null;
+        }
+
+        @Override
+        public String getName() {
             return null;
         }
 
@@ -220,6 +265,11 @@ public enum ProjectTypeEnum {
         }
 
         @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
         public Properties getProperties() {
             Properties properties = new EncryptableProperties(new StandardPBEStringEncryptor());
             properties.put("crowdar.report.disable_screenshot_on_failure", "true");
@@ -235,6 +285,11 @@ public enum ProjectTypeEnum {
 
         @Override
         public Class<? extends RemoteWebDriver> getRemoteDriverImplementation() {
+            return null;
+        }
+
+        @Override
+        public String getName() {
             return null;
         }
 
@@ -257,6 +312,11 @@ public enum ProjectTypeEnum {
      * @return driver type to create instance with selenium hub Strategy.
      */
     public abstract Class<? extends RemoteWebDriver> getRemoteDriverImplementation();
+
+    /**
+     * @return driver name without the Driver at the end. Example: Chrome
+     */
+    public abstract String getName();
 
     public abstract Properties getProperties();
 
