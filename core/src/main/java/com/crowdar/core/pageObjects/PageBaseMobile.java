@@ -33,7 +33,7 @@ public class PageBaseMobile extends CucumberPageBase {
      */
     @Deprecated
     public void completeField(WebElement element, String value, String placeholder) {
-        if (!Utils.isTextFieldEmpty(element, placeholder)) {
+        if (!element.getText().equals(placeholder)) {
             element.clear();
         }
         completeFieldWithoutClear(element, value);
