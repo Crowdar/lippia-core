@@ -1,6 +1,10 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.1 (24/08/2020)
+* Fix problem with threads in ActionManager with method clean() and usage in BasicHook
+* Add dismissMobileDriver in DriverManager
+
 ## 3.2.0 (10/08/2020)
 * LocatorManager refactor
   - catch exceptions
