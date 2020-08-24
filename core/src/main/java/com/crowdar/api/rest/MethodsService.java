@@ -2,17 +2,21 @@ package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
 import com.crowdar.util.ValidateUtils;
+import org.apache.log4j.Logger;
+import org.testng.Assert;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import static com.crowdar.api.rest.APIManager.setLastResponse;
+import static com.crowdar.api.rest.RestClient.getRestClient;
 
 public class MethodsService {
 
 
     public static <T> Response get(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().get(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().get(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -27,7 +31,7 @@ public class MethodsService {
     }
 
     public static <T> Response post(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().post(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().post(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -42,7 +46,7 @@ public class MethodsService {
     }
 
     public static <T> Response put(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().put(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().put(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -58,7 +62,7 @@ public class MethodsService {
     }
 
     public static <T> Response patch(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().patch(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().patch(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -73,7 +77,7 @@ public class MethodsService {
     }
 
     public static <T> Response delete(Request req, Class<T> classModel) {
-        Response resp = RestClient.getRestClient().delete(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders().toString());
+        Response resp = getRestClient().delete(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
@@ -88,21 +92,29 @@ public class MethodsService {
     }
 
     protected static Request getRequest(String jsonFileName, Map<String, String> replacementParameters) {
-        String jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
+        String jsonRequest = null;
+        try {
+            jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
+        } catch (IOException e) {
+            Logger.getLogger(MethodsService.class).error(e.getMessage());
+            Assert.fail(e.getMessage());
+        }
 
         if (replacementParameters != null) {
             for (String key : replacementParameters.keySet()) {
                 jsonRequest = jsonRequest.replace("{{" + key + "}}", replacementParameters.get(key));
             }
         }
-        return JsonUtils.deserialize(jsonRequest, Request.class);
+        Request request = JsonUtils.deserialize(jsonRequest, Request.class);
+        Logger.getLogger(MethodsService.class).info(">>>Request: " + request.toString());
+        return request;
     }
 
     /**
      * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
      * Validate two lists
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath
+     * expected response is obtained in 'entity' with 'jsonResponsePath'
      *
      * @param actualList
      * @param expectedList
@@ -115,8 +127,8 @@ public class MethodsService {
     /**
      * Generic validation. Do assertions for all the expected variables and write file outputs in target folder.
      * Validate two objects
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath'
+     * expected response is obtained in 'entity' with 'jsonResponsePath'
      *
      * @param actual
      * @param expected
@@ -128,8 +140,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object, modifying expected object with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' with 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param actual
      * @param expected
@@ -141,8 +153,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list, modifying expected list with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> con el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' with '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath' y sus parametros 'parameters
+     * expected response is obtained in 'entity' with 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param actualList
      * @param expectedList
@@ -154,8 +166,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object, modifying the json expected. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath'
      *
      * @param jsonExpectedPath
      * @param actual
@@ -166,8 +178,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list, modifying the json expected. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath'
      *
      * @param jsonExpectedPath
      * @param actualList
@@ -178,8 +190,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param jsonExpectedPath
      * @param actual
@@ -191,8 +203,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list, modifying the json expected with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> modificando el <jsonResponsePath> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' modifying the '<jsonResponsePath>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' modificando el 'jsonResponsePath' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' modifying the 'jsonResponsePath' and the parameters 'parameters'
      *
      * @param jsonExpectedPath
      * @param actualList
@@ -204,8 +216,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity>
-     * expected response is obtained in '<entity>'
+     * Step: se obtuvo el response esperado en 'entity'
+     * expected response is obtained in 'entity'
      *
      * @param actual
      * @throws Exception
@@ -215,8 +227,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity>
-     * expected response is obtained in '<entity>'
+     * Step: se obtuvo el response esperado en 'entity'
+     * expected response is obtained in 'entity'
      *
      * @param actualList
      * @param <T>
@@ -227,8 +239,8 @@ public class MethodsService {
 
     /**
      * Set your own expected object with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' y sus parametros 'parameters
+     * expected response is obtained in 'entity' and the parameters 'parameters'
      *
      * @param actual
      * @param parameters
@@ -239,8 +251,8 @@ public class MethodsService {
 
     /**
      * Set your own expected list with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en <entity> y sus parametros <parameters>
-     * expected response is obtained in '<entity>' and the parameters '<parameters>'
+     * Step: se obtuvo el response esperado en 'entity' y sus parametros 'parameters'
+     * expected response is obtained in 'entity' and the parameters 'parameters'
      *
      * @param actualList
      * @param parameters

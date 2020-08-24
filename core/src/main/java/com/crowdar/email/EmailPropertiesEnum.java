@@ -1,9 +1,12 @@
 package com.crowdar.email;
 
 import com.crowdar.core.JsonUtils;
-import com.crowdar.core.PropertyManager;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import org.testng.Assert;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.Set;
@@ -42,7 +45,14 @@ public enum EmailPropertiesEnum {
     }
 
     protected JSONObject getPropertiesJson(String jsonName) {
-        String json = JsonUtils.getJSON(Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "email", jsonName.concat(".json")));
+        String json = null;
+        Path path = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "email", jsonName.concat(".json"));
+        try {
+            json = JsonUtils.getJSON(path);
+        } catch (IOException e) {
+            Logger.getLogger(this.getClass()).error(e.getMessage());
+            Assert.fail(e.getMessage());
+        }
         return new JSONObject(json);
     }
 

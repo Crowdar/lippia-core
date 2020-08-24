@@ -1,6 +1,39 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.0 (10/08/2020)
+* LocatorManager refactor
+  - catch exceptions
+  - split and find locator file (max 1 folder in locators folder)
+  - getProperty method, if is another locator file loaded, load the requested
+* Add LocatorTypesEnum
+* Add getName() method in ProjectTypeEnum with name of driver instance + call it in DriverManager.getName()
+* Method loadLocators in the constructor PageBase and getLocator that returns By searching in LocatorTypesEnum
+* Refactor PageBase, PageBaseMobile and PageBaseWeb in methods to support parameter String locatorName and deprecated in old methods.
+* Replace in places that were using getRootLogger() for Logger.getLogger(class).
+* Api fix in CommonSteps (Delete ':')
+* Remove unused methods in Utils class.
+* Add ActionManager, WebActionManager and MobileActionManager with all static methods and using locator manager. (This replaces PageBase).
+* Fix fluent time in Constants and remove constants without use.
+
+## 3.1.2 (04/08/2020)
+* Move dragAndDrop method from PageBase to PageBaseWeb: these methods is specific for web project.
+* Add waitForElementClickable to PageBase.
+* Add scroll methods in PageBaseMobile: scroll android with text, accessibility id, resource id and class name; scroll ios.
+
+## 3.1.1 (27/07/2020)
+* Add to CommonSteps 
+  - step that allows to validate response with different method (Then expected response is obtained in <entity> with the method <method>)
+  - step to validate api text response (Then text <text> was obtained in response)
+* Refactor in JsonUtils, now methods: getJson(), getJSONFromFile() and getJSONFromPath() thorws IOException
+* Update throw of getJSONFromFile() in MethodsService and EmailPropertiesEnum (catch that and assert fail)
+* Replace in Request: Object urlParameters and headers with Map (update MethodsService and RestClient for this change).
+* Catch invocation target exception in CommonSteps (validate response fields) and fail that test in this case.
+* RestClient instance in MethodsService instead of RestClient.java.
+* Add logs in RestClient response.
+* Add functionally download attachment file in EmailService
+* Add validates list of text present in PDFManager
+    
 ## 3.1.0.1 (15/07/2020)
 * change groupId from com.crowdar to io.lippia
 * bitbucket pipeline configuration
