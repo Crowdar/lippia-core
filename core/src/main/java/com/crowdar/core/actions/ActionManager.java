@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class ActionManager {
 
-    private static WebDriverWait wait;
-    private static FluentWait<RemoteWebDriver> fluentWait;
+    private static ThreadLocal<WebDriverWait> wait = new ThreadLocal<>();
+    private static ThreadLocal<FluentWait<RemoteWebDriver>> fluentWait = new ThreadLocal<>();
 
     /**
      * Method that returns the default wait in our framework
