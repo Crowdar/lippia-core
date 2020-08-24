@@ -3,6 +3,7 @@ package com.crowdar.bdd.cukes.hooks;
 import java.io.IOException;
 
 import com.crowdar.core.Injector;
+import com.crowdar.core.actions.ActionManager;
 import com.crowdar.driver.DriverManager;
 
 import io.cucumber.core.api.Scenario;
@@ -34,6 +35,7 @@ public class BasicHook {
 		Logger.getLogger(this.getClass()).info("------ Ending -----" + scenario.getName() + "-----");
 		DriverManager.dismissCurrentDriver();
 		Injector.cleanThreadCache();
+		ActionManager.clean();
 	}
 
 

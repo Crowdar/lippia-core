@@ -21,16 +21,21 @@ public abstract class ActionManager {
     private static ThreadLocal<WebDriverWait> wait = new ThreadLocal<>();
     private static ThreadLocal<FluentWait<RemoteWebDriver>> fluentWait = new ThreadLocal<>();
 
+    public static void clean() {
+        wait.remove();
+        fluentWait.remove();
+    }
+
     /**
      * Method that returns the default wait in our framework
      *
      * @return web driver wait
      */
     public static WebDriverWait getWait() {
-        if (wait == null) {
-            wait = new WebDriverWait(DriverManager.getDriverInstance(), Constants.getWaitForElementTimeout());
+        if (wait.get() == null) {
+            wait.set(new WebDriverWait(DriverManager.getDriverInstance(), Constants.getWaitForElementTimeout()));
         }
-        return wait;
+        return wait.get();
     }
 
     /**
@@ -39,11 +44,11 @@ public abstract class ActionManager {
      * @return wait
      */
     public static Wait<RemoteWebDriver> getFluentWait() {
-        if (fluentWait == null) {
-            fluentWait = new FluentWait<>(DriverManager.getDriverInstance()).withTimeout(Duration.ofSeconds(Constants.getFluentWaitTimeoutInSeconds()))
-                    .pollingEvery(Duration.ofMillis(Constants.getFluentWaitRequestFrequencyInMillis())).ignoring(NoSuchElementException.class);
+        if (fluentWait.get() == null) {
+            fluentWait.set(new FluentWait<>(DriverManager.getDriverInstance()).withTimeout(Duration.ofSeconds(Constants.getFluentWaitTimeoutInSeconds()))
+                    .pollingEvery(Duration.ofMillis(Constants.getFluentWaitRequestFrequencyInMillis())).ignoring(NoSuchElementException.class));
         }
-        return fluentWait;
+        return fluentWait.get();
     }
 
     /**
