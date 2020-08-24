@@ -16,7 +16,7 @@ public class DriverManager {
 
     }
 
-    private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<RemoteWebDriver>();
+    private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<>();
 
     
     public static void initialize(Map<String, ?> extraCapabilities){
@@ -65,9 +65,9 @@ public class DriverManager {
         return localDriver.get().getSessionId() != null;
     }
 
-    public static void dismissDriver() {
+    public static void dismissMobileDriver() {
         ((AppiumDriver) getDriverInstance()).closeApp();
-        getDriverInstance().quit();
+        dismissCurrentDriver();
     }
 
     public static void resetDriver() {
