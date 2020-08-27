@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.crowdar.driver.ProjectTypeEnum;
 
@@ -19,14 +20,13 @@ public class PropertyManager {
     private static Logger logger = Logger.getLogger(PropertyManager.class);
     private static final String PROPERTY_FILE_NAME = "config.properties";
     
-    
-    private static Properties properties;
+    private static ThreadLocal<Properties> properties = new ThreadLocal<>();
 
     private PropertyManager() {
     }
 
     private static Properties getProperties() {
-        if (properties == null) {
+        if (properties.get() == null) {
             try {
                 loadProperties();
             } catch (IOException var1) {
@@ -34,7 +34,7 @@ public class PropertyManager {
             }
         }
 
-        return properties;
+        return properties.get();
     }
 
     public static String getProperty(String propertyKey) {
@@ -53,8 +53,8 @@ public class PropertyManager {
         InputStream inputStream = PropertyManager.class.getClassLoader().getResourceAsStream(PROPERTY_FILE_NAME);
         clientProperties.load(inputStream);
 
-        properties = getProjectTypeProperties(clientProperties);
-        properties.putAll(clientProperties);
+        properties.set(getProjectTypeProperties(clientProperties));
+        properties.get().putAll(clientProperties);
         
     }
 	
