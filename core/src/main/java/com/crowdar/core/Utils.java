@@ -1,9 +1,6 @@
 package com.crowdar.core;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -83,21 +80,6 @@ public class Utils {
         return formatter.format(date);
     }
 
-    /**
-     * Author jcarames... me hago cargo de esto!
-     *
-     * @param driver
-     * @param inputId
-     * @param valueToSet
-     */
-    public static void setValueToNonEditableInput(WebDriver driver, String inputId, String valueToSet) {
-
-        if (driver instanceof JavascriptExecutor) {
-            ((JavascriptExecutor) driver)
-                    .executeScript("document.getElementById('" + inputId + "').value='" + valueToSet + "'");
-        }
-    }
-
     public static int getOnlyNumbersFromString(String stringToReplace) {
         return Integer.parseInt(stringToReplace.replaceAll("\\D+", ""));
     }
@@ -114,10 +96,6 @@ public class Utils {
         }
 
         System.out.println("Deletion successful.");
-    }
-
-    public static boolean isTextFieldEmpty(WebElement element, String placeholder) {
-        return element.getText().equals(placeholder);
     }
 
     public static <T> List<T> parseArrayToList(T[] array) {

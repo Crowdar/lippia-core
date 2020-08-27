@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,7 +34,7 @@ public class JsonUtils {
             TypeFactory typeFactory = getMapper().getTypeFactory();
             return (T) mapper.readValue(json, typeFactory.constructType(type));
         } catch (IOException e) {
-            Logger.getRootLogger().error(e.getMessage());
+            Logger.getLogger(JsonUtils.class).error(e.getMessage());
         }
         return null;
     }
@@ -45,7 +44,7 @@ public class JsonUtils {
         try {
             jsonResult = getMapper().writeValueAsString(json);
         } catch (IOException e) {
-            Logger.getRootLogger().error(e.getMessage());
+            Logger.getLogger(JsonUtils.class).error(e.getMessage());
         }
         return jsonResult;
     }
