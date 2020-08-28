@@ -19,6 +19,7 @@ ADD . ${WORKSPACE}
 WORKDIR ${WORKSPACE}
 
 RUN chmod +x entrypoint.sh
+RUN cp entrypoint.sh /entrypoint.sh
 
 RUN mvn -B -s settings.xml verify
 RUN mvn -B -s settings.xml install
@@ -27,5 +28,4 @@ RUN rm settings.xml
 
 WORKDIR /
 
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["mvn"]
+CMD ["bash", "/entrypoint.sh"]
