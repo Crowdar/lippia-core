@@ -61,30 +61,30 @@ public class RestClient {
         return headers;
     }
 
-    public Response get(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
+    public Response get(String url, Class<?> type, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.GET);
     }
 
-    public Response post(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
+    public Response post(String url, Class<?> type, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.POST);
     }
 
-    public Response put(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
+    public Response put(String url, Class<?> type, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PUT);
     }
 
-    public Response patch(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
+    public Response patch(String url, Class<?> type, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.PATCH);
     }
 
-    public Response delete(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers) {
+    public Response delete(String url, Class<?> type, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, type, body, urlParameters, headers, HttpMethod.DELETE);
     }
 
-    private Response createHTTPMethod(String url, Class<?> type, String body, Map<String, String> urlParameters, Map<String, String> headers, HttpMethod httpMethod) {
+    private Response createHTTPMethod(String url, Class<?> type, Object body, Map<String, String> urlParameters, Map<String, String> headers, HttpMethod httpMethod) {
         URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
         setRequestHeaders(headers);
-        HttpEntity<String> request = this.createRequest(body, getRequestHeaders());
+        HttpEntity<Object> request = this.createRequest(body, getRequestHeaders());
         try {
             ResponseEntity response = getRestTemplate().exchange(uri, httpMethod, request, type);
             Logger.getLogger(this.getClass()).info(">>>Response: " + response.toString());
@@ -103,8 +103,8 @@ public class RestClient {
         return new Headers(this.getHeaders(headers));
     }
 
-    private HttpEntity<String> createRequest(String body, HttpHeaders headers) {
-        if (body.isEmpty()) {
+    private HttpEntity<Object> createRequest(Object body, HttpHeaders headers) {
+        if (body.toString().isEmpty()) {
             return new HttpEntity<>(headers);
         } else {
             return new HttpEntity<>(body, headers);

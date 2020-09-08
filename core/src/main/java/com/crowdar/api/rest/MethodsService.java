@@ -31,7 +31,7 @@ public class MethodsService {
     }
 
     public static <T> Response post(Request req, Class<T> classModel) {
-        Response resp = getRestClient().post(req.getCompleteUrl(), classModel, req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
+        Response resp = getRestClient().post(req.getCompleteUrl(), classModel, req.getBody(), req.getUrlParameters(), req.getHeaders());
         setLastResponse(resp);
         return resp;
     }
