@@ -63,6 +63,8 @@ public class JsonUtils {
             } catch (JSONException ex1) {
                 return false;
             }
+        } catch (NullPointerException e){
+            return false;
         }
         return true;
     }

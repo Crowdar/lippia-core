@@ -52,7 +52,7 @@ public class Request {
         } else if (JsonUtils.isJSONValid(body)) {
             return JsonUtils.serialize(body);
         } else {
-            return body.toString();
+            return body;
         }
     }
 

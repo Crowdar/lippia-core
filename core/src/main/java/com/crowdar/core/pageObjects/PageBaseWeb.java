@@ -1,7 +1,6 @@
 package com.crowdar.core.pageObjects;
 
 import com.crowdar.core.Constants;
-import com.paulhammant.ngwebdriver.NgWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -22,15 +21,12 @@ import java.util.concurrent.TimeUnit;
 @Deprecated
 public class PageBaseWeb extends CucumberPageBase {
 
-    protected NgWebDriver ngWebDriver;
-
     public PageBaseWeb() {
         super();
     }
 
     public PageBaseWeb(RemoteWebDriver driver) {
         super(driver);
-        initConstructor();
     }
 
     @Deprecated
@@ -82,10 +78,6 @@ public class PageBaseWeb extends CucumberPageBase {
         super.clickElement(element);
     }
 
-    private void initConstructor() {
-        this.ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
-    }
-
     public void maximizeWindow() {
         driver.manage().window().maximize();
     }
@@ -117,23 +109,6 @@ public class PageBaseWeb extends CucumberPageBase {
         driver.get(url);
     }
 
-    /**
-     * Method that returns the NG web driver for operations with angular
-     *
-     * @return NG web driver
-     */
-    public NgWebDriver getNgWebDriver() {
-        return ngWebDriver;
-    }
-
-
-    /**
-     * Method that produce a dynamic wait time waiting to finish an angular
-     * request
-     */
-    public void angularWait() {
-        getNgWebDriver().waitForAngularRequestsToFinish();
-    }
 
     /**
      * switch to the last tab
