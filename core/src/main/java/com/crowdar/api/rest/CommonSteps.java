@@ -70,7 +70,7 @@ public class CommonSteps {
     public void iWillGetTheProperResponseWithParameters(String entity, String jsonName, String inputParameters) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException {
         setInjectorParameters(jsonName);
         Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
-        invokeValidateMethod(entity, parameters, objectClass, expectedJsonResponse);
+        invokeValidateMethod(entity, parameters, objectClass, objectClass, expectedJsonResponse);
     }
 
     @Then("se obtuvo el response esperado en ([^ ]*) modificando el ([^ ]*)")
@@ -85,7 +85,7 @@ public class CommonSteps {
     public void iWillGetTheProperResponseModifiedWithParameters(String entity, String expectedJsonName, String inputParameters) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException, InstantiationException {
         setInjectorParameters(null);
         Map<String, String> parameters = MapUtils.splitIntoMap(inputParameters, ",", ":");
-        invokeValidateMethod(entity, parameters, String.class, "response/".concat(expectedJsonName));
+        invokeValidateMethod(entity, parameters, String.class, objectClass, "response/".concat(expectedJsonName));
     }
 
     @Then("se obtuvo el response esperado en ([^ ]*)")
@@ -128,10 +128,10 @@ public class CommonSteps {
         }
     }
 
-    private void invokeValidateMethod(String entity, Map<String, String> parameters, Class objectClass, Object expectedJsonResponse) throws ClassNotFoundException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    private void invokeValidateMethod(String entity, Map<String, String> parameters, Class objectClass, Class objectClass2, Object expectedJsonResponse) throws ClassNotFoundException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         try {
             Class service = getServiceClass(entity);
-            service.getMethod("validateFields", objectClass, objectClass, Map.class).invoke(service.newInstance(), expectedJsonResponse, actualJsonResponse, parameters);
+            service.getMethod("validateFields", objectClass, objectClass2, Map.class).invoke(service.newInstance(), expectedJsonResponse, actualJsonResponse, parameters);
         } catch (InvocationTargetException e) {
             Assert.fail(e.getCause().toString());
         }

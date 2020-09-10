@@ -1,6 +1,12 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.2 (08/09/2020)
+* Remove firebase, angular dependencies
+* Remove Database and Query classes
+* Fix step CommonSteps in api
+* Add functionality to allow sending files in body request
+
 ## 3.2.1 (24/08/2020)
 * Fix problem with threads in ActionManager with method clean() and usage in BasicHook
 * Add dismissMobileDriver in DriverManager
