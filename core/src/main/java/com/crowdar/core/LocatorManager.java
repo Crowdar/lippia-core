@@ -72,6 +72,12 @@ public class LocatorManager {
     public static By getLocator(String locatorName) {
         try {
             String[] locatorProperty = getProperty(locatorName).split(":");
+            int length = locatorProperty.length;
+            if ( length>= 3) {
+                for (int i = 1; i < length - 1;i++) {
+                    locatorProperty[1] = locatorProperty[1].concat(":".concat(locatorProperty[i+1]));
+                }
+            }
             return getLocatorInEnum(locatorProperty);
         } catch (NullPointerException e){
             Logger.getLogger(LocatorManager.class).error(e.getMessage());
