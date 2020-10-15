@@ -34,9 +34,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
         
         request = new Request();
 		request.setBody("");
-		request.setUrlParameters("");
-		request.setHeaders("");
-				
+
 		PowerMockito.mockStatic(RestClient.class);
         when(RestClient.class, "getRestClient").thenReturn(restClient);
 		
@@ -54,7 +52,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 						Response.class, 
 						request.getBody().toString(), 
 						request.getUrlParameters(), 
-						request.getHeaders().toString()
+						request.getHeaders()
 				)
 		).thenReturn(response);
 		
@@ -64,7 +62,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 						Response.class, 
 						request.getBody().toString(), 
 						request.getUrlParameters(), 
-						request.getHeaders().toString()
+						request.getHeaders()
 				)
 		).thenReturn(response);
 		
@@ -74,7 +72,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 						Response.class, 
 						request.getBody().toString(), 
 						request.getUrlParameters(), 
-						request.getHeaders().toString()
+						request.getHeaders()
 				)
 		).thenReturn(response);
 		
@@ -84,7 +82,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 						Response.class, 
 						request.getBody().toString(), 
 						request.getUrlParameters(), 
-						request.getHeaders().toString()
+						request.getHeaders()
 				)
 		).thenReturn(response);
 		
@@ -94,7 +92,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 						Response.class, 
 						request.getBody().toString(), 
 						request.getUrlParameters(), 
-						request.getHeaders().toString()
+						request.getHeaders()
 				)
 		).thenReturn(response);
 		
@@ -108,7 +106,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 				Response.class, 
 				request.getBody().toString(), 
 				request.getUrlParameters(), 
-				request.getHeaders().toString());
+				request.getHeaders());
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
@@ -122,7 +120,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 				Response.class, 
 				request.getBody().toString(), 
 				request.getUrlParameters(), 
-				request.getHeaders().toString());
+				request.getHeaders());
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
@@ -135,7 +133,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 				Response.class, 
 				request.getBody().toString(), 
 				request.getUrlParameters(), 
-				request.getHeaders().toString());
+				request.getHeaders());
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
@@ -148,7 +146,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 				Response.class, 
 				request.getBody().toString(), 
 				request.getUrlParameters(), 
-				request.getHeaders().toString());
+				request.getHeaders());
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
@@ -161,7 +159,7 @@ public class MethodsServiceTest extends PowerMockTestCase {
 				Response.class, 
 				request.getBody().toString(), 
 				request.getUrlParameters(), 
-				request.getHeaders().toString());
+				request.getHeaders());
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}

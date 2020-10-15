@@ -1,6 +1,18 @@
 package com.crowdar.core.pageObjects;
 
-import java.awt.Toolkit;
+import com.crowdar.core.Constants;
+import com.crowdar.core.LocatorManager;
+import com.crowdar.driver.DriverManager;
+import org.apache.log4j.Logger;
+import org.openqa.selenium.*;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.time.Duration;
@@ -8,35 +20,19 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import org.apache.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.crowdar.core.Constants;
-import com.crowdar.driver.DriverManager;
-
 /**
  * This class represents the things in common between Windows, Web and Mobile projects
  *
  * @author: Juan Manuel Spoleti
  */
+@Deprecated
 abstract public class PageBase {
     /**
      * This is the Base url for all system to be tested
      */
     public static String BASE_URL;
     /**
-     * This is the url that corespond to this child page and should be initialized in  child contructor child page
+     * This is the url that correspond to this child page and should be initialized in  child constructor child page
      */
     protected String url;
 
@@ -44,24 +40,232 @@ abstract public class PageBase {
     protected WebDriverWait wait;
     protected FluentWait<RemoteWebDriver> fluentWait;
 
-    protected Logger logger;
-
     public PageBase() {
     }
 
     public PageBase(RemoteWebDriver driver) {
-//	  String logTemplate = "######  %s - Thread id %s - objId: %s --- DriverId %s ";
-//      System.out.println(logTemplate.format(logTemplate, "PAGE BASE",Thread.currentThread().getId(), this.toString(), driver.getSessionId()));
-    	
-      logger = Logger.getLogger(this.getClass());
-      initialize(driver);
+        initialize(driver);
     }
-    
+
     private void initialize(RemoteWebDriver driver) {
-    	this.driver = driver;
+        this.driver = driver;
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(Constants.getWaitForElementTimeout()))
                 .pollingEvery(Duration.ofMillis(10)).ignoring(NoSuchElementException.class);
+    }
+
+    public Logger getLogger() {
+        return Logger.getLogger(this.getClass().asSubclass(this.getClass()));
+    }
+
+    /**
+     * Click the element provided by the locator name
+     *
+     * @param locatorName
+     */
+    public void click(String locatorName) {
+        WebElement element = waitClickable(locatorName);
+        click(element);
+    }
+
+    protected void click(WebElement element) {
+        element.click();
+    }
+
+    /**
+     * Set element input with a value provided by the locator name
+     * Default: not click and not clear the input element
+     *
+     * @param locatorName
+     * @param value
+     */
+    public void setInput(String locatorName, String value) {
+        setInput(locatorName, value, false, false);
+    }
+
+    /**
+     * Set element input with a value provided by the locator name
+     *
+     * @param locatorName
+     * @param value
+     * @param clickAndClear true: click and clear the input element, false: don't click and don't clear the input element
+     */
+    public void setInput(String locatorName, String value, boolean clickAndClear) {
+        setInput(locatorName, value, clickAndClear, clickAndClear);
+    }
+
+    /**
+     * Set element input with a value provided by the locator name
+     *
+     * @param locatorName
+     * @param value
+     * @param click       true: click the input element, false: don't click the input element
+     * @param clear       true: clear the input element, false: don't clear the input element
+     */
+    public void setInput(String locatorName, String value, boolean click, boolean clear) {
+        WebElement element = waitVisibility(locatorName);
+        setInput(element, value, click, clear);
+    }
+
+    protected void setInput(WebElement element, String value, boolean click, boolean clear) {
+        if (click) {
+            element.click();
+        }
+        if (clear) {
+            element.clear();
+        }
+        element.sendKeys(value);
+    }
+
+    /**
+     * Returns element text
+     *
+     * @param locatorName
+     * @return element text
+     */
+    public String getText(String locatorName) {
+        WebElement element = waitPresence(locatorName);
+        return element.getText();
+    }
+
+    /**
+     * Returns element attribute selected
+     *
+     * @param locatorName
+     * @param attribute
+     * @return attribute value
+     */
+    public String getAttribute(String locatorName, String attribute) {
+        WebElement element = waitPresence(locatorName);
+        return element.getAttribute(attribute);
+    }
+
+    private WebElement getElement(By locator) {
+        return getDriver().findElement(locator);
+    }
+
+    private List<WebElement> getElements(By locator) {
+        return getDriver().findElements(locator);
+    }
+
+    /**
+     * Return WebElement with the locator name provided
+     *
+     * @param locatorName
+     * @return
+     */
+    public WebElement getElement(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        return getElement(locator);
+    }
+
+    public List<WebElement> getElements(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        return getElements(locator);
+    }
+
+    /**
+     * Wait until the element is visible
+     *
+     * @param locatorName
+     * @return web element
+     */
+    public WebElement waitVisibility(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        return getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public List<WebElement> waitVisibilities(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        return getFluentWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+    }
+
+    /**
+     * Wait until the element is present
+     *
+     * @param locatorName
+     * @return web element
+     */
+    public WebElement waitPresence(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        return getFluentWait().until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    public List<WebElement> waitPresences(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        return getFluentWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+    }
+
+    /**
+     * Wait until the element is clickable
+     *
+     * @param locatorName
+     * @return web element
+     */
+    public WebElement waitClickable(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        return getFluentWait().until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    /**
+     * Wait until the element is invisible
+     *
+     * @param locatorName
+     */
+    public void waitInvisibility(String locatorName) {
+        By locator = LocatorManager.getLocator(locatorName);
+        getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    public void waitInvisibilities(String locatorName) {
+        List<WebElement> elements = getElements(locatorName);
+        getFluentWait().until(ExpectedConditions.invisibilityOfAllElements(elements));
+    }
+
+    public boolean isVisible(String locatorName) {
+        return getElement(locatorName).isDisplayed();
+    }
+
+    public boolean isEnabled(String locatorName) {
+        return getElement(locatorName).isEnabled();
+    }
+
+    public boolean isSelected(String locatorName) {
+        return getElement(locatorName).isSelected();
+    }
+
+    /**
+     * Method that verifies if the locator specific is present
+     *
+     * @param locatorName
+     * @return
+     */
+    public boolean isPresent(String locatorName) {
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        try {
+            getElement(locatorName);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        } finally {
+            driver.manage().timeouts().implicitlyWait(Constants.getWaitImlicitTimeout(), TimeUnit.SECONDS);
+        }
+    }
+
+    /**
+     * Select or deselect checkbox
+     *
+     * @param locatorName
+     * @param check
+     */
+    public void setCheckbox(String locatorName, boolean check) {
+        WebElement checkbox = waitClickable(locatorName);
+        boolean isSelected = checkbox.isSelected();
+        if (isSelected && !check) {
+            checkbox.click();
+        } else if (isSelected && check) {
+            checkbox.click();
+        }
     }
 
     /**
@@ -70,11 +274,10 @@ abstract public class PageBase {
      * @return web driver
      */
     public RemoteWebDriver getDriver() {
-    	
-    	if(driver == null) {
-    		initialize(DriverManager.getDriverInstance());
-    	}
-    	return driver;
+        if (driver == null) {
+            initialize(DriverManager.getDriverInstance());
+        }
+        return driver;
     }
 
     /**
@@ -95,16 +298,22 @@ abstract public class PageBase {
         return fluentWait;
     }
 
+
+    //>>>>> DEPRECATED
+
     /**
      * Method that obtains the element specific
      *
      * @param locator of the element; could be by xpath, id, name, etc
      * @return web element
+     * @deprecated use waitPresence(locatorName)
      */
+    @Deprecated
     public WebElement getWebElement(By locator) {
         return getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
+    @Deprecated
     public List<WebElement> getWebElements(By locator) {
         return getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
@@ -113,7 +322,9 @@ abstract public class PageBase {
      * Method that clicks the element specific
      *
      * @param locator of the element to be clickable
+     * @deprecated use click(String locatorName) method
      */
+    @Deprecated
     public void clickElement(By locator) {
         WebElement element = getWebElement(locator);
         clickElement(element);
@@ -123,7 +334,10 @@ abstract public class PageBase {
      * Method that clicks the element specific
      *
      * @param element to be clickable
+     * @deprecated
+     * use click(String locatorName) method
      */
+    @Deprecated()
     public void clickElement(WebElement element) {
         element.click();
     }
@@ -135,12 +349,15 @@ abstract public class PageBase {
      *
      * @param locator of the element to be completed
      * @param value   that i want to write in the field
+     * @deprecated use setInput(String locatorName, String value) method
      */
+    @Deprecated
     public void completeField(By locator, String value) {
         WebElement element = getWebElement(locator);
         completeField(element, value);
     }
 
+    @Deprecated
     public void completeField(WebElement element, String value) {
         clickElement(element);
         element.clear();
@@ -153,7 +370,9 @@ abstract public class PageBase {
      *
      * @param locator of the element to be completed
      * @param value   that i want to write in the field
+     * @deprecated use setInput(String locatorName, String value) method
      */
+    @Deprecated
     public void completeFieldWithoutClear(By locator, String value) {
         WebElement element = getWebElement(locator);
         clickElement(element);
@@ -166,17 +385,21 @@ abstract public class PageBase {
      *
      * @param locator of the element to be completed
      * @param value   that i want to write in the field
+     * @deprecated use setInput(String locatorName, String value) method
      */
+    @Deprecated
     public void completeFieldWithoutClick(By locator, String value) {
         WebElement element = getWebElement(locator);
         completeFieldWithoutClick(element, value);
     }
 
+    @Deprecated
     public void completeFieldWithoutClear(WebElement element, String value) {
         clickElement(element);
         element.sendKeys(value);
     }
 
+    @Deprecated
     public void completeFieldWithoutClick(WebElement element, String value) {
         element.clear();
         element.sendKeys(value);
@@ -186,12 +409,15 @@ abstract public class PageBase {
      * Method that get the text of a element.
      *
      * @param locator of the element to be completed
+     * @deprecated use getText(String locatorName)
      */
+    @Deprecated
     public String getElementText(By locator) {
         WebElement element = getWebElement(locator);
         return getElementText(element);
     }
 
+    @Deprecated
     public String getElementText(WebElement element) {
         return element.getText();
     }
@@ -200,12 +426,15 @@ abstract public class PageBase {
      * Method that get the attribute 'value' of a element, usually an input.
      *
      * @param locator of the element to be completed
+     * @deprecated use getAttribute(String locatorName, "value")
      */
+    @Deprecated
     public String getInputValue(By locator) {
         WebElement element = getWebElement(locator);
         return getInputValue(element);
     }
 
+    @Deprecated
     public String getInputValue(WebElement element) {
         return element.getAttribute("value");
     }
@@ -214,7 +443,9 @@ abstract public class PageBase {
      * Method that checks the option specific if it is not selected
      *
      * @param locator of the checkbox
+     * @deprecated use setCheckbox(locator, true)
      */
+    @Deprecated
     public void selectCheckbox(By locator) {
         WebElement checkbox = driver.findElement(locator);
         if (!checkbox.isSelected()) {
@@ -226,7 +457,9 @@ abstract public class PageBase {
      * Method that un checks the option specific if it is not unselected
      *
      * @param locator of the checkbox
+     * @deprecated use setCheckbox(locator, false)
      */
+    @Deprecated
     public void deselectCheckbox(By locator) {
         WebElement checkbox = driver.findElement(locator);
         if (checkbox.isSelected()) {
@@ -239,7 +472,9 @@ abstract public class PageBase {
      *
      * @param locator of the element specific
      * @return true if the element is present, false otherwise
+     * @deprecated use isPresent(locatorName)
      */
+    @Deprecated
     public boolean isElementPresent(By locator) {
         driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         try {
@@ -252,10 +487,12 @@ abstract public class PageBase {
         }
     }
 
+    @Deprecated
     public boolean isElementVisible(WebElement element) {
         return element.isDisplayed();
     }
 
+    @Deprecated
     public boolean isElementVisible(By locator) {
         return isElementVisible(getWebElement(locator));
     }
@@ -265,7 +502,9 @@ abstract public class PageBase {
      *
      * @param locator of the element specific
      * @return true if the element is present, false otherwise
+     * @deprecated use waitPresence(locatorName) and the isPresent(locatorName)
      */
+    @Deprecated
     public boolean waitAndCheckElementPresent(By locator) {
         try {
             getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -299,11 +538,14 @@ abstract public class PageBase {
      *
      * @param inputLocator
      * @return true if the input is empty, false otherwise
+     * @deprecated use getAttribute("value").isEmpty()
      */
+    @Deprecated
     public boolean isInputElementEmpty(By inputLocator) {
         return isInputElementEmpty(getWebElement(inputLocator));
     }
 
+    @Deprecated
     public boolean isInputElementEmpty(WebElement element) {
         return element.getAttribute("value").isEmpty();
     }
@@ -313,53 +555,64 @@ abstract public class PageBase {
      *
      * @param locator
      * @return true if the element is empty, false otherwise
+     * @deprecated use getText(locatorName).isEmpty()
      */
+    @Deprecated
     public boolean isElementEmpty(By locator) {
         return isElementEmpty(getWebElement(locator));
     }
 
+    @Deprecated
     public boolean isElementEmpty(WebElement element) {
         return element.getText().isEmpty();
     }
 
     /**
-     * Method that drag and drop some element over other element
-     *
-     * @param elementToDrag
-     * @param elementToReplace
-     */
-    public void dragAndDrop(WebElement elementToDrag, WebElement elementToReplace) {
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-
-        jse.executeScript("arguments[0].scrollIntoView()", elementToReplace);
-
-        new Actions(driver).dragAndDrop(elementToDrag, elementToReplace).perform();
-    }
-
-    /**
      * Wait until an element disappear
+     *
+     * @deprecated use waitInvisibility
      */
+    @Deprecated
     public void waitForElementDisappears(By locator) {
         getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     /**
      * Wait until an element is visible
+     *
+     * @deprecated use waitInvisibility
      */
+    @Deprecated
     public void waitForElementVisibility(By locator) {
         getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     /**
      * Wait until an element is not visible
+     *
+     * @deprecated use waitInvisibility
      */
+    @Deprecated
     public void waitForElementInvisibility(By locator) {
         getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     /**
-     * Wait until an element is presence
+     * Wait until an element is clickable
+     *
+     * @deprecated use waitInvisibility
      */
+    @Deprecated
+    public void waitForElementClickable(By locator) {
+        getFluentWait().until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    /**
+     * Wait until an element is presence
+     *
+     * @deprecated use waitInvisibility
+     */
+    @Deprecated
     public void waitForElementPresence(By locator) {
         getFluentWait().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
@@ -386,6 +639,7 @@ abstract public class PageBase {
         }
     }
 
+    @Deprecated
     public boolean isElementEnabled(WebElement element) {
         return element.isEnabled();
     }
@@ -394,12 +648,8 @@ abstract public class PageBase {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            System.out.println("Error in sleep: ".concat(e.getMessage()));
+            getLogger().error("Error in sleep: ".concat(e.getMessage()));
             e.printStackTrace();
         }
-    }
-
-    public Logger getLogger() {
-        return logger;
     }
 }

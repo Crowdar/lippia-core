@@ -1,7 +1,7 @@
 package com.crowdar.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.repackaged.com.google.common.base.Splitter;
+import com.google.common.base.Splitter;
 
 import java.util.Iterator;
 import java.util.Map;
