@@ -18,8 +18,10 @@ ADD . ${WORKSPACE}
 
 WORKDIR ${WORKSPACE}
 
-RUN mvn -B verify
-RUN mvn -B install
+RUN mvn -B -s settings.xml verify
+RUN mvn -B -s settings.xml install
+
+RUN rm settings.xml
 
 #.crt file in the same folder as your Dockerfile
 ARG CERT="../spv_cert/"
