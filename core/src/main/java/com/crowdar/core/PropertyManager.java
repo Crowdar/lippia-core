@@ -38,8 +38,7 @@ public class PropertyManager {
     }
 
     public static String getProperty(String propertyKey) {
-        String value = getProperties().getProperty(propertyKey);
-        return value;
+    	return getProperties().getProperty(propertyKey);
     }
 
     public static boolean isPropertyPresentAndNotEmpty(String propertyKey) {

@@ -14,31 +14,22 @@ ARG WORKSPACE="/opt/workspace/core"
 
 RUN mkdir -p ${WORKSPACE}
     
-COPY . ${WORKSPACE}
+ADD . ${WORKSPACE}
 
 WORKDIR ${WORKSPACE}
 
-<<<<<<< HEAD
 RUN mvn -B verify
 RUN mvn -B install
-=======
-RUN chmod +x entrypoint.sh
-RUN cp entrypoint.sh /entrypoint.sh
-
-RUN mvn -B -s settings.xml verify
-RUN mvn -B -s settings.xml install
->>>>>>> origin/master
 
 #.crt file in the same folder as your Dockerfile
-ARG CERT="reportserver-api.k8sds.gscorp.ad.cer"
+ARG CERT="../spv_cert/"
+ARG CERT_FILE="reportserver-api.k8sds.gscorp.ad.cer"
 
-RUN keytool -importcert -file spv_cert/$CERT -alias $CERT -cacerts -storepass changeit -noprompt
+#import cert into java
+COPY $CERT$CERT_FILE /opt/workdir/
+RUN keytool -importcert -file $CERT_FILE -alias $CERT_FILE -cacerts -storepass changeit -noprompt
 
 WORKDIR /
 
-<<<<<<< HEAD
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["mvn"] 
-=======
-CMD ["bash", "/entrypoint.sh"]
->>>>>>> origin/master
+CMD ["mvn"]
