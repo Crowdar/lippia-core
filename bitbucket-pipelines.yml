@@ -29,13 +29,15 @@ pipelines:
     master:              
       - step:
           name: Run all sample tests
-          image: docker/compose:latest
           services:
             - docker
           caches:
             - docker
           trigger: automatic
           script:
+            - apt-get update
+            - apt-get -y install python3-minimal python3-pip
+            - pip3 install docker-compose
             - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
             - VERSION=$PROJECT_VERSION docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - VERSION=$PROJECT_VERSION docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
