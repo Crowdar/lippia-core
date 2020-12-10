@@ -1,11 +1,6 @@
 image: maven:3.3.9-jdk-8
 
 pipelines:
-  default:
-    - step:
-       script:
-         - apt-get -y install python3-minimal python3-pip
-         - pip install docker-compose
 
   branches:
     release:
@@ -52,6 +47,8 @@ pipelines:
             - echo $PROJECT_VERSION
             - echo VERSION=$PROJECT_VERSION > .env 
             - cat .env
+            - apt-get -y install python3-minimal python3-pip
+            - pip install docker-compose            
             - docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f mobile-docker-compose.yml up -d hub samsung_s7_9_0
