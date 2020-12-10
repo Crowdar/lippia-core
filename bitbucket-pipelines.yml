@@ -47,9 +47,9 @@ pipelines:
             - echo VERSION=$PROJECT_VERSION >> .env 
             - echo BS_USER=$BS_USER >> .env 
             - echo BS_KEY=$BS_KEY >> .env 
+            - docker-compose -f mobile-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
-            - docker-compose -f mobile-sample-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             
       - step:
           name: Publish code to Github
