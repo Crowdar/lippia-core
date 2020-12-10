@@ -4,4 +4,5 @@ services:
        image: crowdar/lippia:${VERSION}
        environment:
             - GIT_REPO=https://github.com/Crowdar/Lippia-API-sample-project.git
-            - CUSTOM_COMMAND=mvn clean test -Dlippia.version=${VERSION}
+            - CUSTOM_COMMAND=mvn clean test
+            - VERSION=${VERSION}
