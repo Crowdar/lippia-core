@@ -1,14 +1,16 @@
 image: maven:3.3.9-jdk-8
 
 pipelines:
-  default:              
-    - step:
-       script:
-         - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
-
   branches:
+    release:
+      - step:
+          name: Extract lippia version
+          trigger: automatic
+          caches:
+            - maven # Cache any dependencies we download, speeds up build times.
+          script:
+            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
 
-    release:  
       - step:
           name: Build and deploy release artifact to private Nexus
           trigger: automatic
@@ -18,6 +20,7 @@ pipelines:
             - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
             - mvn -B -s settings.xml verify 
             - mvn -B -s settings.xml deploy 
+            
       - step:
           name: Build release artifact, build image and push to Dockerhub
           services:
@@ -30,7 +33,15 @@ pipelines:
             - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
             - docker push crowdar/lippia:$PROJECT_VERSION
 
-    master:              
+    master:
+      - step:
+          name: Extract lippia version
+          trigger: automatic
+          caches:
+            - maven # Cache any dependencies we download, speeds up build times.
+          script:
+            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
+            
       - step:
           name: Run all sample tests
           image: docker/compose
