@@ -49,8 +49,6 @@ pipelines:
             - echo BS_KEY=$BS_KEY >> .env 
             - docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
-            - docker-compose -f mobile-docker-compose.yml up -d hub samsung_s7_9_0
-            - sleep 1m
             - docker-compose -f mobile-sample-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             
       - step:
