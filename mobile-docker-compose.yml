@@ -4,7 +4,7 @@ services:
        image: crowdar/lippia:${VERSION}
        environment:
             - GIT_REPO=https://github.com/Crowdar/lippia-mobile-sample-project.git
-            - CUSTOM_COMMAND=mvn clean test -PBrowserStack,Android -Dcrowdar.driverHub=https://${BS_USER}:${BS_KEY}@hub-cloud.browserstack.com/wd/hub
+            - CUSTOM_COMMAND=mvn clean test -PBrowserStack,Android -Dcrowdar.driverHub=https://${BS_USER}:${BS_KEY}@hub-cloud.browserstack.com/wd/hub -Dcrowdar.appLocation=bs://123e0b4ce2f64d5c359a2cd446d92b2f08355149
             - VERSION=${VERSION}
             
 volumes:
