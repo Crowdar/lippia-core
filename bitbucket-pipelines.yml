@@ -41,6 +41,7 @@ pipelines:
           trigger: automatic
           script:
             - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
+            - echo $PROJECT_VERSION
 
       - step:
           name: Run all sample tests
