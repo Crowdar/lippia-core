@@ -25,6 +25,9 @@ WORKDIR ${WORKSPACE}
 RUN chmod +x entrypoint.sh
 RUN cp entrypoint.sh /entrypoint.sh
 
+RUN curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
+
 RUN mvn -B verify
 RUN mvn -B install
 RUN mvn versions:update-parent
