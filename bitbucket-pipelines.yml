@@ -1,6 +1,15 @@
 image: maven:3.3.9-jdk-8
 
 pipelines:
+  default:              
+    - step:
+      name: Run all sample tests
+          services:
+            - docker
+          trigger: automatic
+          script:
+            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
+
   branches:
 
     release:  
@@ -21,7 +30,6 @@ pipelines:
           caches:
             - maven # Cache any dependencies we download, speeds up build times.
           script:
-            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
             - docker build --no-cache -t crowdar/lippia:$PROJECT_VERSION .
             - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
             - docker push crowdar/lippia:$PROJECT_VERSION
@@ -36,7 +44,6 @@ pipelines:
             - docker
           trigger: automatic
           script:
-            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
             - echo VERSION=$PROJECT_VERSION > .env 
             - docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
