@@ -4,4 +4,6 @@ services:
        image: crowdar/lippia:${VERSION}
        environment:
             - GIT_REPO=https://github.com/Crowdar/lippia-web-sample-project.git
-            - CUSTOM_COMMAND=mvn clean test -PLocalHeadless -Dcucumber.tags=@Smoke -Dlippia.version=${VERSION}
+            - CUSTOM_COMMAND=mvn clean test -PLocalHeadless -Dcucumber.tags=@Smoke
+            - VERSION=${VERSION}
+            
