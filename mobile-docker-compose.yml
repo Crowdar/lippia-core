@@ -31,6 +31,8 @@ services:
             - apk_volume:/code-directory
        environment:
             - GIT_REPO=https://github.com/Crowdar/lippia-mobile-sample-project.git
-            - CUSTOM_COMMAND=mvn clean test -PStackLocal,Android -Dlippia.version=${VERSION} -Dcrowdar.gridhub=http://hub:4444/wd/hub
+            - CUSTOM_COMMAND=mvn clean test -PStackLocal,Android -Dcrowdar.driverHub=http://hub:4444/wd/hub
+            - VERSION=${VERSION}
+            
 volumes:
   apk_volume: {}
