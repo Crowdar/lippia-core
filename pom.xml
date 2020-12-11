@@ -357,7 +357,7 @@
 						<configuration>
 						  <source>8</source>
 					      <detectJavaApiLink>false</detectJavaApiLink>
-						  <additionalOptions>-Xdoclint:none</additionalOptions>
+						  <doclint>none</doclint>
 						   
 						</configuration>
 						<executions>
