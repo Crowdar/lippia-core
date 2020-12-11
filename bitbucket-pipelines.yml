@@ -1,4 +1,4 @@
-image: crowdar/lippia:3.2.3.1
+image: maven:3.3.9-jdk-8
 
 pipelines:
 
