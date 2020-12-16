@@ -1,4 +1,4 @@
-image: crowdar/lippia:3.2.3.1
+image: crowdar/pipeline:1.0
 
 pipelines:
 
