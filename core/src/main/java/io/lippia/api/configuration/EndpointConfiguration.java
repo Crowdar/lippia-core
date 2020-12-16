@@ -1,7 +1,13 @@
 package io.lippia.api.configuration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.crowdar.core.PropertyManager;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.TagType;
+import com.github.jknack.handlebars.Template;
 
 public class EndpointConfiguration {
 
@@ -104,4 +110,10 @@ public class EndpointConfiguration {
 		getInstance().getHeaders().put(key, value);		
 		return getInstance();
 	}
+	
+	public static EndpointConfiguration replaceOnBody(String key, String value) {
+		getInstance().setBody(getInstance().getBody().replace("{{" + key + "}}", value));	
+		return getInstance();
+	}
+	
 }
