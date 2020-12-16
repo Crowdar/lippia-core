@@ -5,14 +5,6 @@ pipelines:
   branches:
     release:
       - step:
-          name: Extract lippia version
-          trigger: automatic
-          caches:
-            - maven # Cache any dependencies we download, speeds up build times.
-          script:
-            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
-
-      - step:
           name: Build and deploy release artifact to private Nexus
           trigger: automatic
           caches:
@@ -30,6 +22,7 @@ pipelines:
           caches:
             - maven # Cache any dependencies we download, speeds up build times.
           script:
+            - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
             - docker build --no-cache -t crowdar/lippia:$PROJECT_VERSION .
             - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
             - docker push crowdar/lippia:$PROJECT_VERSION
