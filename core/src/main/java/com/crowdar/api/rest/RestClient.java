@@ -1,12 +1,6 @@
 package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
-import com.crowdar.core.PropertyManager;
-
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.TrustStrategy;
 import org.apache.log4j.Logger;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -22,18 +16,10 @@ import org.testng.Assert;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.SSLContext;
 
 public class RestClient {
 
@@ -49,57 +35,21 @@ public class RestClient {
     }
 
     public RestClient() {
-        try {
-			setRestTemplate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        setRestTemplate(new RestTemplate(new HttpComponentsClientHttpRequestFactory()));
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.ALL));
-        messageConverters.add(mappingJackson2HttpMessageConverter);
-        messageConverters.add(new StringHttpMessageConverter(getCharset()));
 
+        messageConverters.add(mappingJackson2HttpMessageConverter);
+        messageConverters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
     }
 
-    private Charset getCharset() {
-    	
-    	if(!PropertyManager.isPropertyPresentAndNotEmpty("com.crowdar.charset")) {
-    		return StandardCharsets.UTF_8;
-    	}
-    	
-    	String configCharset = PropertyManager.getProperty("com.crowdar.charset");
-        		
-    	return Charset.forName(configCharset);
-	}
-
-	private static RestTemplate getRestTemplate() {
+    private static RestTemplate getRestTemplate() {
         return restTemplate;
     }
 
-    private static void setRestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-    	
-    	Security.setProperty("jdk.tls.disabledAlgorithms", "");   	
-    	Security.setProperty("jdk.certpath.disabledAlgorithms", "");
-    	
-    	TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-
-        SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
-                        .loadTrustMaterial(null, acceptingTrustStrategy)
-                        .build();
-
-        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-
-        CloseableHttpClient httpClient = HttpClients.custom()
-                        .setSSLSocketFactory(csf)
-                        .build();
-
-        HttpComponentsClientHttpRequestFactory requestFactory =
-                        new HttpComponentsClientHttpRequestFactory();
-
-        requestFactory.setHttpClient(httpClient);
-        
-        restTemplate = new RestTemplate(requestFactory);
+    private static void setRestTemplate(RestTemplate newRestTemplate) {
+        restTemplate = newRestTemplate;
     }
 
     private void setRequestHeaders(Map<String, String> headers) {
