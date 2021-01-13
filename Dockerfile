@@ -10,6 +10,10 @@ RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable 
 RUN apt-get -y update
 RUN apt-get install -y google-chrome-stable
 
+#install firefox
+RUN mkdir -p opt/firefox_headless && cd opt/firefox_headless && wget https://ftp.mozilla.org/pub/firefox/releases/57.0/linux-x86_64/en-US/firefox-57.0.tar.bz2 && tar -xjf firefox-57.0.tar.bz2 && rm firefox-57.0.tar.bz2
+ENV FIREFOX_BIN=opt/firefox_headless/firefox/firefox
+
 ARG WORKSPACE="/opt/workspace/core"
 
 RUN mkdir -p ${WORKSPACE}
