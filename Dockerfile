@@ -14,6 +14,10 @@ RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
 RUN apt-get install -y libsystemd0 libudev1 
 RUN apt install -y ./google-chrome-stable_current_amd64.deb
 
+#install firefox
+RUN mkdir -p opt/firefox_headless && cd opt/firefox_headless && wget https://ftp.mozilla.org/pub/firefox/releases/57.0/linux-x86_64/en-US/firefox-57.0.tar.bz2 && tar -xjf firefox-57.0.tar.bz2 && rm firefox-57.0.tar.bz2
+ENV FIREFOX_BIN=opt/firefox_headless/firefox/firefox
+
 ARG WORKSPACE="/opt/workspace/core"
 
 RUN mkdir -p ${WORKSPACE}

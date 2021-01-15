@@ -36,6 +36,7 @@ pipelines:
             - docker
           trigger: automatic
           script:
+            - mvn versions:set -DremoveSnapshot
             - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
             - echo VERSION=$PROJECT_VERSION >> .env 
             - echo BS_USER=$BS_USER >> .env 
@@ -62,5 +63,6 @@ pipelines:
             - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
             - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d -md sha256
             - gpg --batch --import private-key.gpg
+            - mvn versions:set -DremoveSnapshot
             - mvn -P ossrh -B -s settings.xml verify
             - mvn -P ossrh -B -s settings.xml deploy
