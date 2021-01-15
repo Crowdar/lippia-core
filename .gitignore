@@ -72,3 +72,5 @@ core/.classpath
 .project
 core/.settings
 video-samsung_s7_9
+/release.properties
+/pom.xml.versionsBackup
