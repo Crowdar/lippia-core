@@ -19,12 +19,12 @@ public class MobileActionManager extends ActionManager {
     public static void setInput(String locatorName, String value, String placeholder) {
         String elementText = getText(locatorName);
         boolean clear = !elementText.equals(placeholder);
-        setInput(locatorName, value, true, clear);
+        setInput(locatorName, value, Boolean.TRUE, clear);
     }
 
     public static void clickOptionSpinner(String spinnerLocatorName, String option) {
         click(spinnerLocatorName);
-        clickOptionSpinner(option, false);
+        clickOptionSpinner(option, Boolean.FALSE);
     }
 
     public static void clickOptionSpinner(String spinnerLocatorName, String option, boolean startWith) {
@@ -34,13 +34,13 @@ public class MobileActionManager extends ActionManager {
 
     public static void clickOptionSpinner(String spinnerLocator, String option, String filterLocator, String filter) {
         click(spinnerLocator);
-        setInput(filterLocator, filter, true, true);
-        clickOptionSpinner(option, false);
+        setInput(filterLocator, filter, Boolean.TRUE, Boolean.TRUE);
+        clickOptionSpinner(option, Boolean.FALSE);
     }
 
     public static void clickOptionSpinner(String spinnerLocator, String option, String filterLocator, String filter, boolean startWith) {
         click(spinnerLocator);
-        setInput(filterLocator, filter, true, true);
+        setInput(filterLocator, filter, Boolean.TRUE, Boolean.TRUE);
         clickOptionSpinner(option, startWith);
     }
 
