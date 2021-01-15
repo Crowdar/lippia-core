@@ -6,7 +6,7 @@
 
 	<groupId>io.lippia</groupId>
 	<artifactId>root</artifactId>
-	<version>3.2.2</version>
+	<version>3.2.3.3-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<url>http://lippia.io</url>
@@ -69,6 +69,7 @@
 		<meta.filter></meta.filter>
 		<spring-framework.version>4.3.8.RELEASE</spring-framework.version>
 		<jira.client.version>4.0.0</jira.client.version>
+		<jackson-version>2.9.10</jackson-version>
 	</properties>
 
 	<modules>
@@ -173,17 +174,23 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.9.10</version>
+			<version>${jackson-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.10.5</version>
+			<version>${jackson-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.9.10</version>
+			<version>${jackson-version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-xml</artifactId>
+			<version>${jackson-version}</version>
 		</dependency>
 
 		<dependency>
@@ -215,6 +222,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>27.0-jre</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>5.9.0</version>
 		</dependency>
 
 		<dependency>
@@ -274,6 +287,7 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>net.masterthought</groupId>
 				<artifactId>maven-cucumber-reporting</artifactId>
@@ -298,6 +312,16 @@
 			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
 				<version>3.2.0</version> <executions> <execution> <id>attach-javadocs</id> 
 				<goals> <goal>jar</goal> </goals> </execution> </executions> </plugin> -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<configuration>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -354,7 +378,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -362,6 +386,12 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
+								 <configuration>
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>

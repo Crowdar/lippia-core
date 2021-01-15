@@ -5,10 +5,14 @@ if [[ ${GIT_REPO} ]]; then
   cd code-directory
 fi 
 
+if [[ ${VERSION} ]]; then
+  echo "Updating parent version to ${VERSION}"
+  mvn versions:update-parent -DparentVersion=[${VERSION}]
+fi 
+
 if [[ ${CUSTOM_COMMAND} ]]; then
   echo "Running custom Command ${CUSTOM_COMMAND}"
   ${CUSTOM_COMMAND}
 else
   mvn clean test
 fi 
-

@@ -69,20 +69,22 @@ public class LocatorManager {
         }
     }
 
-    public static By getLocator(String locatorName) {
+    public static By getLocator(String locatorName, String ... locatorReplacementArgs) {
         try {
-            String[] locatorProperty = getProperty(locatorName).split(":");
-            return getLocatorInEnum(locatorProperty);
+        	String prop = getProperty(locatorName);
+            String[] locatorProperty = prop.split(":");
+            return getLocatorInEnum(locatorProperty, locatorReplacementArgs);
         } catch (NullPointerException e){
             Logger.getLogger(LocatorManager.class).error(e.getMessage());
             throw new RuntimeException(String.format("Locator property %s was not found", locatorName));
         }
     }
 
-    private static By getLocatorInEnum(String[] locatorProperty) {
+    private static By getLocatorInEnum(String[] locatorProperty, String ... locatorReplacementArgs) {
         try {
             String type = locatorProperty[0].toUpperCase();
-            String value = locatorProperty[1];
+            
+            String value = String.format(locatorProperty[1], locatorReplacementArgs);
             return LocatorTypesEnum.get(type).getLocator(value);
         } catch (IndexOutOfBoundsException e) {
             Logger.getLogger(LocatorManager.class).error(e.getMessage());
