@@ -14,9 +14,8 @@ public class CallerService {
 	public static String call(EndpointConfiguration config) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
 		
 		String methodName = config.getHttConfiguration().getMethod();
-		Class<SimplifyMethodService> clazz = SimplifyMethodService.class;
 		            
-		clazz.getMethod(methodName.toLowerCase(), Request.class).invoke("", getRequest(config));
+		config.getMethodService().getClazz().getMethod(methodName.toLowerCase(), Request.class).invoke("", getRequest(config));
         
 		return (String) APIManager.getLastResponse().getResponse();
 	}

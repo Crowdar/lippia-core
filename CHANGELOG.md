@@ -1,12 +1,18 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.3.4 (22/01/2021)
+* Methodservicea abstraction to configure specifics strategies between with or with out ssl verification.
+* MethodServiceEnum to set that strategy
+* add methodServiceEnum as part of EndpointConfiguration.
+
 ## 3.2.3.3 (15/01/2021)
 * Adding firefox support to dockerfile
 * improve locator manager by adding String ... args to be replaced in properties.  "%s" in propertie values it will be replaced by recivided args
 
 
 ##  completar las versiones faltantes.
+
 
 ## 3.2.2 (08/09/2020)
 * Remove firebase, angular dependencies

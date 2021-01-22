@@ -1,13 +1,9 @@
 package io.lippia.api.configuration;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.crowdar.core.PropertyManager;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.TagType;
-import com.github.jknack.handlebars.Template;
+import io.lippia.api.service.MethodServiceEnum;
 
 public class EndpointConfiguration {
 
@@ -18,7 +14,19 @@ public class EndpointConfiguration {
 	private Map<String, String> headers;
 	private String body;
 	private String tokenPath;
+	private MethodServiceEnum methodService; 
 	
+	public MethodServiceEnum getMethodService() {
+		if(methodService==null) {
+			return MethodServiceEnum.DEFAULT;
+		}
+		return methodService;
+	}
+
+	public void setMethodService(MethodServiceEnum methodService) {
+		this.methodService = methodService;
+	}
+
 	public String getTokenPath() {
 		return tokenPath;
 	}
