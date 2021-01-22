@@ -124,4 +124,9 @@ public class EndpointConfiguration {
 		return getInstance();
 	}
 	
+	public static EndpointConfiguration methodService(MethodServiceEnum methodServiceEnum) {
+		getInstance().setMethodService(methodServiceEnum);	
+		return getInstance();
+	}
+	
 }
