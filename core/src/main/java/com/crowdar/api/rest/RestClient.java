@@ -33,8 +33,20 @@ public class RestClient {
         }
         return restClient;
     }
+    
+    public static RestClient getRestClient(RestTemplate restTemplate) {
+        if (restClient == null) {
+            restClient = new RestClient();
+            RestClient.setRestTemplate(restTemplate);
+        }
+        return restClient;
+    }
 
-    public RestClient() {
+    public static void purge() {
+    	RestClient.setRestTemplate(null);
+    }
+    
+    private RestClient() {
         setRestTemplate(new RestTemplate(new HttpComponentsClientHttpRequestFactory()));
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();

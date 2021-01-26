@@ -98,7 +98,20 @@ public class MethodsServiceTest extends PowerMockTestCase {
 		
 	}
 	
-    @Test
+	@Test
+	public void whenCallSomeApiWithRestClientAndGetMethod() throws Exception{
+		Response responseFromStaticMethod = MethodsService.get(request, Response.class, restClient);
+		Mockito.verify(restClient, Mockito.times(1)).get(
+				"http://test.test", 
+				Response.class, 
+				request.getBody().toString(), 
+				request.getUrlParameters(), 
+				request.getHeaders());
+		Assert.assertTrue(response.equals(responseFromStaticMethod));
+		Assert.assertTrue(APIManager.getLastResponse().equals(response));
+	}
+
+	@Test
 	public void whenCallSomeApiWithGetMethod() throws Exception{
 		Response responseFromStaticMethod = MethodsService.get(request, Response.class);
 		Mockito.verify(restClient, Mockito.times(1)).get(
@@ -124,6 +137,19 @@ public class MethodsServiceTest extends PowerMockTestCase {
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
+
+    @Test
+    public void whenCallSomeApiWithRestClientAndPostMethod() throws Exception{
+    	Response responseFromStaticMethod = MethodsService.post(request, Response.class, restClient);
+    	Mockito.verify(restClient, Mockito.times(1)).post(
+    			"http://test.test", 
+    			Response.class, 
+    			request.getBody().toString(), 
+    			request.getUrlParameters(), 
+    			request.getHeaders());
+    	Assert.assertTrue(response.equals(responseFromStaticMethod));
+    	Assert.assertTrue(APIManager.getLastResponse().equals(response));
+    }
     
     @Test
 	public void whenCallSomeApiWithPatchMethod() throws Exception{
@@ -137,6 +163,19 @@ public class MethodsServiceTest extends PowerMockTestCase {
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
+
+    @Test
+    public void whenCallSomeApiWithRestClientAndPatchMethod() throws Exception{
+    	Response responseFromStaticMethod = MethodsService.patch(request, Response.class, restClient);
+    	Mockito.verify(restClient, Mockito.times(1)).patch(
+    			"http://test.test", 
+    			Response.class, 
+    			request.getBody().toString(), 
+    			request.getUrlParameters(), 
+    			request.getHeaders());
+    	Assert.assertTrue(response.equals(responseFromStaticMethod));
+    	Assert.assertTrue(APIManager.getLastResponse().equals(response));
+    }
     
     @Test
 	public void whenCallSomeApiWithDeleteMethod() throws Exception{
@@ -150,6 +189,19 @@ public class MethodsServiceTest extends PowerMockTestCase {
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
+
+    @Test
+    public void whenCallSomeApiWithRestClientAndDeleteMethod() throws Exception{
+    	Response responseFromStaticMethod = MethodsService.delete(request, Response.class, restClient);
+    	Mockito.verify(restClient, Mockito.times(1)).delete(
+    			"http://test.test", 
+    			Response.class, 
+    			request.getBody().toString(), 
+    			request.getUrlParameters(), 
+    			request.getHeaders());
+    	Assert.assertTrue(response.equals(responseFromStaticMethod));
+    	Assert.assertTrue(APIManager.getLastResponse().equals(response));
+    }
     
     @Test
 	public void whenCallSomeApiWithPutMethod() throws Exception{
@@ -163,5 +215,18 @@ public class MethodsServiceTest extends PowerMockTestCase {
 		Assert.assertTrue(response.equals(responseFromStaticMethod));
 		Assert.assertTrue(APIManager.getLastResponse().equals(response));
 	}
+
+    @Test
+    public void whenCallSomeApiWithRestClientAndPutMethod() throws Exception{
+    	Response responseFromStaticMethod = MethodsService.put(request, Response.class, restClient);
+    	Mockito.verify(restClient, Mockito.times(1)).put(
+    			"http://test.test", 
+    			Response.class, 
+    			request.getBody().toString(), 
+    			request.getUrlParameters(), 
+    			request.getHeaders());
+    	Assert.assertTrue(response.equals(responseFromStaticMethod));
+    	Assert.assertTrue(APIManager.getLastResponse().equals(response));
+    }
 
 }
