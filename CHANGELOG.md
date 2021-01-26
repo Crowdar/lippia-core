@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 * Methodservicea abstraction to configure specifics strategies between with or with out ssl verification.
 * MethodServiceEnum to set that strategy
 * add methodServiceEnum as part of EndpointConfiguration.
+* MethodService junit coverage
 
 ## 3.2.3.3 (15/01/2021)
 * Adding firefox support to dockerfile
