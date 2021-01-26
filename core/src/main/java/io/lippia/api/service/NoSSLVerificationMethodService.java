@@ -17,11 +17,35 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import com.crowdar.api.rest.MethodsService;
+import com.crowdar.api.rest.Request;
+import com.crowdar.api.rest.Response;
 import com.crowdar.api.rest.RestClient;
 
-public class NoSSLVerificationMethodService extends SimplifyMethodService{
+public class NoSSLVerificationMethodService extends MethodsService{
 	
-   public static RestClient getRestClient() {
+	public static Response get(Request request) {
+		return MethodsService.get(request, String.class, getNoSslVerificationRestClient());
+	}
+	
+	public static Response post(Request request) {
+		return post(request, String.class, getNoSslVerificationRestClient() );
+	}
+	
+	public static Response put(Request request) {
+		return put(request, String.class, getNoSslVerificationRestClient());
+	}
+	
+	public static Response patch(Request request) {
+		return patch(request, String.class, getNoSslVerificationRestClient());
+	}
+	
+	public static Response delete(Request request) {
+		return delete(request, String.class, getNoSslVerificationRestClient());
+	}
+
+	
+   private static RestClient getNoSslVerificationRestClient() {
 
 	   TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
 		
@@ -45,5 +69,5 @@ public class NoSSLVerificationMethodService extends SimplifyMethodService{
 	 
 	   return RestClient.getRestClient(new RestTemplate(requestFactory));
     }
-
+   
 }

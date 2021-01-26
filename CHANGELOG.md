@@ -1,6 +1,11 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.3.5 (26/01/2021)
+* #FIX methodService and NosslVerification. Wrong behavior at nosslVerification strategy.  
+* MethodService junit coverage
+
+
 ## 3.2.3.4 (22/01/2021)
 * Methodservicea abstraction to configure specifics strategies between with or with out ssl verification.
 * MethodServiceEnum to set that strategy
