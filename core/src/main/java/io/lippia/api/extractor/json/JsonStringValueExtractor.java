@@ -25,7 +25,7 @@ public class JsonStringValueExtractor {
 				return jsonObject.getString(once[0]);
 			}
 			
-			jsonString = jsonObject.getJSONObject(once[1]).toString();
+			jsonString = jsonObject.getJSONObject(once[i]).toString();
 		}
 		return jsonString;
 	}
