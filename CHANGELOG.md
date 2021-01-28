@@ -1,6 +1,9 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.3.4 (28/01/2021)
+*BUGFIX index out of bound exception JsonStringFormatter
+
 ## 3.2.3.4 (22/01/2021)
 * Methodservicea abstraction to configure specifics strategies between with or with out ssl verification.
 * MethodServiceEnum to set that strategy
