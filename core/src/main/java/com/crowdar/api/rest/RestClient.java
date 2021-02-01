@@ -104,9 +104,6 @@ public class RestClient {
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             Logger.getLogger(this.getClass()).info(">>>Error Response: " + e.toString());
             Object responseBody = JsonUtils.deserialize(e.getResponseBodyAsString(), type);
-            if(responseBody == null){
-                Assert.fail("Cannot cast error response in: " + type.getName() + ". Actual response: " + e.getStatusCode().value() + ", " + e.getResponseBodyAsString());
-            }
             return this.createResponse(e.getStatusCode().value(), e.getLocalizedMessage(), responseBody, createResponseHeaders(e.getResponseHeaders()));
         }
     }
