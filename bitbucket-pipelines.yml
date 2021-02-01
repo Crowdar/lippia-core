@@ -36,12 +36,11 @@ pipelines:
             - docker
           trigger: automatic
           script:
-            - mvn versions:set -DremoveSnapshot
             - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
             - echo VERSION=$PROJECT_VERSION >> .env 
             - echo BS_USER=$BS_USER >> .env 
             - echo BS_KEY=$BS_KEY >> .env 
-            - docker-compose -f mobile-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
+            #- docker-compose -f mobile-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             - docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
             
