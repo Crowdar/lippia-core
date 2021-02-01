@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file.
 ## 3.2.3.6 (01/02/2021)
 * RestClient Remove empty response validation.
 
-## 3.2.3.5 (01/02/2021)
+## 3.2.3.5 (28/01/2021)
 * JsonStringValueExtractor #BUGFIX index out of bound exception
 
 ## 3.2.3.4 (22/01/2021)
-* Methodservicea abstraction to configure specifics strategies between with or with out ssl verification.
+* MethodService abstraction to configure specifics strategies between with or with out ssl verification.
 * MethodServiceEnum to set that strategy
 * add methodServiceEnum as part of EndpointConfiguration.
 * MethodService junit coverage
