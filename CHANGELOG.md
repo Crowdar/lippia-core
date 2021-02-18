@@ -1,6 +1,13 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## 3.2.3.7 (17/02/2021)
+* Fix getElementByParent and getElementsByParent in ActionManager
+* Change locator manager strategy to work directly with constants
+    -replace in methods parameter String locatorName to String locatorElement
+    -delete methods working with properties in LocatorManager 
+    -modify getLocator() to receive String from constant
+
 ## 3.2.3.6 (01/02/2021)
 * RestClient Remove empty response validation.
 

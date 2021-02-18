@@ -17,12 +17,12 @@ import java.util.List;
  */
 public class WebActionManager extends ActionManager {
     
-    public static void click(String locatorName, String ... locatorReplacementValue) {
-    	click(locatorName, true, locatorReplacementValue);
+    public static void click(String locatorElement, String ... locatorReplacementValue) {
+    	click(locatorElement, true, locatorReplacementValue);
     }
 
-    public static void click(String locatorName, Boolean scroll, String ... locatorReplacementValue){
-    	WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void click(String locatorElement, Boolean scroll, String ... locatorReplacementValue){
+    	WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
     	click(element, scroll);
     }
 
@@ -44,13 +44,6 @@ public class WebActionManager extends ActionManager {
 
     public static void maximizeWindow() {
         DriverManager.getDriverInstance().manage().window().maximize();
-    }
-
-    /**
-     * Method is used to navigated to page complete url
-     */
-    public static void navigateToURL(String url) {
-        DriverManager.getDriverInstance().get(url);
     }
 
     /**
@@ -95,13 +88,13 @@ public class WebActionManager extends ActionManager {
         dropdown.selectByVisibleText(text);
     }
 
-    public static void setDropdownByText(String locatorName, String text, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void setDropdownByText(String locatorElement, String text, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         setDropdownByText(element, text);
     }
 
-    public static void setDropdownByValue(String locatorName, String text, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void setDropdownByValue(String locatorElement, String text, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         setDropdownByValue(element, text);
     }
 
@@ -110,8 +103,8 @@ public class WebActionManager extends ActionManager {
         dropdown.selectByValue(value);
     }
 
-    public static void setDropdownByVisibleText(String locatorName, String text, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void setDropdownByVisibleText(String locatorElement, String text, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         setDropdownByVisibleText(element, text);
     }
 
@@ -120,8 +113,8 @@ public class WebActionManager extends ActionManager {
         dropdown.selectByVisibleText(value);
     }
 
-    public static void setDropdownByIndex(String locatorName, Integer index, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void setDropdownByIndex(String locatorElement, Integer index, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         setDropdownByIndex(element, index);
     }
 
@@ -130,8 +123,8 @@ public class WebActionManager extends ActionManager {
         dropdown.selectByIndex(index);
     }
 
-    public static WebElement getDropdownSelectedOption(String locatorName, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static WebElement getDropdownSelectedOption(String locatorElement, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         return getDropdownSelectedOption(element);
     }
 
@@ -140,8 +133,8 @@ public class WebActionManager extends ActionManager {
         return dropdown.getFirstSelectedOption();
     }
 
-    public static List<WebElement> getDropdownAllSelectedOptions(String locatorName, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static List<WebElement> getDropdownAllSelectedOptions(String locatorElement, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         return getDropdownAllSelectedOptions(element);
     }
 
@@ -155,8 +148,8 @@ public class WebActionManager extends ActionManager {
         dropdown.deselectAll();
     }
 
-    public static void deselectDropdownAll(String locatorName, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void deselectDropdownAll(String locatorElement, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         deselectDropdownAll(element);
     }
 
@@ -165,8 +158,8 @@ public class WebActionManager extends ActionManager {
         dropdown.deselectByValue(value);
     }
 
-    public static void deselectDropdownByValue(String locatorName, String value, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void deselectDropdownByValue(String locatorElement, String value, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         deselectDropdownByValue(element, value);
     }
 
@@ -175,8 +168,8 @@ public class WebActionManager extends ActionManager {
         dropdown.deselectByValue(text);
     }
 
-    public static void deselectDropdownByText(String locatorName, String value, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void deselectDropdownByText(String locatorElement, String value, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         deselectDropdownByText(element, value);
     }
 
@@ -185,8 +178,8 @@ public class WebActionManager extends ActionManager {
         dropdown.deselectByIndex(index);
     }
 
-    public static void deselectDropdownByIndex(String locatorName, int index, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void deselectDropdownByIndex(String locatorElement, int index, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         deselectDropdownByIndex(element, index);
     }
 
