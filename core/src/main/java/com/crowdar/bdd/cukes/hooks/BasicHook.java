@@ -20,16 +20,6 @@ public class BasicHook {
 		Logger.getLogger(this.getClass()).info("------ Starting -----" + scenario.getName() + "-----");
 	}
 	
-	@BeforeStep
-	public void beforeStep(Scenario scenario) {
-
-	}
-
-    @AfterStep
-    public void afterStep(Scenario scenario) {
-    	
-    }
-	
 	@After()
 	public void afterScenario(Scenario scenario) throws IllegalAccessException, NoSuchFieldException {
 		Logger.getLogger(this.getClass()).info("------ Ending -----" + scenario.getName() + "-----");
