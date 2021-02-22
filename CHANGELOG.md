@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
     -replace in methods parameter String locatorName to String locatorElement
     -delete methods working with properties in LocatorManager 
     -modify getLocator() to receive String from constant
+    - remove before/after step from basicHook
 
 ## 3.2.3.6 (01/02/2021)
 * RestClient Remove empty response validation.
