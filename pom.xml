@@ -6,7 +6,7 @@
 
 	<groupId>io.lippia</groupId>
 	<artifactId>root</artifactId>
-	<version>3.2.3.6-SNAPSHOT</version>
+	<version>3.2.3.7-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<url>http://lippia.io</url>
@@ -318,7 +318,7 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>3.0.0-M1</version>
 				<configuration>
-					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<tagNameFormat>${project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
 

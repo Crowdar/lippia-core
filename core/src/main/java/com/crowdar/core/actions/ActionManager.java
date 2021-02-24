@@ -54,10 +54,10 @@ public abstract class ActionManager {
     /**
      * Click the element provided by the locator name
      *
-     * @param locatorName
+     * @param locatorElement
      */
-    public static void click(String locatorName, String ... locatorReplacementValue) {
-        WebElement element = waitClickable(locatorName, locatorReplacementValue);
+    public static void click(String locatorElement, String ... locatorReplacementValue) {
+        WebElement element = waitClickable(locatorElement, locatorReplacementValue);
         click(element);
     }
 
@@ -69,34 +69,34 @@ public abstract class ActionManager {
      * Set element input with a value provided by the locator name
      * Default: not click and not clear the input element
      *
-     * @param locatorName
+     * @param locatorElement
      * @param value
      */
-    public static void setInput(String locatorName, String value, String ... locatorReplacementValue) {
-        setInput(locatorName, value, Boolean.FALSE, Boolean.FALSE, locatorReplacementValue);
+    public static void setInput(String locatorElement, String value, String ... locatorReplacementValue) {
+        setInput(locatorElement, value, Boolean.FALSE, Boolean.FALSE, locatorReplacementValue);
     }
 
     /**
      * Set element input with a value provided by the locator name
      *
-     * @param locatorName
+     * @param locatorElement
      * @param value
      * @param clickAndClear true: click and clear the input element, false: don't click and don't clear the input element
      */
-    public static void setInput(String locatorName, String value, Boolean clickAndClear, String ... locatorReplacementValue) {
-        setInput(locatorName, value, clickAndClear, clickAndClear, locatorReplacementValue);
+    public static void setInput(String locatorElement, String value, Boolean clickAndClear, String ... locatorReplacementValue) {
+        setInput(locatorElement, value, clickAndClear, clickAndClear, locatorReplacementValue);
     }
 
     /**
      * Set element input with a value provided by the locator name
      *
-     * @param locatorName
+     * @param locatorElement
      * @param value
      * @param click       true: click the input element, false: don't click the input element
      * @param clear       true: clear the input element, false: don't clear the input element
      */
-    public static void setInput(String locatorName, String value, Boolean click, Boolean clear, String ... locatorReplacementValue) {
-        WebElement element = waitVisibility(locatorName, locatorReplacementValue);
+    public static void setInput(String locatorElement, String value, Boolean click, Boolean clear, String ... locatorReplacementValue) {
+        WebElement element = waitVisibility(locatorElement, locatorReplacementValue);
         setInput(element, value, click, clear);
     }
 
@@ -113,23 +113,23 @@ public abstract class ActionManager {
     /**
      * Returns element text
      *
-     * @param locatorName
+     * @param locatorElement
      * @return element text
      */
-    public static String getText(String locatorName, String ... locatorReplacementValue) {
-        WebElement element = waitPresence(locatorName, locatorReplacementValue);
+    public static String getText(String locatorElement, String ... locatorReplacementValue) {
+        WebElement element = waitPresence(locatorElement, locatorReplacementValue);
         return element.getText();
     }
 
     /**
      * Returns element attribute selected
      *
-     * @param locatorName
+     * @param locatorElement
      * @param attribute
      * @return attribute value
      */
-    public static String getAttribute(String locatorName, String attribute, String ... locatorReplacementValue) {
-        WebElement element = waitPresence(locatorName, locatorReplacementValue);
+    public static String getAttribute(String locatorElement, String attribute, String ... locatorReplacementValue) {
+        WebElement element = waitPresence(locatorElement, locatorReplacementValue);
         return element.getAttribute(attribute);
     }
 
@@ -137,8 +137,8 @@ public abstract class ActionManager {
         return DriverManager.getDriverInstance().findElement(locator);
     }
 
-    public static List<WebElement> getElements(String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static List<WebElement> getElements(String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         return getElements(locator);
     }
 
@@ -157,22 +157,22 @@ public abstract class ActionManager {
     /**
      * Return WebElement with the locator name provided
      *
-     * @param locatorName
+     * @param locatorElement
      * @return
      */
-    public static WebElement getElement(String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static WebElement getElement(String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         return getElement(locator);
     }
 
-    public static WebElement getElement(String locatorParent, String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static WebElement getElementByParent(String locatorParent, String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         WebElement parent = getElement(locatorParent);
         return getElement(parent, locator);
     }
 
-    public static List<WebElement> getElements(String locatorParent, String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static List<WebElement> getElementsByParent(String locatorParent, String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         WebElement parent = getElement(locatorParent);
         return getElements(parent, locator);
     }
@@ -180,83 +180,83 @@ public abstract class ActionManager {
     /**
      * Wait until the element is visible
      *
-     * @param locatorName
+     * @param locatorElement
      * @return web element
      */
-    public static WebElement waitVisibility(String locatorName, String ... locatorReplacementArgs) {
-    	By locator = LocatorManager.getLocator(locatorName, locatorReplacementArgs);
+    public static WebElement waitVisibility(String locatorElement, String ... locatorReplacementArgs) {
+    	By locator = LocatorManager.getLocator(locatorElement, locatorReplacementArgs);
     	return getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public static List<WebElement> waitVisibilities(String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static List<WebElement> waitVisibilities(String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         return getFluentWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
 
     /**
      * Wait until the element is present
      *
-     * @param locatorName
+     * @param locatorElement
      * @return web element
      */
-    public static WebElement waitPresence(String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static WebElement waitPresence(String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         return getFluentWait().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-    public static List<WebElement> waitPresences(String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static List<WebElement> waitPresences(String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         return getFluentWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
 
     /**
      * Wait until the element is clickable
      *
-     * @param locatorName
+     * @param locatorElement
      * @return web element
      */
-    public static WebElement waitClickable(String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static WebElement waitClickable(String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         return getFluentWait().until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     /**
      * Wait until the element is invisible
      *
-     * @param locatorName
+     * @param locatorElement
      */
-    public static void waitInvisibility(String locatorName, String ... locatorReplacementValue) {
-        By locator = LocatorManager.getLocator(locatorName, locatorReplacementValue);
+    public static void waitInvisibility(String locatorElement, String ... locatorReplacementValue) {
+        By locator = LocatorManager.getLocator(locatorElement, locatorReplacementValue);
         getFluentWait().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
-    public static void waitInvisibilities(String locatorName, String ... locatorReplacementValue) {
-        List<WebElement> elements = getElements(locatorName, locatorReplacementValue);
+    public static void waitInvisibilities(String locatorElement, String ... locatorReplacementValue) {
+        List<WebElement> elements = getElements(locatorElement, locatorReplacementValue);
         getFluentWait().until(ExpectedConditions.invisibilityOfAllElements(elements));
     }
 
-    public static boolean isVisible(String locatorName, String ... locatorReplacementValue) {
-        return getElement(locatorName, locatorReplacementValue).isDisplayed();
+    public static boolean isVisible(String locatorElement, String ... locatorReplacementValue) {
+        return getElement(locatorElement, locatorReplacementValue).isDisplayed();
     }
 
-    public static boolean isEnabled(String locatorName, String ... locatorReplacementValue) {
-        return getElement(locatorName, locatorReplacementValue).isEnabled();
+    public static boolean isEnabled(String locatorElement, String ... locatorReplacementValue) {
+        return getElement(locatorElement, locatorReplacementValue).isEnabled();
     }
 
-    public static boolean isSelected(String locatorName, String ... locatorReplacementValue) {
-        return getElement(locatorName, locatorReplacementValue).isSelected();
+    public static boolean isSelected(String locatorElement, String ... locatorReplacementValue) {
+        return getElement(locatorElement, locatorReplacementValue).isSelected();
     }
 
     /**
      * Method that verifies if the locator specific is present
      *
-     * @param locatorName
+     * @param locatorElement
      * @return
      */
-    public static boolean isPresent(String locatorName, String ... locatorReplacementValue) {
+    public static boolean isPresent(String locatorElement, String ... locatorReplacementValue) {
         DriverManager.getDriverInstance().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         try {
-            getElement(locatorName, locatorReplacementValue);
+            getElement(locatorElement, locatorReplacementValue);
             return true;
         } catch (NoSuchElementException e) {
             return false;
@@ -268,11 +268,11 @@ public abstract class ActionManager {
     /**
      * Select or deselect checkbox
      *
-     * @param locatorName
+     * @param locatorElement
      * @param check
      */
-    public static void setCheckbox(String locatorName, Boolean check, String ... locatorReplacementValue) {
-        WebElement checkbox = waitClickable(locatorName, locatorReplacementValue);
+    public static void setCheckbox(String locatorElement, Boolean check, String ... locatorReplacementValue) {
+        WebElement checkbox = waitClickable(locatorElement, locatorReplacementValue);
         boolean isSelected = checkbox.isSelected();
         if (isSelected && !check) {
             checkbox.click();

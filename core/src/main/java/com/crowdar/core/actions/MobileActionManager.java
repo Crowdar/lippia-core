@@ -16,19 +16,19 @@ import java.util.HashMap;
  */
 public class MobileActionManager extends ActionManager {
 
-    public static void setInput(String locatorName, String value, String placeholder) {
-        String elementText = getText(locatorName);
+    public static void setInput(String locatorElement, String value, String placeholder) {
+        String elementText = getText(locatorElement);
         boolean clear = !elementText.equals(placeholder);
-        setInput(locatorName, value, Boolean.TRUE, clear);
+        setInput(locatorElement, value, Boolean.TRUE, clear);
     }
 
-    public static void clickOptionSpinner(String spinnerLocatorName, String option) {
-        click(spinnerLocatorName);
+    public static void clickOptionSpinner(String spinnerlocatorElement, String option) {
+        click(spinnerlocatorElement);
         clickOptionSpinner(option, Boolean.FALSE);
     }
 
-    public static void clickOptionSpinner(String spinnerLocatorName, String option, boolean startWith) {
-        click(spinnerLocatorName);
+    public static void clickOptionSpinner(String spinnerlocatorElement, String option, boolean startWith) {
+        click(spinnerlocatorElement);
         clickOptionSpinner(option, startWith);
     }
 
@@ -70,8 +70,8 @@ public class MobileActionManager extends ActionManager {
         return DriverManager.getDriverInstance().findElement(MobileBy.AndroidUIAutomator(locator));
     }
 
-    public static void scrollIOS(String locatorName) {
-        IOSElement element = (IOSElement) getElement(locatorName);
+    public static void scrollIOS(String locatorElement) {
+        IOSElement element = (IOSElement) getElement(locatorElement);
         scrollIOS(element);
     }
 
