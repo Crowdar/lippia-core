@@ -22,7 +22,7 @@ public class Injector {
         try {
             PageBase pageBase = (PageBase) cache.get().get(page);
 
-            if (pageBase == null || pageBase.getDriver().getSessionId() == null) {
+            if (pageBase == null || ((RemoteWebDriver)pageBase.getDriver().getWrappedDriver()).getSessionId() == null) {
             	
                 Constructor<?> constructor = page.getConstructor(RemoteWebDriver.class);
                 Object o = constructor.newInstance(DriverManager.getDriverInstance());
