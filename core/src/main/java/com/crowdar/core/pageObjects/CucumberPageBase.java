@@ -1,6 +1,6 @@
 package com.crowdar.core.pageObjects;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import com.crowdar.core.Context;
 
@@ -12,7 +12,7 @@ public abstract class CucumberPageBase extends PageBase {
         super();
     }
     
-    public CucumberPageBase(RemoteWebDriver driver) {
+    public CucumberPageBase(EventFiringWebDriver driver) {
         super(driver);
     }
 

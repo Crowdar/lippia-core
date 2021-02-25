@@ -6,7 +6,7 @@
 
 	<groupId>io.lippia</groupId>
 	<artifactId>root</artifactId>
-	<version>3.2.3.7-SNAPSHOT</version>
+	<version>3.2.3.8-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<url>http://lippia.io</url>

@@ -84,10 +84,10 @@ public class MobileActionManager extends ActionManager {
     }
 
     public static boolean isAndroid() {
-        return DriverManager.getDriverInstance() instanceof AndroidDriver;
+        return DriverManager.getDriverInstance().getWrappedDriver() instanceof AndroidDriver;
     }
 
     public static boolean isIos() {
-        return DriverManager.getDriverInstance() instanceof IOSDriver;
+        return DriverManager.getDriverInstance().getWrappedDriver() instanceof IOSDriver;
     }
 }

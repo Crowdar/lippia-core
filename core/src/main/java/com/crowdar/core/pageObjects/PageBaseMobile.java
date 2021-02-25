@@ -8,6 +8,7 @@ import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import java.util.HashMap;
 
@@ -19,7 +20,7 @@ import java.util.HashMap;
 @Deprecated
 public class PageBaseMobile extends CucumberPageBase {
 
-    public PageBaseMobile(RemoteWebDriver driver) {
+    public PageBaseMobile(EventFiringWebDriver driver) {
         super(driver);
     }
 
@@ -109,10 +110,10 @@ public class PageBaseMobile extends CucumberPageBase {
     }
 
     public boolean isAndroid() {
-        return driver instanceof AndroidDriver;
+        return driver.getWrappedDriver() instanceof AndroidDriver;
     }
 
     public boolean isIos() {
-        return driver instanceof IOSDriver;
+        return driver.getWrappedDriver() instanceof IOSDriver;
     }
 }
