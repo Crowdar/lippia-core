@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class ActionManager {
 
     private static ThreadLocal<WebDriverWait> wait = new ThreadLocal<>();
-    private static ThreadLocal<FluentWait<RemoteWebDriver>> fluentWait = new ThreadLocal<>();
+    private static ThreadLocal<FluentWait<EventFiringWebDriver>> fluentWait = new ThreadLocal<>();
 
     public static void clean() {
         wait.remove();
@@ -43,7 +44,7 @@ public abstract class ActionManager {
      *
      * @return wait
      */
-    public static Wait<RemoteWebDriver> getFluentWait() {
+    public static Wait<EventFiringWebDriver> getFluentWait() {
         if (fluentWait.get() == null) {
             fluentWait.set(new FluentWait<>(DriverManager.getDriverInstance()).withTimeout(Duration.ofSeconds(Constants.getFluentWaitTimeoutInSeconds()))
                     .pollingEvery(Duration.ofMillis(Constants.getFluentWaitRequestFrequencyInMillis())).ignoring(NoSuchElementException.class));

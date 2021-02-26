@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.crowdar.core.PropertyManager;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import com.crowdar.driver.setupStrategy.SetupStrategy;
 
@@ -16,7 +17,7 @@ public class DriverManager {
 
     }
 
-    private static ThreadLocal<RemoteWebDriver> localDriver = new ThreadLocal<>();
+    private static ThreadLocal<EventFiringWebDriver> localDriver = new ThreadLocal<>();
 
     
     public static void initialize(Map<String, ?> extraCapabilities){
@@ -24,28 +25,28 @@ public class DriverManager {
             if (localDriver.get() != null) {
                 localDriver.remove();
             }
-            localDriver.set(DriverFactory.createDriver(extraCapabilities));
+            localDriver.set(new EventFiringWebDriver(DriverFactory.createDriver(extraCapabilities)));
         }
     }
-    
+
     public static void initialize(ProjectTypeEnum projectType, SetupStrategy setupStrategy, URL driverHub, Map<String, ?> extraCapabilities) throws Exception {
     	
     	if (!isDriverCreated() || !isAValidDriver()) {
             if (localDriver.get() != null) {
                 localDriver.remove();
             }
-            localDriver.set(DriverFactory.createDriver(projectType, setupStrategy, driverHub, extraCapabilities));
+            localDriver.set(new EventFiringWebDriver(DriverFactory.createDriver(projectType, setupStrategy, driverHub, extraCapabilities)));
         }else {
         	throw new Exception("Driver initialized!");
         }
     }
 
-    public static RemoteWebDriver getDriverInstance() {
+    public static EventFiringWebDriver getDriverInstance() {
         if (!isDriverCreated() || !isAValidDriver()) {
             if (localDriver.get() != null) {
                 localDriver.remove();
             }
-            localDriver.set(DriverFactory.createDriver());
+            localDriver.set(new EventFiringWebDriver(DriverFactory.createDriver()));
         }
         return localDriver.get();
     }
@@ -62,11 +63,11 @@ public class DriverManager {
     }
 
     private static boolean isAValidDriver() {
-        return localDriver.get().getSessionId() != null;
+        return ((RemoteWebDriver)localDriver.get().getWrappedDriver()).getSessionId() != null;
     }
 
     public static void dismissMobileDriver() {
-        ((AppiumDriver) getDriverInstance()).closeApp();
+        ((AppiumDriver) getDriverInstance().getWrappedDriver()).closeApp();
         dismissCurrentDriver();
     }
 

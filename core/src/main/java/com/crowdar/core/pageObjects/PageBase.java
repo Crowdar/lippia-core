@@ -6,6 +6,7 @@ import com.crowdar.driver.DriverManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -36,18 +37,18 @@ abstract public class PageBase {
      */
     protected String url;
 
-    protected RemoteWebDriver driver;
+    protected EventFiringWebDriver driver;
     protected WebDriverWait wait;
-    protected FluentWait<RemoteWebDriver> fluentWait;
+    protected FluentWait<EventFiringWebDriver> fluentWait;
 
     public PageBase() {
     }
 
-    public PageBase(RemoteWebDriver driver) {
+    public PageBase(EventFiringWebDriver driver) {
         initialize(driver);
     }
 
-    private void initialize(RemoteWebDriver driver) {
+    private void initialize(EventFiringWebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Constants.getWaitForElementTimeout());
         this.fluentWait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(Constants.getWaitForElementTimeout()))
@@ -273,7 +274,7 @@ abstract public class PageBase {
      *
      * @return web driver
      */
-    public RemoteWebDriver getDriver() {
+    public EventFiringWebDriver getDriver() {
         if (driver == null) {
             initialize(DriverManager.getDriverInstance());
         }
@@ -294,7 +295,7 @@ abstract public class PageBase {
      *
      * @return wait
      */
-    public Wait<RemoteWebDriver> getFluentWait() {
+    public Wait<EventFiringWebDriver> getFluentWait() {
         return fluentWait;
     }
 
