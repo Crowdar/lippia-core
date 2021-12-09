@@ -69,7 +69,7 @@
 		<meta.filter></meta.filter>
 		<spring-framework.version>4.3.8.RELEASE</spring-framework.version>
 		<jira.client.version>4.0.0</jira.client.version>
-		<jackson-version>2.9.10</jackson-version>
+		<jackson-version>2.9.10.8</jackson-version>
 	</properties>
 
 	<modules>
