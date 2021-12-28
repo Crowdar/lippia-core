@@ -3,7 +3,8 @@ package com.crowdar.driver;
 import com.crowdar.core.PropertyManager;
 import com.crowdar.driver.setupStrategy.SetupStrategy;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 class DriverFactory {
 
-    private static Logger logger = Logger.getLogger(DriverFactory.class);
+    private static Logger logger = LogManager.getLogger(DriverFactory.class);
     private static final String DEFAULT_STRATEGY = "NoneStrategy";
     private static final String STRATEGY_CLASS = "com.crowdar.driver.setupStrategy.%s";
 
