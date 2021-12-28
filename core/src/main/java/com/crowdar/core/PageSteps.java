@@ -1,6 +1,7 @@
 package com.crowdar.core;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 
@@ -14,7 +15,7 @@ public abstract class PageSteps {
 
     public PageSteps(RemoteWebDriver driver) {
         this.driver = driver;
-        logger = Logger.getLogger(this.getClass());
+        logger = LogManager.getLogger(this.getClass());
     }
 
     public PageSteps() {

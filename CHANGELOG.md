@@ -48,7 +48,7 @@ All notable changes to this project will be documented in this file.
 * Add getName() method in ProjectTypeEnum with name of driver instance + call it in DriverManager.getName()
 * Method loadLocators in the constructor PageBase and getLocator that returns By searching in LocatorTypesEnum
 * Refactor PageBase, PageBaseMobile and PageBaseWeb in methods to support parameter String locatorName and deprecated in old methods.
-* Replace in places that were using getRootLogger() for Logger.getLogger(class).
+* Replace in places that were using getRootLogger() for LogManager.getLogger(class).
 * Api fix in CommonSteps (Delete ':')
 * Remove unused methods in Utils class.
 * Add ActionManager, WebActionManager and MobileActionManager with all static methods and using locator manager. (This replaces PageBase).

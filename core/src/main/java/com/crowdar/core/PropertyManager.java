@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -17,7 +18,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import com.crowdar.driver.ProjectTypeEnum;
 
 public class PropertyManager {
-    private static Logger logger = Logger.getLogger(PropertyManager.class);
+    private static Logger logger = LogManager.getLogger(PropertyManager.class);
     private static final String PROPERTY_FILE_NAME = "config.properties";
     
     private static ThreadLocal<Properties> properties = new ThreadLocal<>();

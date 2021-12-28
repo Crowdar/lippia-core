@@ -5,7 +5,8 @@ import com.crowdar.core.PropertyManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -299,7 +300,7 @@ public enum ProjectTypeEnum {
 
     };
 
-    private static Logger logger = Logger.getLogger(ProjectTypeEnum.class);
+    private static Logger logger = LogManager.getLogger(ProjectTypeEnum.class);
 
     public static final String PROJECT_TYPE_KEY = "crowdar.projectType";
 
