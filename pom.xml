@@ -67,7 +67,7 @@
 		<crowd.project.name>CroudProjectNameDefault</crowd.project.name>
 		<stories>**/Test.java</stories>
 		<meta.filter></meta.filter>
-		<spring-framework.version>4.3.8.RELEASE</spring-framework.version>
+		<spring-framework.version>5.2.22.RELEASE</spring-framework.version>
 		<jira.client.version>4.0.0</jira.client.version>
 		<jackson-version>2.9.10</jackson-version>
 	</properties>
