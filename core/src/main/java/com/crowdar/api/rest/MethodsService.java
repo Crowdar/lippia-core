@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.crowdar.api.rest.APIManager.setLastResponse;
+import static com.crowdar.core.JsonUtils.serialize;
+
 public class MethodsService {
 
     public static <T> Response get(Request req, Class<T> classModel) {
@@ -170,6 +172,14 @@ public class MethodsService {
      * @throws Exception
      */
     public void validateFields(Object actual, Object expected, Map<String, String> parameters) throws Exception {
+        String strExpectedResponse = serialize(expected);
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            if (strExpectedResponse.contains(entry.getKey())) {
+                strExpectedResponse = strExpectedResponse.replace("{{" + entry.getKey() + "}}", entry.getValue());
+            }
+        }
+        expected = JsonUtils.deserialize(strExpectedResponse, actual.getClass());
+        validateFields(actual, expected);
     }
 
     /**
