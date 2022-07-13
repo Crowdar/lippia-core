@@ -162,16 +162,14 @@ public class MethodsService {
     }
 
     /**
-     * Set your own expected object, modifying expected object with parameters. Call validateFields(actual, expected); at the end.
-     * Step: se obtuvo el response esperado en 'entity' con el 'jsonResponsePath' y sus parametros 'parameters'
-     * expected response is obtained in 'entity' with 'jsonResponsePath' and the parameters 'parameters'
+     * It takes an expected object, an actual object, and a map of parameters. It replaces the parameters in the expected
+     * object with the values from the map, and then validates the actual object against the expected object
      *
-     * @param actual
-     * @param expected
-     * @param parameters
-     * @throws Exception
+     * @param expected The expected response from the API
+     * @param actual The actual response from the API
+     * @param parameters A map of key-value pairs that will be used to replace the values in the expected response.
      */
-    public void validateFields(Object actual, Object expected, Map<String, String> parameters) throws Exception {
+    public void validateFields(Object expected, Object actual, Map<String, String> parameters) throws Exception {
         String strExpectedResponse = serialize(expected);
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             if (strExpectedResponse.contains(entry.getKey())) {
