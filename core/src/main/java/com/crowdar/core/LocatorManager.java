@@ -6,8 +6,7 @@
 package com.crowdar.core;
 
 import com.crowdar.core.pageObjects.LocatorTypesEnum;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 
 
@@ -18,7 +17,7 @@ public class LocatorManager {
             String[] locatorProperty = locatorElement.split(":");
             return getLocatorInEnum(locatorProperty, locatorReplacementArgs);
         } catch (NullPointerException e){
-            LogManager.getLogger(LocatorManager.class).error(e.getMessage());
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
             throw new RuntimeException(String.format("Locator property %s was not found", locatorElement));
         }
     }
@@ -30,7 +29,7 @@ public class LocatorManager {
             String value = String.format(locatorProperty[1], locatorReplacementArgs);
             return LocatorTypesEnum.get(type).getLocator(value);
         } catch (IndexOutOfBoundsException e) {
-            LogManager.getLogger(LocatorManager.class).error(e.getMessage());
+            Logger.getLogger(LocatorManager.class).error(e.getMessage());
             throw new RuntimeException("Locator property format is invalid. Example: css:#loginButton");
         }
     }

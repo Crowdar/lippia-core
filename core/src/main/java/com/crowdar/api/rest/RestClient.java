@@ -1,8 +1,7 @@
 package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -100,10 +99,10 @@ public class RestClient {
         HttpEntity<Object> request = this.createRequest(body, getRequestHeaders());
         try {
             ResponseEntity response = getRestTemplate().exchange(uri, httpMethod, request, type);
-            LogManager.getLogger(this.getClass()).info(">>>Response: " + response.toString());
+            Logger.getLogger(this.getClass()).info(">>>Response: " + response.toString());
             return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            LogManager.getLogger(this.getClass()).info(">>>Error Response: " + e.toString());
+            Logger.getLogger(this.getClass()).info(">>>Error Response: " + e.toString());
             Object responseBody = JsonUtils.deserialize(e.getResponseBodyAsString(), type);
             return this.createResponse(e.getStatusCode().value(), e.getLocalizedMessage(), responseBody, createResponseHeaders(e.getResponseHeaders()));
         }
@@ -154,5 +153,23 @@ public class RestClient {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Response createHTTPMethod(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers, HttpMethod httpMethod) {
+        URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
+        setRequestHeaders(headers);
+        HttpEntity<Object> request = this.createRequest(body, getRequestHeaders());
+        try {
+            ResponseEntity<String> response = getRestTemplate().exchange(uri, httpMethod, request,String.class);
+            Logger.getLogger(this.getClass()).info(">>>Response: " + response);
+            return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            Logger.getLogger(this.getClass()).info(">>>Error Response: " + e);
+            return this.createResponse(e.getStatusCode().value(), e.getLocalizedMessage(), e.getResponseBodyAsString(), createResponseHeaders(e.getResponseHeaders()));
+        }
+    }
+
+    public Response get(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.GET);
     }
 }

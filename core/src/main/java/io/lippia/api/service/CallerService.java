@@ -11,13 +11,11 @@ import com.crowdar.api.rest.Request;
 import io.lippia.api.configuration.EndpointConfiguration;
 
 public class CallerService {
-	public static String call(EndpointConfiguration config) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
-		
+	public static Object call(EndpointConfiguration config)
+			throws IllegalArgumentException, SecurityException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
 		String methodName = config.getHttConfiguration().getMethod();
-		            
 		config.getMethodService().getClazz().getMethod(methodName.toLowerCase(), Request.class).invoke("", getRequest(config));
-        
-		return (String) APIManager.getLastResponse().getResponse();
+		return APIManager.getLastResponse().getResponse();
 	}
 	
 	protected static Request getRequest(EndpointConfiguration config) throws IOException {

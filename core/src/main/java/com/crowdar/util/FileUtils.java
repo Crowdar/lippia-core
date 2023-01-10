@@ -20,8 +20,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 public class FileUtils {
 
@@ -174,7 +173,7 @@ public class FileUtils {
 
             writeOutput(expectedList, random, "expected".concat(className));
         } catch (Exception e) {
-            LogManager.getLogger(FileUtils.class).error(">>> Error trying to write the output: ", e);
+            Logger.getLogger(FileUtils.class).error(">>> Error trying to write the output: ", e);
         }
     }
 

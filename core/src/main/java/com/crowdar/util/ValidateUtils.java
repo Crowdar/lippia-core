@@ -1,8 +1,7 @@
 package com.crowdar.util;
 
 import org.apache.commons.lang.WordUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.testng.Assert;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,7 +43,7 @@ public class ValidateUtils {
         try {
             expectedClass.getMethod(SORT_NAME_METHOD, List.class).invoke("", expectedList);
         } catch (NoSuchMethodException e) {
-            LogManager.getLogger(ValidateUtils.class).warn(">>> 'sort' method was not found in ".concat(expectedClass.toGenericString()).concat(". Proceeding without sorting the list."));
+            Logger.getLogger(ValidateUtils.class).warn(">>> 'sort' method was not found in ".concat(expectedClass.toGenericString()).concat(". Proceeding without sorting the list."));
         }
     }
 
@@ -118,7 +117,7 @@ public class ValidateUtils {
         try {
             return getMethodValue(actual, actualClass, getMethodName());
         } catch (NoSuchMethodException e) {
-            LogManager.getLogger(ValidateUtils.class).warn(">>> Method ".concat(getMethodName()).concat(" was not found. Trying with capitalize."));
+            Logger.getLogger(ValidateUtils.class).warn(">>> Method ".concat(getMethodName()).concat(" was not found. Trying with capitalize."));
             setMethodName(GETTER_NAME.concat(getFullKey(expectedKey)));
             return tryWithCapitalizeAndReplace(actual, actualClass);
         }

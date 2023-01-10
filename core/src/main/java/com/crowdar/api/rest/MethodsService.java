@@ -2,8 +2,7 @@ package com.crowdar.api.rest;
 
 import com.crowdar.core.JsonUtils;
 import com.crowdar.util.ValidateUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.testng.Assert;
 
 import java.io.IOException;
@@ -114,7 +113,7 @@ public class MethodsService {
         try {
             jsonRequest = JsonUtils.getJSONFromFile(jsonFileName);
         } catch (IOException e) {
-            LogManager.getLogger(MethodsService.class).error(e.getMessage());
+            Logger.getLogger(MethodsService.class).error(e.getMessage());
             Assert.fail(e.getMessage());
         }
 
@@ -124,7 +123,7 @@ public class MethodsService {
             }
         }
         Request request = JsonUtils.deserialize(jsonRequest, Request.class);
-        LogManager.getLogger(MethodsService.class).info(">>>Request: " + request.toString());
+        Logger.getLogger(MethodsService.class).info(">>>Request: " + request.toString());
         return request;
     }
 
@@ -282,5 +281,11 @@ public class MethodsService {
      * @throws Exception
      */
     public <T> void validateFields(List<T> actualList, Map<String, String> parameters) throws Exception {
+    }
+
+    public static <T> Response get(Request req, RestClient restClient) {
+        Response resp = restClient.get(req.getCompleteUrl(), req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
+        setLastResponse(resp);
+        return resp;
     }
 }
