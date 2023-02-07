@@ -14,7 +14,7 @@ public class LocatorManager {
 
     public static By getLocator(String locatorElement, String ... locatorReplacementArgs) {
         try {
-            String[] locatorProperty = locatorElement.split(":");
+            String[] locatorProperty = locatorElement.split(":", 2);
             return getLocatorInEnum(locatorProperty, locatorReplacementArgs);
         } catch (NullPointerException e){
             Logger.getLogger(LocatorManager.class).error(e.getMessage());
