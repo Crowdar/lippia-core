@@ -1,6 +1,22 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]()
+## [3.3.0.0]() (XX/02/2023)
+### Fixed  
+- __LocatorManager:__  
+    The split is limited to 2, regardless of the number of characters represented by the ":" character, it will cut the string when finding the first match  
+- __NOSSLVerification:__  
+    Host Verification BYPASS
+
+### Added
+- __EndpointConfiguration.setInstance($) method:__  
+    Is mainly used by api-lowcode for calls to other scenarios, allows saving instances of endpoint configurations
+
+### Changed
+- __CallerService.call($):__  
+    Changed return data type to Object
+
 ## 3.2.3.7 (17/02/2021)
 * Fix getElementByParent and getElementsByParent in ActionManager
 * Change locator manager strategy to work directly with constants
