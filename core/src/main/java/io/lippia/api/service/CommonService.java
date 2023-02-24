@@ -29,12 +29,14 @@ public class CommonService {
     public static ThreadLocal<String> VALUE = new ThreadLocal<>();
 
     public static void deleteAttributeInBody(String attribute, String jsonName) throws IOException {
-        String json = getJSONFromFileBody(jsonName);
-        JSONObject jsonObj = new JSONObject(json);
+        String json = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
+        BODY.set(json);
+        JSONObject jsonObj = new JSONObject(BODY.get());
         if (jsonObj.has(attribute)) {
             jsonObj.remove(attribute);
+            BODY.set(jsonObj.toString());
         }
-        stepsInCommon.setBody(jsonObj.toString());
+        stepsInCommon.setBody(BODY.get());
     }
 
 
