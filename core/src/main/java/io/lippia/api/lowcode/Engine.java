@@ -42,7 +42,7 @@ public class Engine {
 
     public void set(String key, String value) throws UnsupportedEncodingException {
         if (value.matches("^response.\\S+$") || value.matches("^\\$.\\S+$")) {
-            value = responseMatcherGeneric(value.replaceFirst("response", Matcher.quoteReplacement("$")),StandardCharsets.UTF_8).toString();
+            value = responseMatcherGeneric(value.replaceFirst("response", Matcher.quoteReplacement("$")), StandardCharsets.UTF_8).toString();
         }
         setVariable(key, value);
     }
@@ -62,15 +62,13 @@ public class Engine {
     public void call() {
         EndpointConfiguration.getInstance().setMethodService(NOSSLVERIFICATION);
         try {
+            System.out.println(new Gson().toJson(CallerService.getRequest(EndpointConfiguration.getInstance())));
             CallerService.call(EndpointConfiguration.getInstance());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             throw new LippiaException("Call Step has not been executed, track: \n%s", e.getMessage());
         }
 
         CommonService.BODY.remove();
-        if(EndpointConfiguration.getInstance().getBody() != null){
-            System.out.println("Request >>>" + EndpointConfiguration.getInstance().getBody());
-        }
         EndpointConfiguration.clean();
     }
 
@@ -94,16 +92,18 @@ public class Engine {
 
 
     public <T> void validates(T v1, T v2, BiPredicate<T, T> typeMatcher, final String errorMessage) {
-        Assert.assertTrue(typeMatcher.test(v1, v2), String.format(errorMessage, v1, v2));
+        if(typeMatcher.test(v1,v2))return;
+
+        Assert.fail(String.format(errorMessage,v1,v2));
     }
 
     public void responseMatcher(String path, String expectedValue) throws UnsupportedEncodingException {
         String pathValue = responseMatcherGeneric(path, StandardCharsets.ISO_8859_1).toString();
-        Assert.assertEquals(pathValue, replaceVars(expectedValue), "no hay match!");
+        Assert.assertEquals(pathValue, replaceVars(expectedValue), "no match!");
     }
 
     public void responseMatcherUTF(String path, String expectedValue) throws UnsupportedEncodingException {
-        String pathValue = responseMatcherGeneric(path,StandardCharsets.UTF_8).toString();
+        String pathValue = responseMatcherGeneric(path, StandardCharsets.UTF_8).toString();
         Assert.assertEquals(pathValue, replaceVars(expectedValue), "no match!");
     }
 

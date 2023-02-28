@@ -1,6 +1,5 @@
 package io.lippia.api.lowcode.steps;
 
-import com.crowdar.core.PropertyManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -23,9 +22,9 @@ public class DataBaseSteps {
     @Given("^create connection database '(.*)'$")
     public void setDatabaseConfig(String base) {
         String uri = EnvironmentManager.getProperty("uri.".concat(base));
-        String username = PropertyManager.getProperty("username");
-        String password = EnvironmentManager.getProperty("password");
-        String driver = "oracle.jdbc.driver.OracleDriver";
+        String username = EnvironmentManager.getProperty("username.".concat(base));
+        String password = EnvironmentManager.getProperty("password.".concat(base));
+        String driver = EnvironmentManager.getProperty("driver.".concat(base));
         db = new DbUtils(username, password, uri, driver);
     }
 

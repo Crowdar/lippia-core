@@ -40,7 +40,6 @@ public class ParametersUtility {
         while (varsMatcher.find()) {
             String envProperty = varsMatcher.group();
             str = str.replace("env." + envProperty, EnvironmentManager.getProperty(envProperty));
-            System.out.println(str);
         }
         if (VARIABLE_PATTERN.matcher(str).find() || PROPERTY_PATTERN.matcher(str).find()) {
             replaceVars(str);

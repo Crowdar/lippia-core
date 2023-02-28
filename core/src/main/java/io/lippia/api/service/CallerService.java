@@ -1,14 +1,12 @@
 package io.lippia.api.service;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.crowdar.api.rest.APIManager;
 import com.crowdar.api.rest.Request;
-
 import io.lippia.api.configuration.EndpointConfiguration;
+import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class CallerService {
 	public static Object call(EndpointConfiguration config)
@@ -18,7 +16,7 @@ public class CallerService {
 		return APIManager.getLastResponse().getResponse();
 	}
 	
-	protected static Request getRequest(EndpointConfiguration config) throws IOException {
+	public static Request getRequest(EndpointConfiguration config) throws IOException {
 		Request request = new Request();
 		
 		request.setBody(config.getBody());
