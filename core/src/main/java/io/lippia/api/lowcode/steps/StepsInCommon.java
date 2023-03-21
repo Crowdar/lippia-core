@@ -133,7 +133,7 @@ public class StepsInCommon {
         CommonService.setValuesKeys(values, keys, body);
     }
 
-    @When("^i save from result (.*) the attribute (.*) on variable (.*)$")
+    @When("^I save from result (.*) the attribute (.*) on variable (.*)$")
     public void iSaveVariable(String parameterType, String attribute, String name) throws ParserConfigurationException, IOException, org.xml.sax.SAXException {
         String value = "";
         String responseString = "";
@@ -168,7 +168,7 @@ public class StepsInCommon {
     }
 
 
-    @And("i get variable (.*) from result (.*) of attribute (.*)")
+    @And("I get variable (.*) from result (.*) of attribute (.*)")
     public void iGetVariableFromResultOfAttribute(String name, String parameterType, String attribute) {
         VariablesManager.getVariable(attribute);
     }

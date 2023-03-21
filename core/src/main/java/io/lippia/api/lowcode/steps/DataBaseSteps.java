@@ -1,5 +1,6 @@
 package io.lippia.api.lowcode.steps;
 
+import com.crowdar.core.MyThreadLocal;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -28,6 +29,7 @@ public class DataBaseSteps {
         db = new DbUtils(username, password, uri, driver);
     }
 
+
     @When("^execute query '(.*)'$")
     public void execute(String queryFile) throws IOException {
         if (parameters.isEmpty()) {
@@ -36,6 +38,7 @@ public class DataBaseSteps {
             rows = db.executeQueryWithParameters(queryFile, parameters);
             parameters.clear();
         }
+        MyThreadLocal.setData("resultsDB", rows);
     }
 
     @Then("^validate field '(.*)' = (.*)$")
@@ -53,9 +56,8 @@ public class DataBaseSteps {
 
     @When("^add query parameter '(.*)' = (.*)$")
     public void addParameter(String campo, String parametro) throws Exception {
-        parameters.put(campo,CommonService.getValueOf(parametro).toString());
+        parameters.put(campo, CommonService.getValueOf(parametro).toString());
     }
-
 
 
 }
