@@ -53,12 +53,14 @@ public class StepsInCommon {
     }
 
     @When("^execute method (GET|POST|PUT|PATCH|DELETE)$")
+    @And("^ejecutar metodo (GET|POST|PUT|PATCH|DELETE)$")
     public void setHttpMethodAndExecute(String httpMethod) {
         this.engine.configure(HTTP_METHOD, httpMethod);
         this.engine.call();
     }
 
     @When("^call (\\S+.feature)([@:\\$])(\\S+)$")
+    @And("^invocar (\\S+.feature)([@:\\$])(\\S+)$")
     public void call(String feature, String filterType, String filterValue) throws Throwable {
         this.engine.call(feature, filterType, filterValue);
     }
@@ -89,16 +91,19 @@ public class StepsInCommon {
     }
 
     @Then("^the status code should be (\\d+)$")
+    @And("^el status code debe ser (\\d+)$")
     public void status(int expectedStatusCode) {
         this.engine.validates(expectedStatusCode, APIManager.getLastResponse().getStatusCode(), Integer::equals, Messages.STATUS_CODE_ERROR);
     }
 
     @Then("^response should be ([^\\s].+) = ([^\\s].*)$")
+    @And("^la respuesta debe ser ([^\\s].+) = ([^\\s].*)$")
     public void response(String path, String expectedValue) throws UnsupportedEncodingException {
         this.engine.responseMatcher(path, expectedValue);
     }
 
     @Then("^validate schema (.+)$") // it supports only json
+    @And("^validar schema (.+)$")
     public void schema(String jsonName) throws IOException {
         Object respuesta = APIManager.getLastResponse().getResponse();
         if (respuesta instanceof List || respuesta instanceof Map) {
@@ -113,27 +118,32 @@ public class StepsInCommon {
                         .matches(respuesta));
     }
 
-    @And("^response should be ([^\\s].+) contains ([^\\s].*)$")
+    @Then("^response should be ([^\\s].+) contains ([^\\s].*)$")
+    @And("^la respuesta debe ser ([^\\s].+) contiene ([^\\s].*)$")
     public void responseShouldBeSContains(String path, String expectedValue) {
         this.engine.responseContainer(path, expectedValue);
     }
 
-    @And("^delete keyValue (.*) in body (.*)$")
+    @When("^delete keyValue (.*) in body (.*)$")
+    @And("^eliminar clave (.*) en el body (.*)$")
     public void deleteKeyvalueAtributoInBodyPath(String attribute, String body) throws IOException {
         CommonService.deleteAttributeInBody(attribute, body);
     }
 
-    @And("^set value (.*) of key (.*) in body (.*)$")
+    @When("^set value (.*) of key (.*) in body (.*)$")
+    @And("^setear el valor (.*) de la clave (.*) en el body (.*)$")
     public void setValueValorOfKeyClaveInBodyPath(String value, String key, String body) throws Exception {
         CommonService.setValue(value, key, body);
     }
 
     @When("^set values (.*) of keys (.*) in body (.*)$")
+    @And("^setear los valores (.*) de las claves (.*) en el body (.*)$")
     public void setValuesValoresOfKeysInBody(String values, String keys, String body) throws Exception {
         CommonService.setValuesKeys(values, keys, body);
     }
 
     @When("^I save from result (.*) the attribute (.*) on variable (.*)$")
+    @And("^guardo del resultado (.*) el atributo (.*) en la variable (.*)$")
     public void iSaveVariable(String parameterType, String attribute, String name) throws ParserConfigurationException, IOException, org.xml.sax.SAXException {
         String value = "";
         String responseString = "";
@@ -168,7 +178,8 @@ public class StepsInCommon {
     }
 
 
-    @And("I get variable (.*) from result (.*) of attribute (.*)")
+    @When("I get variable (.*) from result (.*) of attribute (.*)")
+    @And("obtengo la variable (.*) del resultado (.*) del atributo (.*)")
     public void iGetVariableFromResultOfAttribute(String name, String parameterType, String attribute) {
         VariablesManager.getVariable(attribute);
     }

@@ -4,6 +4,7 @@ import com.crowdar.core.MyThreadLocal;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.en.And;
 import io.lippia.api.lowcode.EnvironmentManager;
 import io.lippia.api.lowcode.database.DbUtils;
 import io.lippia.api.service.CommonService;
@@ -21,6 +22,7 @@ public class DataBaseSteps {
     Map<String, String> parameters = new HashMap<>();
 
     @Given("^create connection database '(.*)'$")
+    @And("^crear conexion a la base de datos '(.*)'$")
     public void setDatabaseConfig(String base) {
         String uri = EnvironmentManager.getProperty("uri.".concat(base));
         String username = EnvironmentManager.getProperty("username.".concat(base));
@@ -31,6 +33,7 @@ public class DataBaseSteps {
 
 
     @When("^execute query '(.*)'$")
+    @And("^ejecutar query '(.*)'$")
     public void execute(String queryFile) throws IOException {
         if (parameters.isEmpty()) {
             rows = db.executeQuery(queryFile);
@@ -42,6 +45,7 @@ public class DataBaseSteps {
     }
 
     @Then("^validate field '(.*)' = (.*)$")
+    @And("^validar campo '(.*)' = (.*)$")
     public void validateField(String campo, String valor) throws Exception {
         Object result = null;
         try {
@@ -55,6 +59,7 @@ public class DataBaseSteps {
     }
 
     @When("^add query parameter '(.*)' = (.*)$")
+    @And("^agregar parametro de query '(.*)' = (.*)$")
     public void addParameter(String campo, String parametro) throws Exception {
         parameters.put(campo, CommonService.getValueOf(parametro).toString());
     }
