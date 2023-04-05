@@ -4,8 +4,10 @@ package io.lippia.api.service;
 import com.crowdar.api.rest.APIManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.steps.StepsInCommon;
+import io.lippia.api.utils.Json;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -29,14 +31,17 @@ public class CommonService {
     public static ThreadLocal<String> VALUE = new ThreadLocal<>();
 
     public static void deleteAttributeInBody(String attribute, String jsonName) throws IOException {
-        String json = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
-        BODY.set(json);
-        JSONObject jsonObj = new JSONObject(BODY.get());
-        if (jsonObj.has(attribute)) {
-            jsonObj.remove(attribute);
-            BODY.set(jsonObj.toString());
-        }
-        stepsInCommon.setBody(BODY.get());
+    	try {
+    		String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
+    		BODY.set(jsonFromFile);
+    		Json json = Json.of(jsonFromFile);
+        	json.remove(attribute);
+            BODY.set(String.valueOf(json));
+            stepsInCommon.setBody(BODY.get());
+    	}catch(Exception e) {
+    		System.out.println(e.getMessage());
+    	}
+    	
     }
 
 
@@ -56,20 +61,14 @@ public class CommonService {
     }
 
     public static void setValue(String newValue, String attribute, String jsonName) throws Exception {
-        String json = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
-        BODY.set(json);
         try {
-            JSONObject jsonObj = new JSONObject(json);
-            if (jsonObj.has(attribute)) {
-                if (!newValue.isEmpty()) {
-                    updateValue(jsonObj, attribute, evaluateExpresion(replaceVars(newValue)));
-                } else {
-                    updateValue(jsonObj, attribute, replaceVars(newValue));
-                }
-                BODY.set(jsonObj.toString());
-            }
+            String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
+            BODY.set(jsonFromFile);
+            Json json = Json.of(jsonFromFile);
+            json.set(attribute,evaluateExpresion(newValue));
+            BODY.set(String.valueOf(json));
             stepsInCommon.setBody(BODY.get());
-        } catch (Exception e) {
+        }catch(Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -85,6 +84,10 @@ public class CommonService {
             result = new ObjectMapper().readValue(entry, Double.class);
         } else if (Pattern.compile("^true|false$").matcher(entry).matches()) {
             result = new ObjectMapper().readValue(entry, Boolean.class);
+        } else if (Pattern.compile("^\\{[^{].*[^}]}$").matcher(entry).matches()) {
+            result = new ObjectMapper().readValue(entry, Object.class);
+        } else if (Pattern.compile("^\\[(.|\n)*]$").matcher(entry).matches()) {
+            result = new ObjectMapper().readValue(entry, ArrayList.class);
         } else {
             result = new ObjectMapper().readValue(entry, String.class);
         }
