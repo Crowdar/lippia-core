@@ -19,12 +19,6 @@ import java.util.Set;
 
 public class JsonUtils {
 
-
-    private JsonUtils() {
-        // only static methods
-    }
-
-
     public static String toJson(Object o) {
         return toJson(o, false);
     }

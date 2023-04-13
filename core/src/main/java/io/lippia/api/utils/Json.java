@@ -24,10 +24,6 @@ public class Json {
         return Json.of("{}");
     }
 
-    public static Json array() {
-        return Json.of("[]");
-    }
-
     public static Json of(Object any) {
         if (any instanceof String) {
             return new Json(JsonPath.parse((String) any));
@@ -40,10 +36,6 @@ public class Json {
             return new Json(JsonPath.parse(json));
         }
     }
-    
-    public static <T> T parse(String json) {
-        return Json.of(json).value();
-    }
 
     private Json(DocumentContext doc) {
         this.doc = doc;
@@ -51,21 +43,6 @@ public class Json {
         prefix = array ? "$" : "$.";
     }
 
-    public Json getJson(String path) {
-        return Json.of(get(path, Object.class));
-    }
-
-    public <T> List<T> getAll(String prefix, List<String> paths) {
-        List<T> res = new ArrayList();
-        for(String path : paths) {
-            res.add((T) doc.read(prefix(prefix + path)));
-        }
-        return res;
-    }
-
-    public <T> List<T> getAll(List<String> paths) {
-        return Json.this.getAll("", paths);
-    }
 
     public <T> T get(String path) {
         return (T) doc.read(prefix(path));
@@ -83,42 +60,15 @@ public class Json {
         }
     }
 
-    public <T> T getFirst(String path) {
-        List<T> list = get(path);
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
-    }
-
-    public <T> T getAs(String path, Class<T> clazz) {
-        return doc.read(prefix(path), clazz);
-    }
-
     @Override
     public String toString() {
         return doc.jsonString();
-    }
-
-    public String toStringPretty() {
-        return JsonUtils.toJson(value(), true);
-    }
-
-    public boolean isArray() {
-        return array;
     }
 
     public <T> T value() {
         return doc.read("$");
     }
 
-    public List asList() {
-        return value();
-    }
-
-    public Map<String, Object> asMap() {
-        return value();
-    }
     
     public Json set(String path, Object value) {
         setInternal(path, value);
@@ -137,10 +87,6 @@ public class Json {
         return this;
     }
     
-    public Json setAsString(String path, String value) {
-        setInternal(path, value);
-        return this;
-    }
 
     public Json remove(String path) {
         doc.delete(prefix(path));

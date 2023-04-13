@@ -11,12 +11,6 @@ import java.util.Optional;
 
 public class StringUtils {
 
-    private StringUtils() {
-        // only static methods
-    }
-
-    public static final String EMPTY = "";
-
     public static class Pair {
 
         public final String left;
