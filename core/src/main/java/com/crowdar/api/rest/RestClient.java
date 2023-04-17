@@ -11,7 +11,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.testng.Assert;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -171,5 +170,17 @@ public class RestClient {
 
     public Response get(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
         return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.GET);
+    }
+    public Response put(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.PUT);
+    }
+    public Response patch(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.PATCH);
+    }
+    public Response post(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.POST);
+    }
+    public Response delete(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.DELETE);
     }
 }

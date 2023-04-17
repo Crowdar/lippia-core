@@ -288,4 +288,26 @@ public class MethodsService {
         setLastResponse(resp);
         return resp;
     }
+    public static <T> Response put(Request req, RestClient restClient) {
+        Response resp = restClient.put(req.getCompleteUrl(), req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
+        setLastResponse(resp);
+        return resp;
+    }
+
+    public static <T> Response post(Request req, RestClient restClient) {
+        Response resp = restClient.post(req.getCompleteUrl(), req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
+        setLastResponse(resp);
+        return resp;
+    }
+    public static <T> Response patch(Request req, RestClient restClient) {
+        Response resp = restClient.patch(req.getCompleteUrl(), req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
+        setLastResponse(resp);
+        return resp;
+    }
+
+    public static <T> Response delete(Request req, RestClient restClient) {
+        Response resp = restClient.delete(req.getCompleteUrl(), req.getBody().toString(), req.getUrlParameters(), req.getHeaders());
+        setLastResponse(resp);
+        return resp;
+    }
 }
