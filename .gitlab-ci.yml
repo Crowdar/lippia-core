@@ -15,6 +15,7 @@ deploy Nexus:
     - if: '$CI_COMMIT_BRANCH == "release"'
 
 deploy DockerHub:
+  image: docker:latest
   services:
     - name: docker:19.03.12-dind
       alias: docker
@@ -29,6 +30,7 @@ deploy DockerHub:
 
 
 Sample test:
+  image: docker:latest
   stage: Test
   services:
     - name: docker:19.03.12-dind
