@@ -16,6 +16,13 @@ deploy Nexus:
 
 deploy DockerHub:
   image: docker:latest
+  variables:
+    DOCKER_HOST: tcp://localhost:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_BUILDKIT: 1
+    DOCKER_CLI_EXPERIMENTAL: enabled
+
   services:
     - name: docker:19.03.12-dind
       alias: docker
@@ -32,6 +39,12 @@ deploy DockerHub:
 Sample test:
   image: docker:latest
   stage: Test
+  variables:
+    DOCKER_HOST: tcp://localhost:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_BUILDKIT: 1
+    DOCKER_CLI_EXPERIMENTAL: enabled
   services:
     - name: docker:19.03.12-dind
       alias: docker
