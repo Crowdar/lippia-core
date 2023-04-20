@@ -1,4 +1,4 @@
-image: crowdar/pipeline:2.0
+image: crowdar/pipeline:2.0.0
 
 stages:
     - Test
