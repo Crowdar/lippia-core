@@ -11,7 +11,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.testng.Assert;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -153,5 +152,35 @@ public class RestClient {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Response createHTTPMethod(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers, HttpMethod httpMethod) {
+        URI uri = this.getURIWithURLQueryParameters(url, urlParameters);
+        setRequestHeaders(headers);
+        HttpEntity<Object> request = this.createRequest(body, getRequestHeaders());
+        try {
+            ResponseEntity<String> response = getRestTemplate().exchange(uri, httpMethod, request,String.class);
+            Logger.getLogger(this.getClass()).info(">>>Response: " + response);
+            return this.createResponse(response.getStatusCode().value(), "OK", response.getBody(), createResponseHeaders(response.getHeaders()));
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            Logger.getLogger(this.getClass()).info(">>>Error Response: " + e);
+            return this.createResponse(e.getStatusCode().value(), e.getLocalizedMessage(), e.getResponseBodyAsString(), createResponseHeaders(e.getResponseHeaders()));
+        }
+    }
+
+    public Response get(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.GET);
+    }
+    public Response put(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.PUT);
+    }
+    public Response patch(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.PATCH);
+    }
+    public Response post(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.POST);
+    }
+    public Response delete(String url, Object body, Map<String, String> urlParameters, Map<String, String> headers) {
+        return createHTTPMethod(url, body, urlParameters, headers, HttpMethod.DELETE);
     }
 }

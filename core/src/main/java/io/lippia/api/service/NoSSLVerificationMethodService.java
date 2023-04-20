@@ -1,73 +1,87 @@
 package io.lippia.api.service;
 
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
-
 import com.crowdar.api.rest.MethodsService;
 import com.crowdar.api.rest.Request;
 import com.crowdar.api.rest.Response;
 import com.crowdar.api.rest.RestClient;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.HttpClients;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
-public class NoSSLVerificationMethodService extends MethodsService{
-	
-	public static Response get(Request request) {
-		return MethodsService.get(request, String.class, getNoSslVerificationRestClient());
-	}
-	
-	public static Response post(Request request) {
-		return post(request, String.class, getNoSslVerificationRestClient() );
-	}
-	
-	public static Response put(Request request) {
-		return put(request, String.class, getNoSslVerificationRestClient());
-	}
-	
-	public static Response patch(Request request) {
-		return patch(request, String.class, getNoSslVerificationRestClient());
-	}
-	
-	public static Response delete(Request request) {
-		return delete(request, String.class, getNoSslVerificationRestClient());
-	}
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
-	
-   private static RestClient getNoSslVerificationRestClient() {
+public class NoSSLVerificationMethodService extends MethodsService {
 
-	   TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
-		
-		@Override
-	       public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-	           return true;
-	       }
-	   };
-   
-	   SSLContext sslContext;
-	   try {
-		   sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
-	   } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-		   e.printStackTrace();
-		   throw new RuntimeException(e);
-	   }
-	   SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
-	   CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-	   HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-	   requestFactory.setHttpClient(httpClient);
-	 
-	   return RestClient.getRestClient(new RestTemplate(requestFactory));
+    public static Response get(Request request) {
+        return MethodsService.get(request, getRestClient());
     }
-   
+
+
+    public static Response post(Request request) {
+        return MethodsService.post(request, getRestClient());
+    }
+
+    public static Response put(Request request) {
+        return MethodsService.put(request, getRestClient());
+    }
+
+
+    public static Response patch(Request request) {
+        return MethodsService.patch(request, getRestClient());
+    }
+
+
+    public static Response delete(Request request) {
+        return MethodsService.delete(request, getRestClient());
+    }
+
+    public static RestClient getRestClient() {
+        SSLContext sslContext;
+        try {
+            sslContext = SSLContext.getInstance("SSL");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        // Set up a TrustManager that trusts everything
+        try {
+            sslContext.init(null, new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
+                        }
+                    }
+
+            }, new SecureRandom());
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+        HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setHttpClient(httpClient);
+
+        return RestClient.getRestClient(new RestTemplate(requestFactory));
+    }
+
 }
