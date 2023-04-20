@@ -1,10 +1,8 @@
-#!/bin/bash
-
-
+#!/bin/sh
 #
 # Variables to ensure that we read and write out files to the source directory even if we execute from outside.
 #
-DIR="$(dirname "${BASH_SOURCE[0]}")"
+DIR="$(cd "$(dirname "$0")" && pwd)"
 TEMPLATE_FILE=$DIR/settings.template.xml
 DEST_FILE_NAME=settings.xml
 DESTINATION_FILE=$DIR/$DEST_FILE_NAME
