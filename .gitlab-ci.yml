@@ -15,18 +15,16 @@ deploy Nexus:
     - if: '$CI_COMMIT_BRANCH == "release"'
 
 deploy DockerHub:
-  image: docker:latest
+  stage: Deploy
   variables:
     DOCKER_HOST: tcp://localhost:2375/
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ''
     DOCKER_BUILDKIT: 1
     DOCKER_CLI_EXPERIMENTAL: enabled
-
   services:
     - name: docker:19.03.12-dind
       alias: docker
-  stage: Deploy
   script:
     - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
     - docker build --no-cache -t crowdar/lippia:$PROJECT_VERSION .
@@ -37,7 +35,6 @@ deploy DockerHub:
 
 
 Sample test:
-  image: docker:latest
   stage: Test
   variables:
     DOCKER_HOST: tcp://localhost:2375/
