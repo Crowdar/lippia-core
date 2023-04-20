@@ -1,6 +1,22 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]()
+## [3.3.0.0]() (XX/02/2023)
+### Fixed  
+- __LocatorManager:__  
+    The split is limited to 2, regardless of the number of characters represented by the ":" character, it will cut the string when finding the first match  
+- __NOSSLVerification:__  
+    Host Verification BYPASS
+
+### Added
+- __EndpointConfiguration.setInstance($) method:__  
+    Is mainly used by api-lowcode for calls to other scenarios, allows saving instances of endpoint configurations
+
+### Changed
+- __CallerService.call($):__  
+    Changed return data type to Object
+
 ## 3.2.3.7 (17/02/2021)
 * Fix getElementByParent and getElementsByParent in ActionManager
 * Change locator manager strategy to work directly with constants
@@ -48,7 +64,7 @@ All notable changes to this project will be documented in this file.
 * Add getName() method in ProjectTypeEnum with name of driver instance + call it in DriverManager.getName()
 * Method loadLocators in the constructor PageBase and getLocator that returns By searching in LocatorTypesEnum
 * Refactor PageBase, PageBaseMobile and PageBaseWeb in methods to support parameter String locatorName and deprecated in old methods.
-* Replace in places that were using getRootLogger() for LogManager.getLogger(class).
+* Replace in places that were using getRootLogger() for Logger.getLogger(class).
 * Api fix in CommonSteps (Delete ':')
 * Remove unused methods in Utils class.
 * Add ActionManager, WebActionManager and MobileActionManager with all static methods and using locator manager. (This replaces PageBase).

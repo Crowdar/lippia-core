@@ -3,8 +3,7 @@ package com.crowdar.core.pageObjects;
 import com.crowdar.core.Constants;
 import com.crowdar.core.LocatorManager;
 import com.crowdar.driver.DriverManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -57,7 +56,7 @@ abstract public class PageBase {
     }
 
     public Logger getLogger() {
-        return LogManager.getLogger(this.getClass().asSubclass(this.getClass()));
+        return Logger.getLogger(this.getClass().asSubclass(this.getClass()));
     }
 
     /**

@@ -73,6 +73,10 @@ public class EndpointConfiguration {
 		}
 		return INSTANCE.get();
 	}
+
+	public static void setInstance(EndpointConfiguration instance) {
+		INSTANCE.set(instance);
+	}
 	
 	public static EndpointConfiguration clean() {
 		INSTANCE.set(null);

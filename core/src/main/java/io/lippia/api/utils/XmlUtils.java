@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.crowdar.core.PropertyManager;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,7 +32,7 @@ public class XmlUtils {
             TypeFactory typeFactory = getMapper().getTypeFactory();
             return (T) getMapper().readValue(xml, typeFactory.constructType(type));
         } catch (IOException e) {
-            LogManager.getLogger(XmlUtils.class).error(e.getMessage());
+            Logger.getLogger(XmlUtils.class).error(e.getMessage());
         }
         return null;
     }
@@ -43,7 +42,7 @@ public class XmlUtils {
         try {
             jsonResult = getMapper().writeValueAsString(xml);
         } catch (IOException e) {
-            LogManager.getLogger(XmlUtils.class).error(e.getMessage());
+            Logger.getLogger(XmlUtils.class).error(e.getMessage());
         }
         return jsonResult;
     }

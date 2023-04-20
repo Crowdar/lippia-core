@@ -1,8 +1,7 @@
 package com.crowdar.email;
 
 import com.crowdar.core.JsonUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.testng.Assert;
 
@@ -51,7 +50,7 @@ public enum EmailPropertiesEnum {
         try {
             json = JsonUtils.getJSON(path);
         } catch (IOException e) {
-            LogManager.getLogger(this.getClass()).error(e.getMessage());
+            Logger.getLogger(this.getClass()).error(e.getMessage());
             Assert.fail(e.getMessage());
         }
         return new JSONObject(json);
