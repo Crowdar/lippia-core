@@ -8,7 +8,7 @@ stages:
 deploy Nexus:
   stage: Deploy
   script:
-    - bash create-settings.sh
+    - sh create-settings.sh
     - mvn -B -s settings.xml verify 
     - mvn -B -s settings.xml deploy 
   rules:
