@@ -70,7 +70,7 @@ GitHub publish:
 Deploy OSSRH:
   stage: Deploy
   script:
-    - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
+    - sh create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
     - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d -md sha256
     - gpg --batch --import private-key.gpg
     - mvn versions:set -DremoveSnapshot
