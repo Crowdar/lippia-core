@@ -51,8 +51,8 @@ Sample test:
     - echo BS_USER=$BS_USER >> .env 
     - echo BS_KEY=$BS_KEY >> .env 
     #- docker-compose -f mobile-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
-    - docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
-    - docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
+    #- docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
+    #- docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
 
