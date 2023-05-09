@@ -1,4 +1,4 @@
-image: crowdar/pipeline:2.0.0
+image: crowdar/pipeline:2.0.1
 
 stages:
     - Test
@@ -27,11 +27,13 @@ deploy DockerHub:
       alias: docker
   script:
     - export PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
+    - if [ "$CI_COMMIT_BRANCH" = "master" ]; then export PROJECT_VERSION=${PROJECT_VERSION%-SNAPSHOT}; fi
     - docker build --no-cache -t crowdar/lippia:$PROJECT_VERSION .
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
     - docker push crowdar/lippia:$PROJECT_VERSION
   rules:
     - if: '$CI_COMMIT_BRANCH == "release"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
 
 
 Sample test:
@@ -50,9 +52,9 @@ Sample test:
     - echo VERSION=$PROJECT_VERSION >> .env 
     - echo BS_USER=$BS_USER >> .env 
     - echo BS_KEY=$BS_KEY >> .env 
-    #- docker-compose -f mobile-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
-    - docker-compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
-    - docker-compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
+    #- docker compose -f mobile-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
+    #- docker compose -f web-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
+    #- docker compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
 
@@ -63,16 +65,16 @@ GitHub publish:
       alias: docker
   script:
     - git remote add github https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Crowdar/lippia-core.git
-    - git push -u github
+    - git push -u github HEAD:master
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
 
 Deploy OSSRH:
   stage: Deploy
   script:
-    - bash create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
+    - sh create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
     - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d -md sha256
-    - gpg --batch --import private-key.gpg
+    - gpg --batch --import ${GPG_KEY_FILE}
     - mvn versions:set -DremoveSnapshot
     - mvn -P ossrh -B -s settings.xml verify
     - mvn -P ossrh -B -s settings.xml deploy
