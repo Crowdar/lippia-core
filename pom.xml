@@ -275,19 +275,27 @@
 			<version>5.2.10.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc10</artifactId>
 			<version>19.17.0.0</version>
 		</dependency>
 
+		<!-- json path -->
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<version>2.7.0</version>
 		</dependency>
-	</dependencies>
 
+		<!-- S3Client -->
+		<dependency>
+			<groupId>com.ibm.cos</groupId>
+			<artifactId>ibm-cos-java-sdk</artifactId>
+			<version>2.12.1</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<filters>
