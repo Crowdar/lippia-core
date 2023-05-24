@@ -1,4 +1,4 @@
-package io.lippia.api.lowcode;
+package com.crowdar.core;
 
 
 import com.crowdar.core.PropertyManager;

@@ -6,7 +6,7 @@
 
 	<groupId>io.lippia</groupId>
 	<artifactId>root</artifactId>
-	<version>3.3.0.2</version>
+	<version>3.3.0.1</version>
 
 	<packaging>pom</packaging>
 	<url>http://lippia.io</url>
@@ -67,9 +67,9 @@
 		<crowd.project.name>CroudProjectNameDefault</crowd.project.name>
 		<stories>**/Test.java</stories>
 		<meta.filter></meta.filter>
-		<spring-framework.version>4.3.8.RELEASE</spring-framework.version>
+		<spring-framework.version>5.3.27</spring-framework.version>
 		<jira.client.version>4.0.0</jira.client.version>
-		<jackson-version>2.9.10</jackson-version>
+		<jackson-version>2.15.0</jackson-version>
 	</properties>
 
 	<modules>

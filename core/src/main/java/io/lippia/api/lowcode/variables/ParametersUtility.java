@@ -1,6 +1,6 @@
 package io.lippia.api.lowcode.variables;
 
-import io.lippia.api.lowcode.EnvironmentManager;
+import com.crowdar.core.EnvironmentManager;
 
 import java.util.regex.Matcher;
 

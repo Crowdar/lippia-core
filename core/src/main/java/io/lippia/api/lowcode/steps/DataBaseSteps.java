@@ -5,7 +5,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.And;
-import io.lippia.api.lowcode.EnvironmentManager;
+import com.crowdar.core.EnvironmentManager;
 import io.lippia.api.lowcode.database.DbUtils;
 import io.lippia.api.service.CommonService;
 import org.springframework.jdbc.core.JdbcTemplate;
