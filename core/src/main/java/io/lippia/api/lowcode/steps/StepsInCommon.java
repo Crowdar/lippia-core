@@ -186,7 +186,7 @@ public class StepsInCommon {
 
     @Then("^validate response should be ([^\\s].+) = ([^\\s].*)$")
     public void valdidateResponse(String path, String expectedValue) throws UnsupportedEncodingException {
-        this.engine.responseMatcherUTF(path, expectedValue);
+        this.engine.responseMatcherISO(path, expectedValue);
     }
 
 }
