@@ -1,6 +1,4 @@
 package io.lippia.api.lowcode.internal;
-
-
 import cucumber.runtime.io.ResourceLoader;
 import cucumber.runtime.model.CucumberFeature;
 import cucumber.runtime.model.FeatureBuilder;
@@ -22,9 +20,11 @@ public class CucumberInternal {
 
     private static final Logger log = LoggerFactory.getLogger(CucumberInternal.class);
 
-    private static final FeatureBuilder featureBuilder = new FeatureBuilder();
-
     private CucumberInternal() {}
+
+    private static FeatureBuilder getFeatureBuilder() {
+        return new FeatureBuilder();
+    }
 
     private static Object getFileResourceLoader() {
         return new FileResourceLoader().load();
@@ -35,18 +35,20 @@ public class CucumberInternal {
     }
 
     public static List<CucumberFeature> getCucumberFeatures(String featureName) {
+        FeatureBuilder builder = getFeatureBuilder();
+
         try {
             Method method = getFeatureLoader().getClass()
                     .getDeclaredMethod("loadFromFeaturePath", FeatureBuilder.class, URI.class);
             method.setAccessible(true);
-            method.invoke(getFeatureLoader(), featureBuilder, getFeaturePath(featureName));
+            method.invoke(getFeatureLoader(), builder, getFeaturePath(featureName));
         } catch (NoSuchMethodException | IllegalAccessException |
-                 InvocationTargetException | URISyntaxException |
-                 ClassNotFoundException | InstantiationException e) {
+                InvocationTargetException | URISyntaxException |
+                ClassNotFoundException | InstantiationException e) {
             log.error(e.getMessage());
         }
 
-        return featureBuilder.build();
+        return builder.build();
     }
 
 }

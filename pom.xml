@@ -6,7 +6,7 @@
 
 	<groupId>io.lippia</groupId>
 	<artifactId>root</artifactId>
-	<version>3.3.0.0-SNAPSHOT</version>
+	<version>3.3.0.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<url>http://lippia.io</url>
@@ -67,9 +67,9 @@
 		<crowd.project.name>CroudProjectNameDefault</crowd.project.name>
 		<stories>**/Test.java</stories>
 		<meta.filter></meta.filter>
-		<spring-framework.version>4.3.8.RELEASE</spring-framework.version>
+		<spring-framework.version>5.3.27</spring-framework.version>
 		<jira.client.version>4.0.0</jira.client.version>
-		<jackson-version>2.9.10</jackson-version>
+		<jackson-version>2.15.0</jackson-version>
 	</properties>
 
 	<modules>
@@ -275,19 +275,27 @@
 			<version>5.2.10.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc10</artifactId>
 			<version>19.17.0.0</version>
 		</dependency>
 
+		<!-- json path -->
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<version>2.7.0</version>
 		</dependency>
-	</dependencies>
 
+		<!-- S3Client -->
+		<dependency>
+			<groupId>com.ibm.cos</groupId>
+			<artifactId>ibm-cos-java-sdk</artifactId>
+			<version>2.12.1</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<filters>
@@ -398,25 +406,25 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.3.0</version>
-						<configuration>
-						  <source>8</source>
-					      <detectJavaApiLink>false</detectJavaApiLink>
-						  <doclint>none</doclint>
-						   
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
+<!--					<plugin>-->
+<!--						<groupId>org.apache.maven.plugins</groupId>-->
+<!--						<artifactId>maven-javadoc-plugin</artifactId>-->
+<!--						<version>3.3.0</version>-->
+<!--						<configuration>-->
+<!--						  <source>8</source>-->
+<!--					      <detectJavaApiLink>false</detectJavaApiLink>-->
+<!--						  <doclint>none</doclint>-->
+<!--						   -->
+<!--						</configuration>-->
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<id>attach-javadocs</id>-->
+<!--								<goals>-->
+<!--									<goal>jar</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--						</executions>-->
+<!--					</plugin>-->
 
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>

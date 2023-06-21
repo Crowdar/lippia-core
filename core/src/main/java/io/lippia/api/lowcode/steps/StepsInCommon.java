@@ -42,7 +42,7 @@ public class StepsInCommon {
 
     Engine engine = new Engine();
 
-    @Given("^define ([^\\d]\\S+) = (\\S+)$")
+    @Given("^define ([^\\d]\\S+) = ([^\\s].*)$")
     public void setVariable(String key, String value) throws UnsupportedEncodingException {
         this.engine.set(key, value);
     }
@@ -65,12 +65,12 @@ public class StepsInCommon {
         this.engine.call(feature, filterType, filterValue);
     }
 
-    @Given("^header (\\S+) = (\\S+)$")
+    @Given("^header (\\S+) = ([^\\s].*)$")
     public void setHeader(String key, String value) {
         this.engine.configure(HEADERS, key, value);
     }
 
-    @Given("^headers (\\S+)$")
+    @Given("^headers ([^\\s].*)$")
     public void setHeaders(String headers) {
         this.engine.configure(HEADERS, RecognitionObjectType.find(headers).corresponding(Types.HEADERS));
     }
@@ -186,7 +186,7 @@ public class StepsInCommon {
 
     @Then("^validate response should be ([^\\s].+) = ([^\\s].*)$")
     public void valdidateResponse(String path, String expectedValue) throws UnsupportedEncodingException {
-        this.engine.responseMatcherUTF(path, expectedValue);
+        this.engine.responseMatcherISO(path, expectedValue);
     }
 
 }

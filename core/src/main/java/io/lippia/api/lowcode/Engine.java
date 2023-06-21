@@ -98,12 +98,12 @@ public class Engine {
     }
 
     public void responseMatcher(String path, String expectedValue) throws UnsupportedEncodingException {
-        String pathValue = responseMatcherGeneric(path, StandardCharsets.ISO_8859_1).toString();
+        String pathValue = responseMatcherGeneric(path, StandardCharsets.UTF_8).toString();
         Assert.assertEquals(pathValue, replaceVars(expectedValue), "no match!");
     }
 
-    public void responseMatcherUTF(String path, String expectedValue) throws UnsupportedEncodingException {
-        String pathValue = responseMatcherGeneric(path, StandardCharsets.UTF_8).toString();
+    public void responseMatcherISO(String path, String expectedValue) throws UnsupportedEncodingException {
+        String pathValue = responseMatcherGeneric(path, StandardCharsets.ISO_8859_1).toString();
         Assert.assertEquals(pathValue, replaceVars(expectedValue), "no match!");
     }
 
