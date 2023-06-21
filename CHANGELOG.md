@@ -1,6 +1,25 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
+## [3.3.0.1]() (XX/06/2023)
+### Fixed  
+- __Steps:__  
+    Define and Header now allow spaces in the middle of the parameters
+- __CucumberInternal:__  
+    Fixed problem with multiples Call in diferents features
+
+### Added
+- __S3Client:__  
+    Now available connection with S3
+
+### Changed
+- __EnvironmentManager:__  
+    Support multi environments
+- __Pom:__  
+    Upgrade of dependencies :  
+ 		- jackson-version from 2.9.10 -> 2.15.0 
+ 		- spring-framework.version from 4.3.8.RELEASE -> 5.3.27
+
 ## [Unreleased]()
 ## [3.3.0.0]() (XX/02/2023)
 ### Fixed  
