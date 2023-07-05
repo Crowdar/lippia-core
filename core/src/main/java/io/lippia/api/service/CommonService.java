@@ -2,9 +2,15 @@ package io.lippia.api.service;
 
 
 import com.crowdar.api.rest.APIManager;
+import com.crowdar.api.rest.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import io.cucumber.core.logging.Logger;
+import io.cucumber.core.logging.LoggerFactory;
+import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.steps.StepsInCommon;
 import io.lippia.api.utils.Json;
@@ -19,7 +25,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static com.crowdar.api.rest.APIManager.getLastResponse;
 import static com.crowdar.core.JsonUtils.getJSONFromPath;
+import static io.lippia.api.lowcode.Engine.gson;
 import static io.lippia.api.lowcode.variables.ParametersUtility.replaceVars;
 
 
@@ -31,19 +39,18 @@ public class CommonService {
     public static ThreadLocal<String> VALUE = new ThreadLocal<>();
 
     public static void deleteAttributeInBody(String attribute, String jsonName) throws IOException {
-    	try {
-    		String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
-    		BODY.set(jsonFromFile);
-    		Json json = Json.of(jsonFromFile);
-        	json.remove(attribute);
+        try {
+            String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
+            BODY.set(jsonFromFile);
+            Json json = Json.of(jsonFromFile);
+            json.remove(attribute);
             BODY.set(String.valueOf(json));
             stepsInCommon.setBody(BODY.get());
-    	}catch(Exception e) {
-    		System.out.println(e.getMessage());
-    	}
-    	
-    }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
+    }
 
 
     public static String getJSONFromFileBody(String fileName) throws IOException {
@@ -65,10 +72,10 @@ public class CommonService {
             String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
             BODY.set(jsonFromFile);
             Json json = Json.of(jsonFromFile);
-            json.set(attribute,evaluateExpresion(newValue));
+            json.set(attribute, evaluateExpresion(newValue));
             BODY.set(String.valueOf(json));
             stepsInCommon.setBody(BODY.get());
-        }catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -184,5 +191,28 @@ public class CommonService {
         return result;
     }
 
+    public void printerLog() {
+        EndpointConfiguration.getInstance().setMethodService(MethodServiceEnum.NOSSLVERIFICATION);
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        Response response = getLastResponse();
+        Object status = response.getStatusCode();
+        Object body = response.getResponse();
+        logger.info("\n┌────────────────────────────────────────────────────────────────────────────────────┐\n" +
+                "|────────────────────────────────── BEGIN RESPONSE ──────────────────────────────────|\n" +
+                " status " + status + "\n" + getPrettyJson(body) + "\n" +
+                "|─────────────────────────────────── END RESPONSE  ──────────────────────────────────|\n" +
+                "└────────────────────────────────────────────────────────────────────────────────────┘"
+        );
+    }
 
+
+    public static String getPrettyJson(Object jsonString) {
+        if (jsonString == null) return null;
+        if (jsonString instanceof Map) {
+            jsonString = gson.toJson(jsonString, Map.class);
+        }
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(new String(jsonString.toString().getBytes(StandardCharsets.UTF_8)));
+        return gson.toJson(je);
+    }
 }

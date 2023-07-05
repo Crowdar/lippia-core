@@ -41,6 +41,7 @@ public class StepsInCommon {
 
 
     Engine engine = new Engine();
+    CommonService commonService = new CommonService();
 
     @Given("^define ([^\\d]\\S+) = ([^\\s].*)$")
     public void setVariable(String key, String value) throws UnsupportedEncodingException {
@@ -187,6 +188,11 @@ public class StepsInCommon {
     @Then("^validate response should be ([^\\s].+) = ([^\\s].*)$")
     public void valdidateResponse(String path, String expectedValue) throws UnsupportedEncodingException {
         this.engine.responseMatcherISO(path, expectedValue);
+    }
+
+    @And("^print response$")
+    public void printResponse() {
+        commonService.printerLog();
     }
 
 }
