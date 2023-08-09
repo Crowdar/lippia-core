@@ -5,9 +5,9 @@ import com.crowdar.bdd.cukes.TestNGSecuencialRunner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import gherkin.events.PickleEvent;
-import io.cucumber.core.logging.Logger;
-import io.cucumber.core.logging.LoggerFactory;
+
 import io.cucumber.testng.TestNGCucumberRunner;
 import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.assertions.JsonPathAnalyzer;
@@ -16,6 +16,7 @@ import io.lippia.api.lowcode.exception.LippiaException;
 import io.lippia.api.lowcode.internal.PicklesBuilder;
 import io.lippia.api.service.CallerService;
 import io.lippia.api.service.CommonService;
+
 import org.testng.Assert;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 
 import static com.crowdar.util.JsonUtils.isJSONValid;
-import static io.lippia.api.lowcode.variables.ParametersUtility.replaceVars;
+
 import static io.lippia.api.lowcode.variables.VariablesManager.setVariable;
 import static io.lippia.api.service.MethodServiceEnum.NOSSLVERIFICATION;
 
@@ -37,8 +38,15 @@ import static io.lippia.api.service.MethodServiceEnum.NOSSLVERIFICATION;
 public class Engine {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
+    static {
+        EventDispatcher.dispatch(ParametersDefinitionTypeBuilder::new);
+        EventDispatcher.dispatch(PrimitiveDefinitionTypeBuilder::new);
+        EventDispatcher.dispatch(FileEventDefinitionTypeBuilder::new);
+    }
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    public static Object evaluateExpression(Object... entries) {
+        return EventDispatcher.trigger(entries);
+    }
 
     public void set(String key, String value) throws UnsupportedEncodingException {
         if (value.matches("^response.\\S+$") || value.matches("^\\$.\\S+$")) {
@@ -99,15 +107,15 @@ public class Engine {
 
     public void responseMatcher(String path, String expectedValue) throws UnsupportedEncodingException {
         String pathValue = responseMatcherGeneric(path, StandardCharsets.UTF_8).toString();
-        Assert.assertEquals(pathValue, replaceVars(expectedValue), "no match!");
+        Assert.assertEquals(pathValue, evaluateExpression(expectedValue), "no match!");
     }
 
     public void responseMatcherISO(String path, String expectedValue) throws UnsupportedEncodingException {
         String pathValue = responseMatcherGeneric(path, StandardCharsets.ISO_8859_1).toString();
-        Assert.assertEquals(pathValue, replaceVars(expectedValue), "no match!");
+        Assert.assertEquals(pathValue, evaluateExpression(expectedValue), "no match!");
     }
 
-    public Object responseMatcherGeneric(String path, Charset Standard) throws UnsupportedEncodingException {
+    public Object responseMatcherGeneric(String path, Charset Standard) {
         Object entry = APIManager.getLastResponse().getResponse();
         if (entry instanceof List || entry instanceof Map) {
             entry = new Gson().toJson(entry);
@@ -121,7 +129,7 @@ public class Engine {
                 new Gson().toJson(APIManager.getLastResponse().getResponse());
 
         Object pathValue = JsonPathAnalyzer.read(response, path);
-        Assert.assertTrue(pathValue.toString().contains(replaceVars(expectedValue)), "no se encontraron coincidencias!");
+        Assert.assertTrue(pathValue.toString().contains(evaluateExpression(expectedValue).toString()), "no se encontraron coincidencias!");
     }
 
 }

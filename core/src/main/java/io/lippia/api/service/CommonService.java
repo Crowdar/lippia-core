@@ -5,15 +5,16 @@ import com.crowdar.api.rest.APIManager;
 import com.crowdar.api.rest.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
 import io.cucumber.core.logging.Logger;
 import io.cucumber.core.logging.LoggerFactory;
 import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.steps.StepsInCommon;
 import io.lippia.api.utils.Json;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -27,8 +28,9 @@ import java.util.regex.Pattern;
 
 import static com.crowdar.api.rest.APIManager.getLastResponse;
 import static com.crowdar.core.JsonUtils.getJSONFromPath;
+
+import static io.lippia.api.lowcode.Engine.evaluateExpression;
 import static io.lippia.api.lowcode.Engine.gson;
-import static io.lippia.api.lowcode.variables.ParametersUtility.replaceVars;
 
 
 public class CommonService {
@@ -52,7 +54,6 @@ public class CommonService {
 
     }
 
-
     public static String getJSONFromFileBody(String fileName) throws IOException {
         return getJSONFromFileGeneric(fileName, "bodies");
     }
@@ -72,7 +73,7 @@ public class CommonService {
             String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
             BODY.set(jsonFromFile);
             Json json = Json.of(jsonFromFile);
-            json.set(attribute, evaluateExpresion(newValue));
+            json.set(attribute, evaluateExpression(newValue));
             BODY.set(String.valueOf(json));
             stepsInCommon.setBody(BODY.get());
         } catch (Exception e) {
@@ -80,27 +81,6 @@ public class CommonService {
         }
 
     }
-
-    public static Object evaluateExpresion(String entry) throws IOException {
-        Object result = null;
-        if (Pattern.compile("^\\d+$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Integer.class);
-        } else if (Pattern.compile("^\\d+\\.[\\d+]{1,9}$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Float.class);
-        } else if (Pattern.compile("^\\d+\\.[\\d+]{10,}$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Double.class);
-        } else if (Pattern.compile("^true|false$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Boolean.class);
-        } else if (Pattern.compile("^\\{[^{].*[^}]}$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Object.class);
-        } else if (Pattern.compile("^\\[(.|\n)*]$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, ArrayList.class);
-        } else {
-            result = new ObjectMapper().readValue(entry, String.class);
-        }
-        return result;
-    }
-
 
     public static void setValuesKeys(String newValue, String attribute, String jsonName) throws Exception {
         ArrayList<String> claves = setLista(attribute);
@@ -186,8 +166,9 @@ public class CommonService {
         if (valor.startsWith("$.")) {
             result = engine.responseMatcherGeneric(valor, StandardCharsets.UTF_8);
         } else {
-            result = replaceVars(valor);
+            result = evaluateExpression(valor);
         }
+
         return result;
     }
 
