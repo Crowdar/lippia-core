@@ -2,6 +2,7 @@ package io.lippia.api.lowcode;
 
 import com.crowdar.api.rest.APIManager;
 import com.crowdar.bdd.cukes.TestNGSecuencialRunner;
+import com.crowdar.core.annotations.Beta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -48,6 +49,7 @@ public class Engine {
         return EventDispatcher.trigger(entries);
     }
 
+    @Beta
     public void set(String key, String value, String on) {
         Object json = evaluateExpression(on);
         if (json instanceof List || json instanceof Map) {
