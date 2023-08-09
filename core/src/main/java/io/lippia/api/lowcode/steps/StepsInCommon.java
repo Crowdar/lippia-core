@@ -78,6 +78,11 @@ public class StepsInCommon {
         this.engine.configure(BODY, body);
     }
 
+    @Given("^set (\\S+) = (\\S+) on (\\S+)$")
+    public void set(String key, String value, String on) {
+        this.engine.set(key, value, on);
+    }
+
     @Given("^param (\\S+) = (\\S+)$")
     public void setParam(String key, String value) {
         this.engine.configure(URL_PARAMETER, key, value);

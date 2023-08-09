@@ -48,6 +48,28 @@ public class Engine {
         return EventDispatcher.trigger(entries);
     }
 
+    public void set(String key, String value, String on) {
+        Object json = evaluateExpression(on);
+        if (json instanceof List || json instanceof Map) {
+            json = new Gson().toJson(json);
+        }
+
+        String[] splJsonPath = key.split("\\.");
+        String completeJsonPath = "$";
+
+        if (splJsonPath.length > 1) {
+            key = splJsonPath[splJsonPath.length - 1];
+            completeJsonPath = completeJsonPath.concat(".").concat(splJsonPath[splJsonPath.length - 2]);
+        }
+
+        String newJson = JsonPathAnalyzer.set(json.toString(), completeJsonPath, key, evaluateExpression(value));
+
+        if (on.startsWith("$(") && on.endsWith(")")) {
+            on = on.substring(6, on.length() - 1);
+            setVariable(on, newJson);
+        }
+    }
+
     public void set(String key, String value) throws UnsupportedEncodingException {
         if (value.matches("^response.\\S+$") || value.matches("^\\$.\\S+$")) {
             value = responseMatcherGeneric(value.replaceFirst("response", Matcher.quoteReplacement("$")), StandardCharsets.UTF_8).toString();
