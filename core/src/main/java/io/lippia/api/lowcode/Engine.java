@@ -37,7 +37,7 @@ import static io.lippia.api.service.MethodServiceEnum.NOSSLVERIFICATION;
 
 
 public class Engine {
-    public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     static {
         EventDispatcher.dispatch(ParametersDefinitionTypeBuilder::new);

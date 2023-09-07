@@ -4,7 +4,6 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
-import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
 public class JsonPathAnalyzer {
@@ -16,7 +15,8 @@ public class JsonPathAnalyzer {
     static {
         configuration = Configuration.builder()
                 .options(Option.REQUIRE_PROPERTIES)
-                .jsonProvider(new JsonOrgJsonProvider())
+                .mappingProvider(new JacksonMappingProvider())
+                .jsonProvider(new JacksonJsonProvider())
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class JsonPathAnalyzer {
                 .jsonString();
     }
 
-    public static Object read(Object jsonString, String jsonPath) {
+    public static Object read(String jsonString, String jsonPath) {
         return JsonPath.using(configuration)
                 .parse(jsonString)
                 .read(jsonPath);
