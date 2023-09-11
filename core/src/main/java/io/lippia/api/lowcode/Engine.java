@@ -50,7 +50,7 @@ public class Engine {
     }
 
     @Beta
-    public void set(String key, String value, String on) {
+    public void set(String key, Object value, String on) {
         Object json = evaluateExpression(on);
         if (json instanceof List || json instanceof Map) {
             json = new Gson().toJson(json);
@@ -61,7 +61,10 @@ public class Engine {
 
         if (splJsonPath.length > 1) {
             key = splJsonPath[splJsonPath.length - 1];
-            completeJsonPath = completeJsonPath.concat(".").concat(splJsonPath[splJsonPath.length - 2]);
+
+            for (int i = 0; i <= splJsonPath.length - 2; i++) {
+                completeJsonPath = completeJsonPath.concat(".").concat(splJsonPath[i]);
+            }
         }
 
         String newJson = JsonPathAnalyzer.set(json.toString(), completeJsonPath, key, evaluateExpression(value));

@@ -79,7 +79,7 @@ public class StepsInCommon {
     }
 
     @Given("^set (\\S+) = (\\S+) on (\\S+)$")
-    public void set(String key, String value, String on) {
+    public void set(String key, Object value, String on) {
         this.engine.set(key, value, on);
     }
 
