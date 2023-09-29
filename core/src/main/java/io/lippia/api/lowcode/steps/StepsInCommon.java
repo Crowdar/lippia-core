@@ -78,9 +78,10 @@ public class StepsInCommon {
         this.engine.configure(BODY, body);
     }
 
-    @Given("^set (\\S+) = (\\S+) on (\\S+)$")
-    public void set(String key, Object value, String on) {
-        this.engine.set(key, value, on);
+    @Given("^setear el valor (.*) de las clave (.*) en el body (.*)$")
+    @And("^set value (\\S+) of key (\\S+) in body (\\S+)$")
+    public void set(String value, String key, String in) {
+        this.engine.set(value, key, in);
     }
 
     @Given("^param (\\S+) = (\\S+)$")
@@ -134,12 +135,6 @@ public class StepsInCommon {
     @And("^eliminar clave (.*) en el body (.*)$")
     public void deleteKeyvalueAtributoInBodyPath(String attribute, String body) throws IOException {
         CommonService.deleteAttributeInBody(attribute, body);
-    }
-
-    @When("^set value (.*) of key (.*) in body (.*)$")
-    @And("^setear el valor (.*) de la clave (.*) en el body (.*)$")
-    public void setValueValorOfKeyClaveInBodyPath(String value, String key, String body) throws Exception {
-        CommonService.setValue(value, key, body);
     }
 
     @When("^set values (.*) of keys (.*) in body (.*)$")

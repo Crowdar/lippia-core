@@ -50,8 +50,8 @@ public class Engine {
     }
 
     @Beta
-    public void set(String key, Object value, String on) {
-        Object json = evaluateExpression(on);
+    public void set(String value, String key, String in) {
+        Object json = evaluateExpression(in);
         if (json instanceof List || json instanceof Map) {
             json = new Gson().toJson(json);
         }
@@ -69,9 +69,9 @@ public class Engine {
 
         String newJson = JsonPathAnalyzer.set(json.toString(), completeJsonPath, key, evaluateExpression(value));
 
-        if (on.startsWith("$(") && on.endsWith(")")) {
-            on = on.substring(6, on.length() - 1);
-            setVariable(on, newJson);
+        if (in.startsWith("$(") && in.endsWith(")")) {
+            in = in.substring(6, in.length() - 1);
+            setVariable(in, newJson);
         }
     }
 

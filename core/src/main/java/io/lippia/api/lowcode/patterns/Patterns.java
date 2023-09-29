@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public class Patterns {
 
     /* combination of positive lookbehind & lookahead, finds the 1st word ("var" with "{{" before it and "}}" after it) */
+    public static final Pattern OLD_VARIABLE_PATTERN = Pattern.compile("(?<=\\{{2})\\w+(?=}{2})");
     public static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\(var\\.(\\w+).*");
     public static final Pattern ENVIRONMENT_PATTERN = Pattern.compile("\\$\\(env\\.(\\w+).*");
     public static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\(pro\\.(\\w+).*");

@@ -2,9 +2,14 @@ package io.lippia.api.lowcode;
 
 import com.crowdar.core.EnvironmentManager;
 import com.crowdar.core.PropertyManager;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.google.gson.Gson;
+
 import io.lippia.api.lowcode.patterns.Patterns;
 import io.lippia.api.lowcode.variables.VariablesManager;
+
 import org.apache.commons.lang.NotImplementedException;
 
 import java.util.List;
@@ -12,6 +17,35 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 public abstract class ParametersDefinitionTypeParser extends DefinitionTypeParser {
+    public static class OldVariable extends ParametersDefinitionTypeParser {
+        @Override
+        public Object parse(Object... entries) throws JsonProcessingException {
+            String VARIABLE_REPLACE_PATTERN = "[{]{2}%s[}]{2}";
+
+            Matcher varsMatcher = Patterns.OLD_VARIABLE_PATTERN.matcher((String) entries[0]);
+            while (varsMatcher.find()) {
+                String keyVar = varsMatcher.group(0);
+                Object keyVal = VariablesManager.getInstance().getVariable(keyVar);
+                if (keyVal instanceof String) {
+                    entries[0] = ((String) entries[0]).replaceAll
+                            (String.format(VARIABLE_REPLACE_PATTERN, keyVar), (String) keyVal);
+                    continue;
+                }
+
+                if (keyVal instanceof List || keyVal instanceof Map) {
+                    entries[0] = ((String) entries[0]).replaceAll
+                            ("\"?" + String.format(VARIABLE_REPLACE_PATTERN, keyVar) + "\"?", new Gson().toJson(keyVal));
+                    continue;
+                }
+
+                entries[0] = ((String) entries[0]).replaceAll
+                        ("\"?" + String.format(VARIABLE_REPLACE_PATTERN, keyVar) + "\"?", keyVal.toString());
+            }
+
+            return entries[0];
+        }
+    }
+
     public static class Variable extends ParametersDefinitionTypeParser {
         @Override
         public Object parse(Object... entries) {

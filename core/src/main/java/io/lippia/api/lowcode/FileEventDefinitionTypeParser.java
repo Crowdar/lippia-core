@@ -14,4 +14,14 @@ public abstract class FileEventDefinitionTypeParser extends DefinitionTypeParser
         }
     }
 
+    @Deprecated
+    public static class Json extends FileEventDefinitionTypeParser {
+
+        @Override
+        public Object parse(Object... entries) {
+            String currentPath = (String) entries[0];
+            return read(getDefaultPathTo(currentPath));
+        }
+    }
+
 }

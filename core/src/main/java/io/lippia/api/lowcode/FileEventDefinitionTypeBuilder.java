@@ -12,7 +12,8 @@ public class FileEventDefinitionTypeBuilder implements IHierarchicalEventTypeBui
 
     enum FileEventDefinitionTypeFactory {
 
-        READ(FileEventDefinitionTypeParser.Read::new,   "^read\\(\\S+\\)$");
+        READ(FileEventDefinitionTypeParser.Read::new,   "^read\\(\\S+\\)$"),
+        JSONPATH(FileEventDefinitionTypeParser.Json::new, "(\\S+)\\.json");
 
         private final Supplier<FileEventDefinitionTypeParser> constructor;
         private final Predicate<String> typeMatcher;
