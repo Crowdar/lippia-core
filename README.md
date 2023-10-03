@@ -1,11 +1,20 @@
+# Lippia Core Framework
+El core del framework tiene todos las librerias propias de crowdar por ejemplo todas las Paginas base de cucumber, todos los artefactos necesarios para correr los test.
+
 * Para poder ejecutar Lippia necesitamos setear properties ubicadas en src/main/resources/config.properties. A continuacion, se enumeran dichas properties.
 
-    Properties de proyecto.
-	- crowdar.projectType= proyecto a ejecutar. (Ejemplo: WEB_CHROME) OBLIGATORIA
-	- crowdar.projectType.driverCapabilities.jsonFile= ruta donde esta ubicado el json de las capabilities. OBLIGATORIA para proyectos web y mobile.
+## Properties de proyecto.
+
+```properties
+#Tipo de proyecto a ejecutar. (Ejemplo: WEB_CHROME) OBLIGATORIA
+crowdar.projectType = WEB_CHROME 
+#ruta donde esta ubicado el json de las capabilities. OBLIGATORIA para proyectos web y mobile.
+crowdar.projectType.driverCapabilities.jsonFile= 
+```
 
     Properties de proyecto opcionales.
-	- crowdar.setupStrategy= estrategia de driver a utilizar. En caso de proyectos web con hub, utilizar: web.SeleniumGridStrategy. Default: NoneStrategy. OPCIONAL.
+	```env
+    crowdar.setupStrategy=web.SeleniumGridStrategy                  /*estrategia de driver a utilizar. En caso de proyectos web con hub, utilizar web.SeleniumGridStrategy. Default: NoneStrategy. OPCIONAL.*/
 	- crowdar.driverHub= URL en donde esta alojado el hub para correr desde un servidor. En caso de ejecutar localmente, no es necesaria. Default: null. OPCIONAL.
 	- crowdar.report.disable_screenshot_on_failure= true para NO mostrar imagen de error en reporte. Default: false. Default para API, WIN32 y DATABASE: true. OPCIONAL.
 	- crowdar.report.stackTraceDetail= Stacktrace para proyectos que no son web o mobile. Default: false. Default para API, WIN32 y DATABASE: true. OPCIONAL.
@@ -121,10 +130,7 @@ ProjectTypes:
 
 El root del framework tiene todas las librerias que son utilizadas dentro del core para correr cualquier proyecto cliente
 
-# CrowdarCoreFramework
-El core del framework tiene todos las librerias propias de crowdar por ejemplo todas las Paginas base de cucumber, todos los artefactos necesarios para correr los test.
 
----
 
 # LIPPIA configuration
 Primer paso a dar para construir un projecto Lippia, en un proyecto cliente se deben configurar el pom.xml en el proyecto cliente y  heredar del root de la siguiente manera
@@ -153,8 +159,9 @@ se debe configurar el repositorio de Lippia en la seccion de repositotios del po
 </repository>`
 
 tendria que quedar el pom.xml de la siguiente manera : 
-**https://github.com/Crowdar/lippia-web-sample-project/blob/master/pom.xml**
---
+https://github.com/Crowdar/lippia-web-sample-project/blob/master/pom.xml
+
+
 
 # Main configuration file : 
 
@@ -162,15 +169,19 @@ El archivo de configuracion principal es el config.properties, hay una clase lla
 las propiedades desde config.properties este esta ubicado en el path
 src\main\resources\config.properties 
 la mayoria de las propiedades esta sobre escrita por variables maven definidas en los perfiles
+
 **Ejemplo de config.properties**
+
 https://github.com/Crowdar/lippia-web-sample-project/blob/master/src/main/resources/config.properties
---
+
 
 # Maven Profiles
 
 Los perfiles maven nos permiten definir la parametria, para configurar perfiles en proyectos clientes se tiene que definir en el pom.xml del projecto la siguiente seccion
-`<profiles>
- <profile>
+
+``` XML
+<profiles>
+         <profile>
             <id>TestParallelJenkins</id>
             <activation>
             </activation>
@@ -178,73 +189,85 @@ Los perfiles maven nos permiten definir la parametria, para configurar perfiles 
          ...
             </properties>
         </profile>
-</profiles>`
---
+</profiles>
+```
+
 
 # Maven resources filters
 
 hay una configuration en el root que lo que hace es mediante perfiles reemplazar cualquier variable del tipo ${variable} en los archivos ubicados
 en el path src\main\resources\ que terminen en .properties este configuracion es 
- ` <filters>            
+
+``` XML
+<filters>            
        <filter>src/main/resources/config.properties</filter>
-  </filters>
-  <resources>
+</filters>
+<resources>
        <resource>
            <filtering>true</filtering>
            <directory>src/main/resources</directory>
        </resource>
-  </resources>`
+</resources>
+```
 
 Para mas informacion sobre Maven referirse a https://maven.apache.org/
----
+
 
 # Cucumber and TestNG integration
 Para ejecutar un proyecto de Lippia se requiere el runner de TestNG y Cucumber 
 Para que un cliente tenga un configuracion deberia  tener lo siguiente 
 una clase runner que extienda de com.crowdar.bdd.cukes.TestNgRunner para una configuracion secuencial 
 
-`public class TestsRunner extends TestNgRunner {
+``` Java
+public class TestsRunner extends TestNgRunner {
 	
-}`
+}
+``` 
 
 Configuacion en paralelo :
 una clase runner que extienda de com.crowdar.bdd.cukes.TestNGParallelRunner para una configuracion en paralelo a partir de la version 1.4 del core y del root
 por ejemplo 
 
+``` Java
 public class ParallelTestRunner extends TestNGParallelRunner { 
 
 }
+``` 
 
 tener una testng.xml apuntando a esa clase por ejemplo 
 
-`<suite name="BDD Test Suite" verbose="1" parallel="methods" data-provider-thread-count="10" thread-count="10" configfailurepolicy="continue">
+``` XML
+<suite name="BDD Test Suite" verbose="1" parallel="methods" data-provider-thread-count="10" thread-count="10" configfailurepolicy="continue">
     <test name="Test 1" annotations="JDK" preserve-order="true">
         <classes>
             <class name="ParallelTestRunner"/>
         </classes>
     </test>
-</suite> `
+</suite> 
+```
 
 en este caso esta corriendo en paralelo  10 hilos para eso tenemos esta configuracion 
+
+``` XML
 data-provider-thread-count="10" thread-count="10"
+```
 
 Para informacion adicional sobre TestNG referirse a https://testng.org/doc/
---
+
 ## Configuracion de cucumber :
 
  el proyecto cliente debe tener si o si un archivo properties del tipo 
- src/main/resources/cucumber.properties , las variables del tipo ${cucumber.option} es sobre escrita por la propiedad crowdar.cucumber.option en los perfiles 
- maven del proyecto como por ejemplo 
-```<crowdar.cucumber.option>src/test/resources/features --glue com/crowdar/core --glue com/crowdar/bdd/cukes --glue ar/com/ --glue ar//hook --tags ${crowdar.cucumber.filter} --tags ~@Ignore --plugin com.crowdar.report.CucumberExtentReport  --plugin pretty</crowdar.cucumber.option>```
+ src/main/resources/cucumber.properties , las variables del tipo ${cucumber.option} es sobre escrita por la propiedad crowdar.cucumber.option en los perfiles maven del proyecto como por ejemplo 
+
+```XML
+<crowdar.cucumber.option>src/test/resources/features --glue com/crowdar/core --glue com/crowdar/bdd/cukes --glue ar/com/ --glue ar//hook --tags ${crowdar.cucumber.filter} --tags ~@Ignore --plugin com.crowdar.report.CucumberExtentReport  --plugin pretty</crowdar.cucumber.option>
+```
  
 **Ejemplo de cucumber.properties**
 
 https://github.com/Crowdar/lippia-web-sample-project/blob/master/src/main/resources/cucumber.properties
 
-
 Para mas informacion sobre cucumber referirse a https://cucumber.io/docs
-
----
 
 ## EJEMPLOS
 por favor revisar los siguientes ejemplos de proyectos  para tener mas información
@@ -255,17 +278,10 @@ por favor revisar los siguientes ejemplos de proyectos  para tener mas informaci
 + https://github.com/Crowdar/lippia-low-code-sample-project
 
 
---- 
 
 # DOCKER
 para correr Lippia en un entorno de CI/CD, debe utilizarse la imagen Docker que se encuentra en DockerHub 
 
 + https://hub.docker.com/r/crowdar/lippia
-
-
-
-
-
-
 
 
