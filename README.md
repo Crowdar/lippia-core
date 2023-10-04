@@ -1,7 +1,5 @@
 # Lippia Core Framework
-El core del framework tiene todos las librerias propias de crowdar por ejemplo todas las páginas base de cucumber, todos los artefactos necesarios para correr los test.
-
-El core del framework tiene todas las librerias que son utilizadas dentro del core para correr cualquier proyecto cliente
+El core del framework tiene todas las librerías que son utilizadas dentro un proyecto de automatización.
 Todos los proyectos de Lippia utilizan [Maven](https://maven.apache.org/) para su ensamble y ejecución y su configuración asociada, [TestNG](https://testng.org/) como runner para ejecuciones en secuencia y en paralelo, y [Cucumber](https://cucumber.io) para la selección de los tests a ejecutar, como así tambien los Reporters utilizados para leer los resultados, como ser [Extent Reports](https://www.extentreports.com/), [Pretty console cucumber reporter](https://cucumber.io/docs/cucumber/reporting/)  o [Lippia Test Manager](https://lippia.io)
 
 # Maven Profiles
