@@ -12,53 +12,102 @@ crowdar.projectType = WEB_CHROME
 crowdar.projectType.driverCapabilities.jsonFile= 
 ```
 
-    Properties de proyecto opcionales.
-	```env
-    crowdar.setupStrategy=web.SeleniumGridStrategy                  /*estrategia de driver a utilizar. En caso de proyectos web con hub, utilizar web.SeleniumGridStrategy. Default: NoneStrategy. OPCIONAL.*/
-	- crowdar.driverHub= URL en donde esta alojado el hub para correr desde un servidor. En caso de ejecutar localmente, no es necesaria. Default: null. OPCIONAL.
-	- crowdar.report.disable_screenshot_on_failure= true para NO mostrar imagen de error en reporte. Default: false. Default para API, WIN32 y DATABASE: true. OPCIONAL.
-	- crowdar.report.stackTraceDetail= Stacktrace para proyectos que no son web o mobile. Default: false. Default para API, WIN32 y DATABASE: true. OPCIONAL.
+# Properties de proyecto opcionales.
 
-    Properties de URL
-    - base.api.url= URL comun a usar en un proyecto API. Ejemplo: http://api.pagos/ OPCIONAL.
-    - URL= URL base para proyectos web. Ejemplo: https://github.com/Crowdar. OPCIONAL
-    - db.url= URL de la base de datos. OPCIONAL.
+```properties
+crowdar.setupStrategy=web.SeleniumGridStrategy       #estrategia de driver a utilizar. En caso de proyectos web con hub, utilizar web.SeleniumGridStrategy. Default: NoneStrategy. OPCIONAL.
 
-    Properties de reporte Extent.
-    - crowdar.extent.host.name= nombre del host en el que se ejecuta. OBLIGATORIO.
-    - crowdar.extent.environment= nombre del ambiente en que se ejecuta. Ejemplo: Linux - Jenkins. OBLIGATORIO.
-    - crowdar.extent.user.name= nombre del ejecutor. OBLIGATORIO.
-    - crowdar.extent.report.path= ubicación del reporte dentro de la carpeta target. OPCIONAL.
-    - crowdar.extent.report.name= nombre del archivo del reporte html. OPCIONAL.
-    - crowdar.extent.report.document.title= titulo del reporte una vez dentro. OPCIONAL.
-    - crowdar.extent.report.encoding= tipo de encoding. Default: UTF-8. OPCIONAL.
-    - crowdar.extent.report.protocol= tipo de protocolo. http o https. Default: http. OPCIONAL.
-    - crowdar.extent.report.theme= tipo de estilo: dark o standard. Default: standard. OPCIONAL.
-    - crowdar.extent.report.timestampformat= tipo de formato en textos como duracion de ejecucion del caso. OPCIONAL.
-    - crowdar.report.screenshotOnSuccess= mostrar screenshot en step pass. Default: false. OPCIONAL.
+crowdar.driverHub= 
+#URL en donde esta alojado el hub para correr desde un servidor. En caso de ejecutar localmente, no es necesaria. Default: null. OPCIONAL.
 
-    Properties de timeout.
-    - crowdar.wait.fluent.frecuency= frecuencia de espera para fluent. Default: 500
-    - crowdar.wait.fluent.timeout= tiempo de espera para fluent. Default: 60
-    - crowdar.wait.file.download.timeout= tiempo de espera para descargas. Default: 10
-    - crowdar.wait.timeout= tiempo de espera general. Default: 20
-    - crowdar.wait.script.timeout= tiempo de espera para finalizacion de un script. Default: 55
-    - crowdar.wait.impicit.timeout= tiempo de espera para timeout implicitos. Default: 2
-    - crowdar.wait.element.timeout= tiempo de espera para elementos. Default: 30
-    - crowdar.wait.appStart.timeout= tiempo de espera para que la app inicie (mobile). Default: 70
-    - crowdar.pattern.simpleDate= formato para fecha. Default: MM/dd/yyyy
-    - crowdar.pattern.completeDate= formato para fecha y hora. Default: MM/dd/yyyy hh:mm aa
+crowdar.report.disable_screenshot_on_failure = true 
+#true para NO mostrar imagen de error en reporte. Default: false. Default para API, WIN32 y DATABASE: true. OPCIONAL.
+	- 
+crowdar.report.stackTraceDetail= false
 
-    Properties para casos de prueba de validacion de emails.
-	- email.protocol= protocolo para sesion de email. Valores posibles: pop3s - imap - smtp. OPCIONAL.
-    - email.user= email para autenticarse. OPCIONAL.
-    - email.password= password para autenticarse. OPCIONAL.
+#Stacktrace para proyectos que no son web o mobile. Default: false. Default para API, WIN32 y DATABASE: true. OPCIONAL.
+```
 
-    - crowdar.download.folder= path en donde se ubicaran los archivos descargados durante la ejecucion del test. OPCIONAL.
+# Properties de URL
+    
+``` properties
+base.api.url= http://api.pagos.com/
 
+#URL comun a usar en un proyecto API. OPCIONAL.
 
-* 	dar ejemplos de distintas cinfiguraciones.
-	api:
+URL= https://github.com/Crowdar
+
+# URL base para proyectos web. OPCIONAL
+
+db.url= URL de la base de datos. OPCIONAL.
+```
+
+# Properties de reporte Extent.
+
+```properties
+crowdar.extent.host.name= nombre del host en el que se ejecuta. OBLIGATORIO.
+
+crowdar.extent.environment= nombre del ambiente en que se ejecuta. Ejemplo: Linux - Jenkins. OBLIGATORIO.
+
+crowdar.extent.user.name= nombre del ejecutor. OBLIGATORIO.
+
+crowdar.extent.report.path= ubicación del reporte dentro de la carpeta target. OPCIONAL.
+
+crowdar.extent.report.name= nombre del archivo del reporte html. OPCIONAL.
+
+crowdar.extent.report.document.title= titulo del reporte una vez dentro. OPCIONAL.
+
+crowdar.extent.report.encoding= tipo de encoding. Default: UTF-8. OPCIONAL.
+
+crowdar.extent.report.protocol= tipo de protocolo. http o https. Default: http. OPCIONAL.
+
+crowdar.extent.report.theme= tipo de estilo: dark o standard. Default: standard. OPCIONAL.
+
+crowdar.extent.report.timestampformat= tipo de formato en textos como duracion de ejecucion del caso. OPCIONAL.
+
+crowdar.report.screenshotOnSuccess= mostrar screenshot en step pass. Default: false. OPCIONAL.
+```
+
+# Properties de timeout.
+
+```properties
+crowdar.wait.fluent.frecuency= frecuencia de espera para fluent. Default: 500
+
+crowdar.wait.fluent.timeout= tiempo de espera para fluent. Default: 60
+
+crowdar.wait.file.download.timeout= tiempo de espera para descargas. Default: 10
+
+crowdar.wait.timeout= tiempo de espera general. Default: 20
+
+crowdar.wait.script.timeout= tiempo de espera para finalizacion de un script. Default: 55
+
+crowdar.wait.impicit.timeout= tiempo de espera para timeout implicitos. Default: 2
+
+crowdar.wait.element.timeout= tiempo de espera para elementos. Default: 30
+
+crowdar.wait.appStart.timeout= tiempo de espera para que la app inicie (mobile). Default: 70
+
+crowdar.pattern.simpleDate= formato para fecha. Default: MM/dd/yyyy
+
+crowdar.pattern.completeDate= formato para fecha y hora. Default: MM/dd/yyyy hh:mm aa
+```
+
+# Properties para casos de prueba de validacion de emails.
+
+```propertied
+email.protocol= protocolo para sesion de email. Valores posibles: pop3s - imap - smtp. OPCIONAL.
+    
+email.user= email para autenticarse. OPCIONAL.
+
+email.password= password para autenticarse. OPCIONAL.
+
+crowdar.download.folder= path en donde se ubicaran los archivos descargados durante la ejecucion del test. OPCIONAL.
+```
+
+# Ejemplos de distintas cinfiguraciones.
+	
+       
+       api:
 		- config.properties
 			- crowdar.projectType=API
 			- base.api.url=${base.api.url}
@@ -120,26 +169,31 @@ ProjectTypes:
  		Las properties son crowdar.localDriverType y crowdar.remoteDriverType.
 
  		Ejemplo:
- 		    + crowdar.projectType=GENERIC
+ 		    ```properties
+                   crowdar.projectType=GENERIC
  		    + crowdar.projectType.driverCapabilities.jsonFile=src/main/resources/browsers/genericCapabilities.json
  		    + crowdar.setupStrategy=web.DownloadLatestStrategy
 	 		+ crowdar.projectType.localDriverType=org.openqa.selenium.chrome.ChromeDriver
 	 		+ crowdar.projectType.remoteDriverType=org.openqa.selenium.remote.RemoteWebDriver
- 
-   ---------------------
+                     ```
+              
+
 
 El root del framework tiene todas las librerias que son utilizadas dentro del core para correr cualquier proyecto cliente
 
 
 
 # LIPPIA configuration
+
 Primer paso a dar para construir un projecto Lippia, en un proyecto cliente se deben configurar el pom.xml en el proyecto cliente y  heredar del root de la siguiente manera
 
-`<parent>
+```XML
+<parent>
         <groupId>com.crowdar</groupId>
         <artifactId>Crowd-Root-Framework</artifactId>
         <version>3.0.0</version>
-</parent>`
+</parent>
+```
 
 
 y del core se agrega en la seccion de dependencias de la siguiente manera 
