@@ -316,7 +316,3 @@ Para ver ejemplos de como se configuran los distintos pipelines ver los siguient
 + https://github.com/Crowdar/lippia-api-sample-project-github-ci
 + https://github.com/Crowdar/lippia-web-sample-project-github-ci
 + https://github.com/Crowdar/lippia-api-sample-project-gitlab-ci
-
-
-
-
