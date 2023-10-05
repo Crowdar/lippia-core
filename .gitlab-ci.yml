@@ -16,7 +16,6 @@ deploy Nexus:
       changes:
         - "*[^.md]"    
 
-
 deploy DockerHub:
   stage: Deploy
   variables:
@@ -35,8 +34,9 @@ deploy DockerHub:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
     - docker push crowdar/lippia:$PROJECT_VERSION
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release"'  
-
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release"'
+      changes:
+        - "*[^.md]"  
 
 Sample test:
   stage: Test
@@ -72,9 +72,7 @@ GitHub publish:
     - git push -u github HEAD:master
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      changes:
-        - "*[^.md]"   
-
+ 
 Deploy OSSRH:
   stage: Deploy
   script:
