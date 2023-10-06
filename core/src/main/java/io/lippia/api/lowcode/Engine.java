@@ -39,6 +39,7 @@ import static io.lippia.api.service.MethodServiceEnum.NOSSLVERIFICATION;
 public class Engine {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
+
     static {
         EventDispatcher.dispatch(ParametersDefinitionTypeBuilder::new);
         EventDispatcher.dispatch(PrimitiveDefinitionTypeBuilder::new);
@@ -51,9 +52,12 @@ public class Engine {
 
     @Beta
     public void set(String value, String key, String in) {
-        Object json = evaluateExpression(in);
-        if (json instanceof List || json instanceof Map) {
-            json = new Gson().toJson(json);
+        if (CommonService.BODY.get() == null) {
+            Object json = evaluateExpression(in);
+            if (json instanceof List || json instanceof Map) {
+                json = new Gson().toJson(json);
+            }
+            CommonService.BODY.set(json.toString());
         }
 
         String[] splJsonPath = key.split("\\.");
@@ -67,13 +71,15 @@ public class Engine {
             }
         }
 
-        String newJson = JsonPathAnalyzer.set(json.toString(), completeJsonPath, key, evaluateExpression(value));
-
+        String newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, evaluateExpression(value));
+        CommonService.BODY.set(newJson);
         if (in.startsWith("$(") && in.endsWith(")")) {
             in = in.substring(6, in.length() - 1);
-            setVariable(in, newJson);
+            setVariable(in, CommonService.BODY.get());
         }
+        EndpointConfiguration.body(CommonService.BODY.get());
     }
+
 
     public void set(String key, String value) throws UnsupportedEncodingException {
         if (value.matches("^response.\\S+$") || value.matches("^\\$\\.\\S+$")) {
@@ -128,13 +134,13 @@ public class Engine {
 
 
     public <T> void validates(T v1, T v2, BiPredicate<T, T> typeMatcher, final String errorMessage) {
-        if(typeMatcher.test(v1,v2))return;
+        if (typeMatcher.test(v1, v2)) return;
 
-        Assert.fail(String.format(errorMessage,v1,v2));
+        Assert.fail(String.format(errorMessage, v1, v2));
     }
 
     public void responseMatcher(String path, String expectedValue) throws UnsupportedEncodingException {
-        String pathValue = responseMatcherGeneric(path, StandardCharsets.UTF_8).toString();
+        Object pathValue = responseMatcherGeneric(path, StandardCharsets.UTF_8);
         Assert.assertEquals(pathValue, evaluateExpression(expectedValue), "no match!");
     }
 

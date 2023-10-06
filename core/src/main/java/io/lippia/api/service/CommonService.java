@@ -3,18 +3,15 @@ package io.lippia.api.service;
 
 import com.crowdar.api.rest.APIManager;
 import com.crowdar.api.rest.Response;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
 import io.cucumber.core.logging.Logger;
 import io.cucumber.core.logging.LoggerFactory;
 import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.steps.StepsInCommon;
 import io.lippia.api.utils.Json;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -24,11 +21,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import static com.crowdar.api.rest.APIManager.getLastResponse;
 import static com.crowdar.core.JsonUtils.getJSONFromPath;
-
 import static io.lippia.api.lowcode.Engine.evaluateExpression;
 import static io.lippia.api.lowcode.Engine.gson;
 
@@ -55,7 +50,7 @@ public class CommonService {
     }
 
     public static String getJSONFromFileBody(String fileName) throws IOException {
-        return getJSONFromFileGeneric(fileName, "bodies");
+        return getJSONFromFileGeneric(fileName, "resources");
     }
 
     public static String getJSONFromFileResponse(String fileName) throws IOException {
@@ -64,7 +59,7 @@ public class CommonService {
 
     public static String getJSONFromFileGeneric(String fileName, String from) throws IOException {
         String file = String.format(fileName).replace("/", File.separator);
-        String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat("jsons").concat(File.separator).concat(from).concat(File.separator).concat(file);
+        String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat(from).concat(File.separator).concat(file);
         return getJSONFromPath(path);
     }
 
