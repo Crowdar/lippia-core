@@ -12,7 +12,7 @@ public class ParametersDefinitionTypeBuilder implements IHierarchicalEventTypeBu
 
     public enum ParametersDefinitionTypeFactory {
         VARIABLE(ParametersDefinitionTypeParser.Variable::new,   ".*?\\$\\(var.\\w+\\).*?"),
-        OLD_VARIABLE(ParametersDefinitionTypeParser.OldVariable::new, "\\{{2}\\w+}{2}"),
+        OLD_VARIABLE(ParametersDefinitionTypeParser.OldVariable::new, ".*?\\{{2}\\w+}{2}.*?"),
         ENV_PROPERTY(ParametersDefinitionTypeParser.EnvironmentProperty::new, ".*?\\$\\(env.\\w+\\).*?"),
         FILE_PROPERTY(ParametersDefinitionTypeParser.FileProperty::new, ".*?\\$\\(pro.\\w+\\).*?"),
         XLSX_PROPERTY(ParametersDefinitionTypeParser.XLSXProperty::new, ".*?\\$\\(\\w+\\.xlsx@\\w+\\).*?"),

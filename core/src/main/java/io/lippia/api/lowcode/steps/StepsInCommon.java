@@ -2,13 +2,9 @@ package io.lippia.api.lowcode.steps;
 
 
 import com.crowdar.api.rest.APIManager;
-import com.crowdar.core.JsonUtils;
 import com.crowdar.database.DatabaseManager;
-import com.github.fge.jsonschema.cfg.ValidationConfiguration;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -22,18 +18,14 @@ import io.lippia.api.lowcode.messages.Messages;
 import io.lippia.api.lowcode.variables.VariablesManager;
 import io.lippia.api.service.CommonService;
 
-import org.testng.Assert;
-
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.fge.jsonschema.SchemaVersion.DRAFTV4;
 import static io.lippia.api.lowcode.Engine.gson;
 import static io.lippia.api.lowcode.configuration.ConfigurationType.*;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 
 
 public class StepsInCommon {
@@ -79,7 +71,7 @@ public class StepsInCommon {
     }
 
     @Given("^setear el valor (.*) de las clave (.*) en el body (.*)$")
-    @And("^set value (\\S+) of key (\\S+) in body (\\S+)$")
+    @And("^set value (.*) of key (\\S+) in body (\\S+)$")
     public void set(String value, String key, String in) {
         this.engine.set(value, key, in);
     }
