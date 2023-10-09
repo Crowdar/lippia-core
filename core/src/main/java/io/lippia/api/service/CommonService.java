@@ -156,10 +156,10 @@ public class CommonService {
     }
 
 
-    public static Object getValueOf(String valor) throws UnsupportedEncodingException {
+    public static Object getValueOf(Object valor) throws UnsupportedEncodingException {
         Object result = null;
-        if (valor.startsWith("$.")) {
-            result = engine.responseMatcherGeneric(valor, StandardCharsets.UTF_8);
+        if (valor.toString().startsWith("$.")) {
+            result = engine.responseMatcherGeneric(valor.toString(), StandardCharsets.UTF_8);
         } else {
             result = evaluateExpression(valor);
         }
