@@ -1,8 +1,10 @@
 package io.lippia.api.lowcode;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.exc.InputCoercionException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 public abstract class PrimitiveDefinitionTypeParser extends DefinitionTypeParser {
@@ -24,8 +26,12 @@ public abstract class PrimitiveDefinitionTypeParser extends DefinitionTypeParser
 
     static class Integer extends PrimitiveDefinitionTypeParser {
         @Override
-        public java.lang.Integer parse(java.lang.Object... entries) throws JsonProcessingException {
-            return new ObjectMapper().readValue((java.lang.String) entries[0], java.lang.Integer.class);
+        public java.lang.Number parse(java.lang.Object... entries) throws JsonProcessingException {
+            try {
+                return new ObjectMapper().readValue((java.lang.String) entries[0], java.lang.Integer.class);
+            } catch(InputCoercionException ex) {
+                return new ObjectMapper().readValue((java.lang.String) entries[0], BigInteger.class);
+            }
         }
     }
 
