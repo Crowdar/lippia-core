@@ -82,7 +82,7 @@ public class Engine {
 
 
     public void set(String key, String value) throws UnsupportedEncodingException {
-        if (value.matches("^response.\\S+$") || value.matches("^\\$\\.\\S+$")) {
+        if (value.matches("^response\\.?\\S+$") || value.matches("^\\$\\.?\\S+$")) {
             value = responseMatcherGeneric(value.replaceFirst("response", Matcher.quoteReplacement("$")), StandardCharsets.UTF_8).toString();
         }
 
