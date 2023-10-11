@@ -2,9 +2,13 @@ package io.lippia.api.service;
 
 
 import com.crowdar.api.rest.APIManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.crowdar.api.rest.Response;
 import com.google.gson.Gson;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import io.cucumber.core.logging.Logger;
+import io.cucumber.core.logging.LoggerFactory;
+import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.steps.StepsInCommon;
 import io.lippia.api.utils.Json;
@@ -17,10 +21,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.regex.Pattern;
 
+import static com.crowdar.api.rest.APIManager.getLastResponse;
 import static com.crowdar.core.JsonUtils.getJSONFromPath;
-import static io.lippia.api.lowcode.variables.ParametersUtility.replaceVars;
+import static io.lippia.api.lowcode.Engine.evaluateExpression;
+import static io.lippia.api.lowcode.Engine.gson;
 
 
 public class CommonService {
@@ -31,23 +36,21 @@ public class CommonService {
     public static ThreadLocal<String> VALUE = new ThreadLocal<>();
 
     public static void deleteAttributeInBody(String attribute, String jsonName) throws IOException {
-    	try {
-    		String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
-    		BODY.set(jsonFromFile);
-    		Json json = Json.of(jsonFromFile);
-        	json.remove(attribute);
+        try {
+            String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
+            BODY.set(jsonFromFile);
+            Json json = Json.of(jsonFromFile);
+            json.remove(attribute);
             BODY.set(String.valueOf(json));
             stepsInCommon.setBody(BODY.get());
-    	}catch(Exception e) {
-    		System.out.println(e.getMessage());
-    	}
-    	
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
-
-
     public static String getJSONFromFileBody(String fileName) throws IOException {
-        return getJSONFromFileGeneric(fileName, "bodies");
+        return getJSONFromFileGeneric(fileName, "resources");
     }
 
     public static String getJSONFromFileResponse(String fileName) throws IOException {
@@ -56,7 +59,7 @@ public class CommonService {
 
     public static String getJSONFromFileGeneric(String fileName, String from) throws IOException {
         String file = String.format(fileName).replace("/", File.separator);
-        String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat("resources").concat(File.separator).concat("jsons").concat(File.separator).concat(from).concat(File.separator).concat(file);
+        String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("test").concat(File.separator).concat(from).concat(File.separator).concat(file);
         return getJSONFromPath(path);
     }
 
@@ -65,35 +68,14 @@ public class CommonService {
             String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
             BODY.set(jsonFromFile);
             Json json = Json.of(jsonFromFile);
-            json.set(attribute,evaluateExpresion(newValue));
+            json.set(attribute, evaluateExpression(newValue));
             BODY.set(String.valueOf(json));
             stepsInCommon.setBody(BODY.get());
-        }catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
     }
-
-    public static Object evaluateExpresion(String entry) throws IOException {
-        Object result = null;
-        if (Pattern.compile("^\\d+$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Integer.class);
-        } else if (Pattern.compile("^\\d+\\.[\\d+]{1,9}$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Float.class);
-        } else if (Pattern.compile("^\\d+\\.[\\d+]{10,}$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Double.class);
-        } else if (Pattern.compile("^true|false$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Boolean.class);
-        } else if (Pattern.compile("^\\{[^{].*[^}]}$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, Object.class);
-        } else if (Pattern.compile("^\\[(.|\n)*]$").matcher(entry).matches()) {
-            result = new ObjectMapper().readValue(entry, ArrayList.class);
-        } else {
-            result = new ObjectMapper().readValue(entry, String.class);
-        }
-        return result;
-    }
-
 
     public static void setValuesKeys(String newValue, String attribute, String jsonName) throws Exception {
         ArrayList<String> claves = setLista(attribute);
@@ -174,15 +156,39 @@ public class CommonService {
     }
 
 
-    public static Object getValueOf(String valor) throws UnsupportedEncodingException {
+    public static Object getValueOf(Object valor) throws UnsupportedEncodingException {
         Object result = null;
-        if (valor.startsWith("$.")) {
-            result = engine.responseMatcherGeneric(valor, StandardCharsets.UTF_8);
+        if (valor.toString().startsWith("$.")) {
+            result = engine.responseMatcherGeneric(valor.toString(), StandardCharsets.UTF_8);
         } else {
-            result = replaceVars(valor);
+            result = evaluateExpression(valor);
         }
+
         return result;
     }
 
+    public void printerLog() {
+        EndpointConfiguration.getInstance().setMethodService(MethodServiceEnum.NOSSLVERIFICATION);
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        Response response = getLastResponse();
+        Object status = response.getStatusCode();
+        Object body = response.getResponse();
+        logger.info("\n┌────────────────────────────────────────────────────────────────────────────────────┐\n" +
+                "|────────────────────────────────── BEGIN RESPONSE ──────────────────────────────────|\n" +
+                " status " + status + "\n" + getPrettyJson(body) + "\n" +
+                "|─────────────────────────────────── END RESPONSE  ──────────────────────────────────|\n" +
+                "└────────────────────────────────────────────────────────────────────────────────────┘"
+        );
+    }
 
+
+    public static String getPrettyJson(Object jsonString) {
+        if (jsonString == null) return null;
+        if (jsonString instanceof Map) {
+            jsonString = gson.toJson(jsonString, Map.class);
+        }
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(new String(jsonString.toString().getBytes(StandardCharsets.UTF_8)));
+        return gson.toJson(je);
+    }
 }

@@ -1,6 +1,7 @@
 package com.crowdar.email;
 
 import com.crowdar.core.PropertyManager;
+
 import org.jsoup.Jsoup;
 
 import javax.mail.*;

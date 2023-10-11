@@ -1,14 +1,17 @@
 package io.lippia.api.lowcode.configuration;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import io.lippia.api.configuration.EndpointConfiguration;
 
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static io.lippia.api.lowcode.variables.ParametersUtility.replaceVars;
-
+import static io.lippia.api.lowcode.Engine.evaluateExpression;
 
 public enum ConfigurationType {
 
@@ -32,7 +35,7 @@ public enum ConfigurationType {
     }
 
     public void assign(String key, String value) {
-        key = replaceVars(key); value = replaceVars(value);
+        value = (String) evaluateExpression(value);
         if (configResolver != null) {
             value = configResolver.apply(value);
         }
@@ -41,7 +44,11 @@ public enum ConfigurationType {
     }
 
     public void assign(String assignment) {
-        assignment = replaceVars(assignment);
+        Object evalExpr = evaluateExpression(assignment);
+        if (evalExpr instanceof List || evalExpr instanceof Map) {
+            assignment = new Gson().toJson(evalExpr);
+        } else assignment = (String) evalExpr;
+
         if (configResolver != null) {
             assignment = configResolver.apply(assignment);
         }

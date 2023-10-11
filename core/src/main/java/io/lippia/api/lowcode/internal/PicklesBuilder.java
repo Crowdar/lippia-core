@@ -1,6 +1,7 @@
 package io.lippia.api.lowcode.internal;
 
 import cucumber.runtime.model.CucumberFeature;
+
 import gherkin.events.PickleEvent;
 import gherkin.pickles.PickleLocation;
 import gherkin.pickles.PickleTag;
@@ -9,8 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.lippia.api.lowcode.recognition.validators.Patterns.*;
-
+import static io.lippia.api.lowcode.patterns.Patterns.LOCATION_EXCLUSION_PATTERN;
+import static io.lippia.api.lowcode.patterns.Patterns.LOCATION_INCLUSION_PATTERN;
+import static io.lippia.api.lowcode.patterns.Patterns.SCENARIO_NAME_EXCLUSION_PATTERN;
+import static io.lippia.api.lowcode.patterns.Patterns.SCENARIO_NAME_INCLUSION_PATTERN;
+import static io.lippia.api.lowcode.patterns.Patterns.TAG_EXCLUSION_PATTERN;
+import static io.lippia.api.lowcode.patterns.Patterns.TAG_INCLUSION_PATTERN;
 
 public class PicklesBuilder {
 
