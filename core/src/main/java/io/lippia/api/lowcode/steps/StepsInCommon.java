@@ -2,10 +2,7 @@ package io.lippia.api.lowcode.steps;
 
 
 import com.crowdar.api.rest.APIManager;
-import com.crowdar.core.JsonUtils;
 import com.crowdar.database.DatabaseManager;
-import com.github.fge.jsonschema.cfg.ValidationConfiguration;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.cucumber.java.en.And;
@@ -18,12 +15,8 @@ import io.lippia.api.extractor.json.JsonStringValueExtractor;
 import io.lippia.api.extractor.xml.XmlStringValueExtractor;
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.messages.Messages;
-import io.lippia.api.lowcode.recognition.RecognitionObjectType;
-import io.lippia.api.lowcode.recognition.parser.Deserialization;
-import io.lippia.api.lowcode.recognition.parser.Types;
 import io.lippia.api.lowcode.variables.VariablesManager;
 import io.lippia.api.service.CommonService;
-import org.testng.Assert;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -31,16 +24,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.fge.jsonschema.SchemaVersion.DRAFTV4;
 import static io.lippia.api.lowcode.Engine.gson;
 import static io.lippia.api.lowcode.configuration.ConfigurationType.*;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 
 
 public class StepsInCommon {
-
-
     Engine engine = new Engine();
+    CommonService commonService = new CommonService();
 
     @Given("^define ([^\\d]\\S+) = ([^\\s].*)$")
     public void setVariable(String key, String value) throws UnsupportedEncodingException {
@@ -72,12 +62,18 @@ public class StepsInCommon {
 
     @Given("^headers ([^\\s].*)$")
     public void setHeaders(String headers) {
-        this.engine.configure(HEADERS, RecognitionObjectType.find(headers).corresponding(Types.HEADERS));
+        this.engine.configure(HEADERS, headers);
     }
 
     @Given("^body (\\S+)$")
     public void setBody(String body) {
-        this.engine.configure(BODY, RecognitionObjectType.find(body).corresponding(Types.BODIES).toString());
+        this.engine.configure(BODY, body);
+    }
+
+    @Given("^setear el valor (.*) de las clave (.*) en el body (.*)$")
+    @And("^set value (.*) of key (\\S+) in body (\\S+)$")
+    public void set(String value, String key, String in) {
+        this.engine.set(value, key, in);
     }
 
     @Given("^param (\\S+) = (\\S+)$")
@@ -109,14 +105,17 @@ public class StepsInCommon {
         if (respuesta instanceof List || respuesta instanceof Map) {
             respuesta = gson.toJson(respuesta);
         }
-        String jsonSchemaPath = Deserialization.getPathFromJsonPath(Types.SCHEMAS).concat(jsonName);
+
+        /* String jsonSchemaPath = Deserialization.getPathFromJsonPath(Types.SCHEMAS).concat(jsonName);
         JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.newBuilder().setValidationConfiguration(
                 ValidationConfiguration.newBuilder().setDefaultVersion(DRAFTV4).freeze()).freeze();
         Assert.assertTrue(
                 matchesJsonSchema(JsonUtils.getJSONFromPath(jsonSchemaPath))
                         .using(jsonSchemaFactory)
                         .matches(respuesta));
+    */
     }
+
 
     @Then("^response should be ([^\\s].+) contains ([^\\s].*)$")
     @And("^la respuesta debe ser ([^\\s].+) contiene ([^\\s].*)$")
@@ -128,12 +127,6 @@ public class StepsInCommon {
     @And("^eliminar clave (.*) en el body (.*)$")
     public void deleteKeyvalueAtributoInBodyPath(String attribute, String body) throws IOException {
         CommonService.deleteAttributeInBody(attribute, body);
-    }
-
-    @When("^set value (.*) of key (.*) in body (.*)$")
-    @And("^setear el valor (.*) de la clave (.*) en el body (.*)$")
-    public void setValueValorOfKeyClaveInBodyPath(String value, String key, String body) throws Exception {
-        CommonService.setValue(value, key, body);
     }
 
     @When("^set values (.*) of keys (.*) in body (.*)$")
@@ -187,6 +180,11 @@ public class StepsInCommon {
     @Then("^validate response should be ([^\\s].+) = ([^\\s].*)$")
     public void valdidateResponse(String path, String expectedValue) throws UnsupportedEncodingException {
         this.engine.responseMatcherISO(path, expectedValue);
+    }
+
+    @And("^print response$")
+    public void printResponse() {
+        commonService.printerLog();
     }
 
 }

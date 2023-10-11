@@ -1,6 +1,5 @@
 package com.crowdar.core;
 
-import com.crowdar.core.PropertyManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.typesafe.config.Config;
@@ -34,22 +33,27 @@ public class EnvironmentManager {
 
     public static String getProperty(String property) {
         parseResources();
-        if (resource.has(property)) {
-            return resource.getAsJsonPrimitive(property).getAsString();
+        if (!resource.has(property)) {
+            parseResource("default");
         }
 
-        throw new LippiaException("Property {" + property + "} has not been defined in " + definedEnvironment + " in lippia.conf");
+        return resource.getAsJsonPrimitive(property).getAsString();
     }
 
     private static void parseResources() {
+        if (definedEnvironment == null || definedEnvironment.isEmpty()) {
+            parseResource("default");
+            return;
+        }
+
         String[] environments = definedEnvironment.split("#");
         for (String env: environments) {
-            parseResources(env);
+            parseResource(env);
         }
     }
 
-    private static void parseResources(String env) {
-        if (resources.has(env) && resource == null) {
+    private static void parseResource(String env) {
+        if (resources.has(env)) {
             resource = resources.getAsJsonObject(env);
         } else if (resource.has(env)) {
             resource = resource.getAsJsonObject(env);
