@@ -5,7 +5,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.And;
-import io.lippia.api.lowcode.EnvironmentManager;
+import com.crowdar.core.EnvironmentManager;
+import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.database.DbUtils;
 import io.lippia.api.service.CommonService;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,7 +47,7 @@ public class DataBaseSteps {
 
     @Then("^validate field '(.*)' = (.*)$")
     @And("^validar campo '(.*)' = (.*)$")
-    public void validateField(String campo, String valor) throws Exception {
+    public void validateField(String campo, Object valor) throws Exception {
         Object result = null;
         try {
             if (rows.get(campo) != null) {
@@ -55,7 +56,11 @@ public class DataBaseSteps {
         } catch (Exception e) {
             throw new Exception(e.getMessage() + " - Valide que el campo " + campo + " sea el correcto");
         }
-        Assert.assertEquals(result.toString(), CommonService.getValueOf(valor));
+        if(result.getClass().equals(String.class)){
+          result = "\"".concat((String) result).concat("\"");
+        }
+        Object obj = Engine.evaluateExpression(result.toString());
+        Assert.assertEquals(obj, CommonService.getValueOf(valor));
     }
 
     @When("^add query parameter '(.*)' = (.*)$")

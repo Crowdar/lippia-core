@@ -20,16 +20,17 @@ public class JsonPathAnalyzer {
                 .build();
     }
 
-    public static <T> T read(String jsonString, String jsonPath, Class<T> classType) {
+    public static String set(String jsonString, String jsonPath, String key, Object value) {
         return JsonPath.using(configuration)
                 .parse(jsonString)
-                .read(jsonPath, classType);
+                .put(jsonPath, key, value)
+                .jsonString();
     }
 
-    public static <T> T read(String jsonString, String jsonPath) {
+    public static Object read(String jsonString, String jsonPath) {
         return JsonPath.using(configuration)
                 .parse(jsonString)
-                .<T>read(jsonPath);
+                .read(jsonPath);
     }
 }
 
