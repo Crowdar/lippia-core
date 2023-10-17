@@ -3,6 +3,9 @@ package io.lippia.api.lowcode.steps;
 
 import com.crowdar.api.rest.APIManager;
 import com.crowdar.database.DatabaseManager;
+import com.github.fge.jsonschema.SchemaVersion;
+import com.github.fge.jsonschema.cfg.ValidationConfiguration;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.cucumber.java.en.And;
@@ -17,6 +20,8 @@ import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.messages.Messages;
 import io.lippia.api.lowcode.variables.VariablesManager;
 import io.lippia.api.service.CommonService;
+import io.restassured.module.jsv.JsonSchemaValidator;
+import org.testng.Assert;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -24,7 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
-import static io.lippia.api.lowcode.Engine.gson;
 import static io.lippia.api.lowcode.configuration.ConfigurationType.*;
 
 
@@ -100,20 +104,15 @@ public class StepsInCommon {
 
     @Then("^validate schema (.+)$") // it supports only json
     @And("^validar schema (.+)$")
-    public void schema(String jsonName) throws IOException {
-        Object respuesta = APIManager.getLastResponse().getResponse();
-        if (respuesta instanceof List || respuesta instanceof Map) {
-            respuesta = gson.toJson(respuesta);
-        }
+    public void schema(String var0) throws IOException {
+        Object response = APIManager.getLastResponse().getResponse();
+        response = this.engine.instanceListOrMapOf(response);
 
-        /* String jsonSchemaPath = Deserialization.getPathFromJsonPath(Types.SCHEMAS).concat(jsonName);
-        JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.newBuilder().setValidationConfiguration(
-                ValidationConfiguration.newBuilder().setDefaultVersion(DRAFTV4).freeze()).freeze();
-        Assert.assertTrue(
-                matchesJsonSchema(JsonUtils.getJSONFromPath(jsonSchemaPath))
-                        .using(jsonSchemaFactory)
-                        .matches(respuesta));
-    */
+        Object jsonSchema = Engine.evaluateExpression(new Object[]{var0});
+        jsonSchema = this.engine.instanceListOrMapOf(jsonSchema);
+
+        JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.newBuilder().setValidationConfiguration(ValidationConfiguration.newBuilder().setDefaultVersion(SchemaVersion.DRAFTV4).freeze()).freeze();
+        Assert.assertTrue(JsonSchemaValidator.matchesJsonSchema(jsonSchema.toString()).using(jsonSchemaFactory).matches(response));
     }
 
 

@@ -54,7 +54,7 @@ public class CommonService {
     }
 
     public static String getJSONFromFileResponse(String fileName) throws IOException {
-        return getJSONFromFileGeneric(fileName, "responses");
+        return getJSONFromFileGeneric(fileName, "resources");
     }
 
     public static String getJSONFromFileGeneric(String fileName, String from) throws IOException {
