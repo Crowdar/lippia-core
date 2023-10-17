@@ -166,4 +166,11 @@ public class Engine {
         Assert.assertTrue(pathValue.toString().contains(evaluateExpression(expectedValue).toString()), "no se encontraron coincidencias!");
     }
 
+    public Object instanceListOrMapOf(Object jsonVar){
+        if (jsonVar instanceof List || jsonVar instanceof Map) {
+            jsonVar = Engine.gson.toJson(jsonVar);
+        }
+        return jsonVar;
+    }
+
 }
