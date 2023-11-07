@@ -186,4 +186,10 @@ public class StepsInCommon {
         commonService.printerLog();
     }
 
+    @Given("^imprimir '(\\S+)'$")
+    @And("^print '(\\S+)'$")
+    public void print(String param) {
+        CommonService.print(param);
+    }
+
 }
