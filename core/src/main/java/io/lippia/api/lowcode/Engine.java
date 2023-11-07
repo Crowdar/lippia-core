@@ -70,8 +70,13 @@ public class Engine {
                 completeJsonPath = completeJsonPath.concat(".").concat(splJsonPath[i]);
             }
         }
+        String newJson;
+        if (value.equals("null")) {
+            newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, null);
+        } else {
+            newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, evaluateExpression(value));
+        }
 
-        String newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, evaluateExpression(value));
         CommonService.BODY.set(newJson);
         if (in.startsWith("$(") && in.endsWith(")")) {
             in = in.substring(6, in.length() - 1);
@@ -166,7 +171,7 @@ public class Engine {
         Assert.assertTrue(pathValue.toString().contains(evaluateExpression(expectedValue).toString()), "no se encontraron coincidencias!");
     }
 
-    public Object instanceListOrMapOf(Object jsonVar){
+    public Object instanceListOrMapOf(Object jsonVar) {
         if (jsonVar instanceof List || jsonVar instanceof Map) {
             jsonVar = Engine.gson.toJson(jsonVar);
         }

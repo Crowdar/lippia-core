@@ -193,6 +193,10 @@ public class CommonService {
         return gson.toJson(je);
     }
 
+    /**
+     * This method prints any input through the console, it can be a defined variable, a response or a request
+     * @param param is the name of the variable, the attribute of a response, or a request
+     */
     public static void print(String param) {
         String param1 = param.contains("'") ? param.replace("'", "") : param;
         try {
