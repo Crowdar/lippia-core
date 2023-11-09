@@ -1,27 +1,73 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
-## [3.3.0.1]() (XX/06/2023)
+## [Unreleased]()
+## [3.3.0.2]()  (XX/11/2023)
+### Fixed
+- __Steps:__
+-   set value of key \S+ in body \S+ set null value.
+
+### Added
+- __Steps:__
+- print '\S+' allows you to display values of variables, responses and requests.
+
+  
+## [3.3.0.1]() (25/04/2023)
 ### Fixed  
 - __Steps:__  
-    Define and Header now allow spaces in the middle of the parameters
+- Define and Header now allow spaces in the middle of the parameters
+- Set value  of key \S+ in body \S+ now use to class EventDispacher.
+- Validate Schemas,set value..  and step body now specific path from resorces test so in jsons/bodies/...
+- Validate schemas is implemented by JsonSchemaFactory.newBuilder().
+- __Methods:__
+- CommonService method getValueOf() changed its signature now it receives a parameter of type object.
+- evaluateExpression call to EventDispatcher class.
 - __CucumberInternal:__  
-    Fixed problem with multiples Call in diferents features
+- Fixed problem with multiples Call in different features
+
+### Removed:
+- RecognitionObjectType
+- PropertiesManager
+- Deserialization
+- ParametersUtility.
 
 ### Added
 - __S3Client:__  
-    Now available connection with S3
+- Now available connection with S3.
+- __Polling:__
+- Provides utility methods for polling and waiting for a condition to be met within a specified timeout.
+- __FileEventDefinitionTypeParser:__
+- Abstract class that defines the read method.
+- __FileEventDefinitionTypeBuilder:__
+- Parses file type events, identifies the event using a regexp and executes, for example, the read method.
+- __IHierarchicalEventTypeBuilder:__
+- It is an interface that has the build method that all TypeBuilders implement.
+- __ParametersDefinitionTypeBuilder:__
+- The same as FileEventDefinitionTypeBuilder but for parameters.
+- __ParametersDefinitionTypeParser:__
+- Abstract class that defines file types that can be handled or global variables.
+- __PrimitiveDefinitionTypeParser:__
+- Abstract class that define casts the input it receives to the type of class it belongs to.
+- __Path:__
+- Set default path from src/test/resources
+- __PrimitiveDefinitionTypeBuilder:__
+- Enum with data types using regular expressions.
+- __EventDispatcher:__
+- Takes an input and evaluates all expressions for a match to execute an event.
 
 ### Changed
 - __EnvironmentManager:__  
     Support multi environments
+- __JsonPathAnalyzer:__
+    the read method now return data type to Object.
 - __Pom:__  
     Upgrade of dependencies :  
- 		- jackson-version from 2.9.10 -> 2.15.0 
- 		- spring-framework.version from 4.3.8.RELEASE -> 5.3.27
+    - jackson-version from 2.9.10 -> 2.15.0 
+    - spring-framework.version from 4.3.8.RELEASE -> 5.3.27
+    - rest-assured from 5.1.1 --> 5.3.0
 
-## [Unreleased]()
-## [3.3.0.0]() (XX/02/2023)
+
+## [3.3.0.0]() (XX/10/2022)
 ### Fixed  
 - __LocatorManager:__  
     The split is limited to 2, regardless of the number of characters represented by the ":" character, it will cut the string when finding the first match  
@@ -42,7 +88,7 @@ All notable changes to this project will be documented in this file.
     -replace in methods parameter String locatorName to String locatorElement
     -delete methods working with properties in LocatorManager 
     -modify getLocator() to receive String from constant
-    - remove before/after step from basicHook
+    -remove before/after step from basicHook
 
 ## 3.2.3.6 (01/02/2021)
 * RestClient Remove empty response validation.
