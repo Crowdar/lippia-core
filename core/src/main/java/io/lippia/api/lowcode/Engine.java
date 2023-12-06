@@ -6,9 +6,7 @@ import com.crowdar.core.annotations.Beta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-
 import gherkin.events.PickleEvent;
-
 import io.cucumber.testng.TestNGCucumberRunner;
 import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.assertions.JsonPathAnalyzer;
@@ -17,7 +15,6 @@ import io.lippia.api.lowcode.exception.LippiaException;
 import io.lippia.api.lowcode.internal.PicklesBuilder;
 import io.lippia.api.service.CallerService;
 import io.lippia.api.service.CommonService;
-
 import org.testng.Assert;
 
 import java.io.IOException;
@@ -29,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
-
-import static com.crowdar.util.JsonUtils.isJSONValid;
 
 import static io.lippia.api.lowcode.variables.VariablesManager.setVariable;
 import static io.lippia.api.service.MethodServiceEnum.NOSSLVERIFICATION;
@@ -149,6 +144,19 @@ public class Engine {
         Assert.assertEquals(pathValue, evaluateExpression(expectedValue), "no match!");
     }
 
+    public void responseMatcher(String path,String condition, String expectedValue) {
+        String pathValue = this.responseMatcherGeneric(path, StandardCharsets.UTF_8).toString();
+        expectedValue = expectedValue.replace("\"", "");
+
+        if (condition.equals("equals")) {
+            Assert.assertEquals(pathValue, evaluateExpression(expectedValue).toString(), "The value " + pathValue + " doesn't match with " + evaluateExpression(expectedValue).toString());
+        } else if (condition.equals("contains")) {
+            Assert.assertTrue(pathValue.contains(evaluateExpression(expectedValue).toString()), "The value " + pathValue + " doesn't match with " + evaluateExpression(expectedValue).toString());
+        } else {
+            Assert.fail("unsupported condition: " + condition);
+        }
+    }
+
     public void responseMatcherISO(String path, String expectedValue) throws UnsupportedEncodingException {
         String pathValue = responseMatcherGeneric(path, StandardCharsets.ISO_8859_1).toString();
         Assert.assertEquals(pathValue, evaluateExpression(expectedValue), "no match!");
@@ -162,14 +170,6 @@ public class Engine {
         return JsonPathAnalyzer.read(new String(entry.toString().getBytes(Standard)), path);
     }
 
-    public void responseContainer(String path, String expectedValue) {
-        String response = (isJSONValid(APIManager.getLastResponse().getResponse().toString())) ?
-                APIManager.getLastResponse().getResponse().toString() :
-                new Gson().toJson(APIManager.getLastResponse().getResponse());
-
-        Object pathValue = JsonPathAnalyzer.read(response, path);
-        Assert.assertTrue(pathValue.toString().contains(evaluateExpression(expectedValue).toString()), "no se encontraron coincidencias!");
-    }
 
     public Object instanceListOrMapOf(Object jsonVar) {
         if (jsonVar instanceof List || jsonVar instanceof Map) {

@@ -2,17 +2,21 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]()
-## [3.3.0.2]()  (XX/11/2023)
+## [3.3.0.2]()  (XX/12/2023)
 ### Fixed
 - __Steps:__
--   set value of key \S+ in body \S+ set null value.
+- set value of key \S+ in body \S+ set null value.
 
 ### Added
 - __Steps:__
 - print '\S+' allows you to display values of variables, responses and requests.
+- step response should be overload with options (equals|contains)
+### Delete
+- __Methods:__
+- responseContainer 
 
   
-## [3.3.0.1]() (25/04/2023)
+## [3.3.0.1]() (16/11/2023)
 ### Fixed  
 - __Steps:__  
 - Define and Header now allow spaces in the middle of the parameters
@@ -67,7 +71,7 @@ All notable changes to this project will be documented in this file.
     - rest-assured from 5.1.1 --> 5.3.0
 
 
-## [3.3.0.0]() (XX/10/2022)
+## [3.3.0.0]() (24/04/2023)
 ### Fixed  
 - __LocatorManager:__  
     The split is limited to 2, regardless of the number of characters represented by the ":" character, it will cut the string when finding the first match  
@@ -81,6 +85,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - __CallerService.call($):__  
     Changed return data type to Object
+
+## 3.2.3.8 (26/02/2021)
+*
 
 ## 3.2.3.7 (17/02/2021)
 * Fix getElementByParent and getElementsByParent in ActionManager

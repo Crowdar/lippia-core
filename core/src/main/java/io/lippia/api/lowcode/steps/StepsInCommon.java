@@ -21,7 +21,7 @@ import io.lippia.api.lowcode.messages.Messages;
 import io.lippia.api.lowcode.variables.VariablesManager;
 import io.lippia.api.service.CommonService;
 import io.restassured.module.jsv.JsonSchemaValidator;
-import org.testng.Assert;
+import junit.framework.Assert;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -102,6 +102,12 @@ public class StepsInCommon {
         this.engine.responseMatcher(path, expectedValue);
     }
 
+    @Then("^response should be ([^\\s].+) (equals|contains) ([^\\s].*)$")
+    @And("^la respuesta debe ser ([^\\s].+) (equals|contains) ([^\\s].*)$")
+    public void response(String path, String condition, String expectedValue) {
+        this.engine.responseMatcher(path, condition, expectedValue);
+    }
+
     @Then("^validate schema (.+)$") // it supports only json
     @And("^validar schema (.+)$")
     public void schema(String var0) throws IOException {
@@ -115,12 +121,6 @@ public class StepsInCommon {
         Assert.assertTrue(JsonSchemaValidator.matchesJsonSchema(jsonSchema.toString()).using(jsonSchemaFactory).matches(response));
     }
 
-
-    @Then("^response should be ([^\\s].+) contains ([^\\s].*)$")
-    @And("^la respuesta debe ser ([^\\s].+) contiene ([^\\s].*)$")
-    public void responseShouldBeSContains(String path, String expectedValue) {
-        this.engine.responseContainer(path, expectedValue);
-    }
 
     @When("^delete keyValue (.*) in body (.*)$")
     @And("^eliminar clave (.*) en el body (.*)$")
