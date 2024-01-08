@@ -2,11 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]()
-## [3.3.0.2]()  (XX/12/2023)
+## [3.3.0.2]()  (08/01/2024)
 ### Fixed
 - __Steps:__
 - set value of key \S+ in body \S+ set null value.
-
+- set value of key \S+ in body \S+ add elements to an array
 ### Added
 - __Steps:__
 - print '\S+' allows you to display values of variables, responses and requests.
