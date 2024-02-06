@@ -30,7 +30,7 @@ public class JsonPathAnalyzer {
                 .parse(jsonString);
 
         try {
-            context.set(jsonPath + key, value);
+            context.set(jsonPath + "." + key, value);
         } catch (PathNotFoundException ex) {
             return retry(context, jsonPath, key, value);
         }

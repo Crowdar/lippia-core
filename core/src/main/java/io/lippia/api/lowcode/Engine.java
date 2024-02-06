@@ -65,6 +65,7 @@ public class Engine {
                 completeJsonPath = completeJsonPath.concat(".").concat(splJsonPath[i]);
             }
         }
+
         String newJson;
         if (value.equals("null")) {
             newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, null);
