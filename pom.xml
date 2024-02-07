@@ -165,9 +165,22 @@
 
 		<!--Bonigarcia WebDriver -->
 		<dependency>
-			<groupId>io.github.bonigarcia</groupId>
-			<artifactId>webdrivermanager</artifactId>
-			<version>3.6.1</version>
+		    <groupId>io.github.bonigarcia</groupId>
+		    <artifactId>webdrivermanager</artifactId>
+		    <version>5.6.3</version>
+		    <scope>test</scope>
+		    <exclusions>
+		       <exclusion>
+		          <groupId>org.slf4j</groupId>
+		          <artifactId>slf4j-api</artifactId>
+		       </exclusion>
+		    </exclusions>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.github.luben</groupId>
+		    <artifactId>zstd-jni</artifactId>
+		    <version>1.5.5-11</version>
 		</dependency>
 
 		<!--Json serialization dependencies -->
