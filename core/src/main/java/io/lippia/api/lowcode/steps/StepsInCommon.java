@@ -102,8 +102,8 @@ public class StepsInCommon {
         this.engine.responseMatcher(path, expectedValue);
     }
 
-    @Then("^response should be ([^\\s].+) (equals|contains) ([^\\s].*)$")
-    @And("^la respuesta debe ser ([^\\s].+) (equals|contains) ([^\\s].*)$")
+    @Then("^response should be ([^\\s].+) '(equals|contains)' ([^\\s].*)$")
+    @And("^la respuesta debe ser ([^\\s].+) '(equals|contains)' ([^\\s].*)$")
     public void response(String path, String condition, String expectedValue) {
         this.engine.responseMatcher(path, condition, expectedValue);
     }
