@@ -192,6 +192,11 @@
 		    <artifactId>jackson-dataformat-xml</artifactId>
 			<version>${jackson-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.12.2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.json</groupId>
@@ -262,6 +267,11 @@
 			<type>maven-plugin</type>
 		</dependency>
 
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>5.3.0</version>
+		</dependency>
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>json-schema-validator</artifactId>
