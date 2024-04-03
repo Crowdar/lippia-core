@@ -123,11 +123,7 @@ public class StepsInCommon {
         Object schema = Engine.evaluateExpression(var0);
         schema = this.engine.instanceListOrMapOf(schema);
 
-        if (JsonUtils.isJSONValid(response.toString())) {
-            SchemaValidator.validateJsonSchema(response.toString(), schema.toString());
-        } else {
-            SchemaValidator.validateXmlSchema(response.toString(), schema.toString());
-        }
+        SchemaValidator.validate(response.toString(), schema.toString());
     }
 
     @When("^delete keyValue (.*) in body (.*)$")
