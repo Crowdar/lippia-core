@@ -2,37 +2,26 @@ package io.lippia.api.lowcode.steps;
 
 
 import com.crowdar.api.rest.APIManager;
-
-import com.crowdar.core.JsonUtils;
-
 import com.crowdar.database.DatabaseManager;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
 import io.lippia.api.configuration.enums.ParameterTypeEnum;
-
 import io.lippia.api.extractor.ddbb.DatabaseStringValueExtractor;
 import io.lippia.api.extractor.json.JsonStringValueExtractor;
 import io.lippia.api.extractor.xml.XmlStringValueExtractor;
-
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.assertions.SchemaValidator;
 import io.lippia.api.lowcode.messages.Messages;
 import io.lippia.api.lowcode.variables.VariablesManager;
-
 import io.lippia.api.service.CommonService;
 
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
 import java.util.List;
 import java.util.Map;
 
@@ -108,8 +97,8 @@ public class StepsInCommon {
         this.engine.responseMatcher(path, expectedValue);
     }
 
-    @Then("^response should be ([^\\s].+) '(equals|contains)' ([^\\s].*)$")
-    @And("^la respuesta debe ser ([^\\s].+) '(equals|contains)' ([^\\s].*)$")
+    @Then("^verify the response ([^\\s].+) '(equals|contains)' ([^\\s].*)$")
+    @And("^verificar la respuesta ([^\\s].+) '(equals|contains)' ([^\\s].*)$")
     public void response(String path, String condition, String expectedValue) {
         this.engine.responseMatcher(path, condition, expectedValue);
     }
@@ -124,6 +113,12 @@ public class StepsInCommon {
         schema = this.engine.instanceListOrMapOf(schema);
 
         SchemaValidator.validate(response.toString(), schema.toString());
+    }
+
+    @Then("^response should be ([^\\s].+) contains ([^\\s].*)$")
+    @And("^la respuesta debe ser ([^\\s].+) contiene ([^\\s].*)$")
+    public void responseShouldBeSContains(String path, String expectedValue) {
+        this.engine.responseContainer(path, expectedValue);
     }
 
     @When("^delete keyValue (.*) in body (.*)$")
