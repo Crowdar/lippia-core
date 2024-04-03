@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 
+import static com.crowdar.util.JsonUtils.isJSONValid;
+
 import static io.lippia.api.lowcode.variables.VariablesManager.setVariable;
 import static io.lippia.api.service.MethodServiceEnum.NOSSLVERIFICATION;
 
@@ -170,6 +172,14 @@ public class Engine {
         return JsonPathAnalyzer.read(new String(entry.toString().getBytes(Standard)), path);
     }
 
+    public void responseContainer(String path, String expectedValue) {
+        String response = (isJSONValid(APIManager.getLastResponse().getResponse().toString())) ?
+                APIManager.getLastResponse().getResponse().toString() :
+                new Gson().toJson(APIManager.getLastResponse().getResponse());
+
+        Object pathValue = JsonPathAnalyzer.read(response, path);
+        Assert.assertTrue(pathValue.toString().contains(evaluateExpression(expectedValue).toString()), "no se encontraron coincidencias!");
+    }
 
     public Object instanceListOrMapOf(Object jsonVar) {
         if (jsonVar instanceof List || jsonVar instanceof Map) {
