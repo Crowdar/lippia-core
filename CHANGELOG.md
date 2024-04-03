@@ -1,19 +1,29 @@
 # Changelog 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]()
-## [3.3.0.2]()  (08/01/2024)
+
+## [3.3.0.2]()  (03/04/2024)
 ### Fixed
 - __Steps:__
-- set value of key \S+ in body \S+ set null value.
-- set value of key \S+ in body \S+ add elements to an array
+- set value of key \S+ in body \S+ allows setting null values.
+- set value of key \S+ in body \S+ allows allows modifying values of inner arrays
+
+### Changed
+- Updated driver management method to utilize Bonigarcia library version 5.7.0
+- Change Jackson library to version 2.10.1
+- javadoc plugin version 3.4.1
+
 ### Added
 - __Steps:__
 - print '\S+' allows you to display values of variables, responses and requests.
-- step response should be overload with options (equals|contains)
-### Delete
-- __Methods:__
-- responseContainer 
+- step verify the response ([^\s].+) '(equals|contains)' ([^\s].*)
+- FileManager to perform a recursive search by entering any directory or subdirectory
+- dependency com.github.luben
+- SchemaValidator class that validates the reason for a schema failure
+
+### Removed
+-S3Client Class
+
 
   
 ## [3.3.0.1]() (16/11/2023)
@@ -114,7 +124,7 @@ All notable changes to this project will be documented in this file.
 * improve locator manager by adding String ... args to be replaced in properties.  "%s" in propertie values it will be replaced by recivided args
 
 
-##  completar las versiones faltantes.
+##  ...
 
 
 ## 3.2.2 (08/09/2020)
