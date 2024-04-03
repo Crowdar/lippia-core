@@ -45,7 +45,6 @@ public class Engine {
         return EventDispatcher.trigger(entries);
     }
 
-    @Beta
     public void set(String value, String key, String in) {
         if (CommonService.BODY.get() == null) {
             Object json = evaluateExpression(in);
