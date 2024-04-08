@@ -11,6 +11,7 @@ import io.cucumber.core.logging.LoggerFactory;
 import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.Engine;
 import io.lippia.api.lowcode.steps.StepsInCommon;
+import io.lippia.api.lowcode.variables.VariablesManager;
 import io.lippia.api.utils.Json;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,9 +19,9 @@ import org.testng.Assert;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Matcher;
 
 import static com.crowdar.api.rest.APIManager.getLastResponse;
 import static com.crowdar.core.JsonUtils.getJSONFromPath;
@@ -33,7 +34,7 @@ public class CommonService {
     static StepsInCommon stepsInCommon = new StepsInCommon();
 
     public static ThreadLocal<String> BODY = new ThreadLocal<>();
-    public static ThreadLocal<String> VALUE = new ThreadLocal<>();
+
 
     public static void deleteAttributeInBody(String attribute, String jsonName) throws IOException {
         try {
@@ -63,7 +64,7 @@ public class CommonService {
         return getJSONFromPath(path);
     }
 
-    public static void setValue(String newValue, String attribute, String jsonName) throws Exception {
+    public static void setValue(String newValue, String attribute, String jsonName)  {
         try {
             String jsonFromFile = (BODY.get() == null) ? getJSONFromFileBody(jsonName) : BODY.get();
             BODY.set(jsonFromFile);
@@ -156,7 +157,7 @@ public class CommonService {
     }
 
 
-    public static Object getValueOf(Object valor) throws UnsupportedEncodingException {
+    public static Object getValueOf(Object valor) {
         Object result = null;
         if (valor.toString().startsWith("$.")) {
             result = engine.responseMatcherGeneric(valor.toString(), StandardCharsets.UTF_8);
@@ -191,4 +192,28 @@ public class CommonService {
         JsonElement je = jp.parse(new String(jsonString.toString().getBytes(StandardCharsets.UTF_8)));
         return gson.toJson(je);
     }
+
+    /**
+     * This method prints any input through the console, it can be a defined variable, a response or a request
+     * @param param is the name of the variable, the attribute of a response, or a request
+     */
+    public static void print(String param) {
+        String param1 = param.contains("'") ? param.replace("'", "") : param;
+        try {
+            if (param1.equals("response")) {
+                CommonService commonService = new CommonService();
+                commonService.printerLog();
+            }
+            if (param1.matches("^response\\.?\\S+$") || param1.matches("^\\$\\.?\\S+$")) {
+                String value = engine.responseMatcherGeneric(param1.replaceFirst("response", Matcher.quoteReplacement("$")), StandardCharsets.UTF_8).toString();
+                System.out.println("Attribute " + param1 + ": " + value);
+            }
+            if (param1.contains("{{")) {
+                System.out.println("Variable " + param1 + ": " + VariablesManager.getVariable(param1.replaceAll("[\\{\\{|\\}\\}]", "")));
+            }
+        } catch (Exception e) {
+            System.out.println("Could not find variable or path" + e.getMessage());
+        }
+    }
+
 }

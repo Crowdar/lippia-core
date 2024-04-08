@@ -21,10 +21,38 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 public class FileUtils {
 
     private static String tempDirectoryPath = null;
+
+    /**
+     *
+     * @param baseFilePath: base file path which can include ** to perform a recursive search by entering any directory or subdirectory
+     * sample usage: getAbsPaths("classpath:/dir0/**\/file.json")
+     *
+     * @return List of paths
+     **/
+    public static List<String> getAbsPaths(String baseFilePath) {
+        final List<String> paths = new LinkedList<>();
+
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
+        try {
+            baseFilePath = baseFilePath.replaceAll("\\*\\*", "/**/");
+            Resource[] resources = resolver.getResources("file:" + baseFilePath);
+            for (Resource resource : resources) {
+                paths.add(resource.getFile().getAbsolutePath());
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+
+        return paths;
+    }
 
     private static String getDirPath(String dirName) {
         JarFile jarFile = null;
