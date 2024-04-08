@@ -3,6 +3,9 @@ _Please be aware that the use of listeners can be challenging for users who are 
 
 Most of the events that trigger the core-level steps come from a pillar called the **EventDispatcher**, which is responsible for recognizing expressions and executing logic based on matches.
 
+One of the most significant advantages of using this powerful feature is that you can create an expression to trigger an event, and this will be automatically applied to everything that happens in the core.  
+It applies to saving the result in: a Gherkin-level variable, setting values in the request body, headers, schemas, and can even be combined with other values.
+
 #### Guide
 Often, we will need to create events such as a UUID generator, Strings, Integers, etc.  
 It is not necessary to create new steps for this purpose (although it could be done); Lippia Low Code has an architecture that allows you to create listeners to recognize and trigger this event, which can then be set in a Gherkin-level variable (if that is your current need).
