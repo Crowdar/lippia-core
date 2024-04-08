@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [3.3.0.2]()  (03/04/2024)
+## [3.3.0.2]()  (08/04/2024)
 ### Fixed
 - __Steps:__
 - set value of key \S+ in body \S+ allows setting null values.
@@ -23,6 +23,9 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 -S3Client Class
+
+### Discontinued
+-"Coming soon, steps "response should be ([^\s].+) = ([^\s].*)" and "response should be ([^\s].+) contains ([^\s].*)" will cease to receive maintenance and must be replaced with step "verify the response ([^\s].+) '(equals|contains)' ([^\s].*)"."
 
 
   
