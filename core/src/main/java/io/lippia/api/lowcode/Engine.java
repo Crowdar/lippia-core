@@ -1,13 +1,18 @@
 package io.lippia.api.lowcode;
 
 import com.crowdar.api.rest.APIManager;
+
 import com.crowdar.bdd.cukes.TestNGSecuencialRunner;
-import com.crowdar.core.annotations.Beta;
+
+import com.crowdar.core.JsonUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import gherkin.events.PickleEvent;
+
 import io.cucumber.testng.TestNGCucumberRunner;
+
 import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.assertions.JsonPathAnalyzer;
 import io.lippia.api.lowcode.configuration.ConfigurationType;
@@ -15,6 +20,8 @@ import io.lippia.api.lowcode.exception.LippiaException;
 import io.lippia.api.lowcode.internal.PicklesBuilder;
 import io.lippia.api.service.CallerService;
 import io.lippia.api.service.CommonService;
+import io.lippia.api.utils.XmlUtils;
+
 import org.testng.Assert;
 
 import java.io.IOException;
@@ -49,11 +56,17 @@ public class Engine {
 
     public void set(String value, String key, String in) {
         if (CommonService.BODY.get() == null) {
-            Object json = evaluateExpression(in);
-            if (json instanceof List || json instanceof Map) {
-                json = new Gson().toJson(json);
+            Object content = evaluateExpression(in);
+
+            if (JsonUtils.isJSONValid(content.toString())) {
+                if (content instanceof List || content instanceof Map) {
+                    content = new Gson().toJson(content);
+                }
+            } else if (XmlUtils.isXMLValid(content.toString())) {
+                content = XmlUtils.asJson(content.toString());
             }
-            CommonService.BODY.set(json.toString());
+
+            CommonService.BODY.set(content.toString());
         }
 
         String[] splJsonPath = key.split("\\.");
@@ -79,6 +92,7 @@ public class Engine {
             in = in.substring(6, in.length() - 1);
             setVariable(in, CommonService.BODY.get());
         }
+
         EndpointConfiguration.body(CommonService.BODY.get());
     }
 

@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import io.lippia.api.lowcode.exception.LippiaException;
+
 import org.apache.log4j.Logger;
 
 import com.crowdar.core.PropertyManager;
@@ -21,6 +23,8 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.TagType;
 import com.github.jknack.handlebars.Template;
 
+import org.json.JSONException;
+import org.json.XML;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -66,6 +70,18 @@ public class XmlUtils {
             return true;
         } catch (SAXException | IOException e) {
             return false;
+        }
+    }
+
+    public static String asJson(String xmlString) {
+        if (isXMLValid(xmlString)) {
+            try {
+                return XML.toJSONObject(xmlString).toString();
+            } catch (JSONException e) {
+                throw new LippiaException(e.getMessage());
+            }
+        } else {
+            throw new LippiaException("Invalid XML provided, \n\t%s", xmlString);
         }
     }
 
