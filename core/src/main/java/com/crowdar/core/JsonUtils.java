@@ -3,13 +3,18 @@ package com.crowdar.core;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.TagType;
 import com.github.jknack.handlebars.Template;
+
+import io.lippia.api.lowcode.exception.LippiaException;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.XML;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +32,15 @@ public class JsonUtils {
             mapper = new ObjectMapper();
         }
         return mapper;
+    }
+
+    public static String asXml(String jsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            return XML.toString(jsonObject);
+        } catch (Exception e) {
+            throw new LippiaException("Error converting JSON to XML: " + e.getMessage());
+        }
     }
 
     public static <T> T deserialize(String json, Class<T> type) {

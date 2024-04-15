@@ -180,9 +180,15 @@ public class Engine {
 
     public Object responseMatcherGeneric(String path, Charset Standard) {
         Object entry = APIManager.getLastResponse().getResponse();
-        if (entry instanceof List || entry instanceof Map) {
-            entry = new Gson().toJson(entry);
+
+        if (JsonUtils.isJSONValid(entry)) {
+            if (entry instanceof List || entry instanceof Map) {
+                entry = new Gson().toJson(entry);
+            }
+        } else if (XmlUtils.isXMLValid(entry.toString())) {
+            entry = XmlUtils.asJson(entry.toString());
         }
+
         return JsonPathAnalyzer.read(new String(entry.toString().getBytes(Standard)), path);
     }
 

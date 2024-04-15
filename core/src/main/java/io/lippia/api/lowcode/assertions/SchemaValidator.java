@@ -34,7 +34,7 @@ public class SchemaValidator {
     public static void validate(String data, String schema) {
         if (JsonUtils.isJSONValid(data)) {
             validateJsonSchema(data, schema);
-        } else if (XmlUtils.isXMLValid(data)) {
+        } else if (XmlUtils.isXMLValid(data) && XmlUtils.isXSDValid(schema)) {
             validateXmlSchema(data, schema);
         } else {
             throw new LippiaException("Content %s is not in the expected format", data);
@@ -57,19 +57,15 @@ public class SchemaValidator {
     }
 
     private static void validateXmlSchema(String xmlData, String xmlSchema) {
-        if (XmlUtils.isXSDValid(xmlSchema)) {
-            try {
-                SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                Schema schema = factory.newSchema(new StreamSource(new StringReader(xmlSchema)));
+        try {
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new StreamSource(new StringReader(xmlSchema)));
 
-                Validator validator = schema.newValidator();
+            Validator validator = schema.newValidator();
 
-                validator.validate(new StreamSource(new StringReader(xmlData)));
-            } catch (SAXException | IOException e) {
-                throw new LippiaException(e.getMessage());
-            }
-        } else {
-            throw new LippiaException("You must provide a valid XSD format");
+            validator.validate(new StreamSource(new StringReader(xmlData)));
+        } catch (SAXException | IOException e) {
+            throw new LippiaException(e.getMessage());
         }
     }
 
