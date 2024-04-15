@@ -16,7 +16,7 @@ Let's imagine for a moment that you need a step like:
 * define uuid = $(random.uuid)
 ```
 
-Well, it's not necessary to create a step to do that; we could simply create an event that triggers when the expression **$(random.uuid)** is recognized.
+It's not necessary to create a step to do that; we could simply create an event that triggers when the expression **$(random.uuid)** is recognized.
 
 #### Building our first event
 
