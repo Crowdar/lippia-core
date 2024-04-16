@@ -5,6 +5,7 @@ import com.crowdar.api.rest.APIManager;
 import com.crowdar.bdd.cukes.TestNGSecuencialRunner;
 
 import com.crowdar.core.JsonUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -55,6 +56,8 @@ public class Engine {
     }
 
     public void set(String value, String key, String in) {
+        boolean isXml = false;
+
         if (CommonService.BODY.get() == null) {
             Object content = evaluateExpression(in);
 
@@ -64,6 +67,7 @@ public class Engine {
                 }
             } else if (XmlUtils.isXMLValid(content.toString())) {
                 content = XmlUtils.asJson(content.toString());
+                isXml = true;
             }
 
             CommonService.BODY.set(content.toString());
@@ -87,7 +91,7 @@ public class Engine {
             newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, evaluateExpression(value));
         }
 
-        CommonService.BODY.set(newJson);
+        CommonService.BODY.set(isXml ? JsonUtils.asXml(newJson) : newJson);
         if (in.startsWith("$(") && in.endsWith(")")) {
             in = in.substring(6, in.length() - 1);
             setVariable(in, CommonService.BODY.get());
