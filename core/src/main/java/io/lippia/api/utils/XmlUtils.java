@@ -62,13 +62,9 @@ public class XmlUtils {
     public static boolean isXSDValid(String xsd) {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(new StringReader(xsd)));
-
-            Validator validator = schema.newValidator();
-
-            validator.validate(new StreamSource(new StringReader(xsd)));
+            factory.newSchema(new StreamSource(new StringReader(xsd)));
             return true;
-        } catch (SAXException | IOException e) {
+        } catch (SAXException var4) {
             return false;
         }
     }

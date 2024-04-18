@@ -85,6 +85,11 @@ public class Engine {
         }
 
         String newJson;
+        if (XmlUtils.isXMLValid(CommonService.BODY.get())) {
+            isXml = true;
+            CommonService.BODY.set(XmlUtils.asJson(CommonService.BODY.get()));
+        }
+
         if (value.equals("null")) {
             newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, null);
         } else {
