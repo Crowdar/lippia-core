@@ -91,9 +91,17 @@ public abstract class RandomValuesDefinitionTypeParser extends DefinitionTypePar
 ```
 
 #### Implementation
-
+*EventDispatcher.class*
 ```java
-EventDispatcher.dispatch(RandomValuesDefinitionTypeBuilder::new);
+import io.lippia.api.lowcode.EventDispatcher;
+public class Engine {
+       
+    static {
+        EventDispatcher.dispatch(RandomValuesDefinitionTypeBuilder::new);
+    }
+ 
+}
+
 ```
 
 Please note that using this dispatch will save your custom event to the queue of pre-developed listeners in the low code core.
