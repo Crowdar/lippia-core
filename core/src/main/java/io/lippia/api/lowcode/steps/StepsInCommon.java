@@ -3,12 +3,15 @@ package io.lippia.api.lowcode.steps;
 
 import com.crowdar.api.rest.APIManager;
 import com.crowdar.database.DatabaseManager;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
 import io.lippia.api.configuration.enums.ParameterTypeEnum;
 import io.lippia.api.extractor.ddbb.DatabaseStringValueExtractor;
 import io.lippia.api.extractor.json.JsonStringValueExtractor;
@@ -20,8 +23,10 @@ import io.lippia.api.lowcode.variables.VariablesManager;
 import io.lippia.api.service.CommonService;
 
 import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -124,7 +129,7 @@ public class StepsInCommon {
     @When("^delete keyValue (.*) in body (.*)$")
     @And("^eliminar clave (.*) en el body (.*)$")
     public void deleteKeyvalueAtributoInBodyPath(String attribute, String body) throws IOException {
-        CommonService.deleteAttributeInBody(attribute, body);
+        this.engine.delete(attribute, body);
     }
 
     @When("^set values (.*) of keys (.*) in body (.*)$")
