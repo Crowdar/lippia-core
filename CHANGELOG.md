@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]()
 
-## [3.3.0.3]() (TBD)
+## [3.3.0.3]() (xx/05/2024)
 ### Added
 - **XML Support**
     - Key/Value pairs setting
@@ -18,8 +18,8 @@ All notable changes to this project will be documented in this file.
 ## [3.3.0.2]() (08/01/2024)
 ### Fixed
 - **Steps:**
-    - Fixed issue with setting null value for key \S+ in body \S+.
-    - Fixed issue with adding elements to an array for key \S+ in body \S+.
+    - Fixed issue with setting null value for **set value of key \S+ in body \S+** step.
+    - Fixed issue with adding elements to an array **set value of key \S+ in body \S+** step.
 ### Added
 - **Steps:**
     - Added 'print '\S+'' to display values of variables, responses, and requests.
