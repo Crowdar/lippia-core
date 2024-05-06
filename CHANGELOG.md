@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]()
+
+## [3.3.0.3]() (TBD) 
+### Added
+- **XML Support**
+  - Set Key/Value pairs
+  - Delete Key/Value pairs
+  - Data Validation
+  - Schema Validation
+
 ## [3.3.0.2]()  (08/01/2024)
 ### Fixed
 - __Steps:__
