@@ -30,11 +30,9 @@ public class JsonKeysProcessor {
 
         if (CommonService.BODY.get() == null) {
             Object content = Engine.evaluateExpression(in);
+            if (content instanceof List || content instanceof Map) {
+                content = new Gson().toJson(content);
 
-            if (JsonUtils.isJSONValid(content.toString())) {
-                if (content instanceof List || content instanceof Map) {
-                    content = new Gson().toJson(content);
-                }
             } else if (XmlUtils.isXMLValid(content.toString())) {
                 content = XmlUtils.asJson(content.toString());
                 isXml = true;
