@@ -22,7 +22,7 @@ public class JsonKeysProcessor {
     }
 
     public static void set(String value, String key, String in) {
-        processOperation(key, in, value.equals("null") ? null : Engine.evaluateExpression(value));
+        processOperation(key, in, Engine.evaluateExpression(value));
     }
 
     private static void processOperation(String key, String in, Object value) {
@@ -32,7 +32,6 @@ public class JsonKeysProcessor {
             Object content = Engine.evaluateExpression(in);
             if (content instanceof List || content instanceof Map) {
                 content = new Gson().toJson(content);
-
             } else if (XmlUtils.isXMLValid(content.toString())) {
                 content = XmlUtils.asJson(content.toString());
                 isXml = true;
@@ -58,8 +57,10 @@ public class JsonKeysProcessor {
             CommonService.BODY.set(XmlUtils.asJson(CommonService.BODY.get()));
         }
 
-        if (value == null && key != null) {
+        if (value == null) {
             newJson = JsonPathAnalyzer.delete(CommonService.BODY.get(), completeJsonPath.concat(".").concat(key));
+        } else if (value.equals("null")) {
+            newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, null);
         } else {
             newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, value);
         }
