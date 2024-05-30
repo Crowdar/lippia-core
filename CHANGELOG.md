@@ -1,9 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]()
 
-## [3.3.0.3]() (xx/05/2024)
+## [3.3.0.3]() (30/05/2024)
 ### Added
 - **XML Support**
     - Key/Value pairs setting
