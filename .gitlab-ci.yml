@@ -68,7 +68,7 @@ GitHub publish:
     - name: docker:19.03.12-dind
       alias: docker
   script:
-    - git remote add github https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Crowdar/lippia-core.git
+    - git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/Crowdar/lippia-core.git
     - git push -u github HEAD:master
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
