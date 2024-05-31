@@ -1,13 +1,19 @@
 package io.lippia.api.lowcode;
 
 import com.crowdar.api.rest.APIManager;
+
 import com.crowdar.bdd.cukes.TestNGSecuencialRunner;
-import com.crowdar.core.annotations.Beta;
+
+import com.crowdar.core.JsonUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import gherkin.events.PickleEvent;
+
 import io.cucumber.testng.TestNGCucumberRunner;
+
 import io.lippia.api.configuration.EndpointConfiguration;
 import io.lippia.api.lowcode.assertions.JsonPathAnalyzer;
 import io.lippia.api.lowcode.configuration.ConfigurationType;
@@ -15,6 +21,8 @@ import io.lippia.api.lowcode.exception.LippiaException;
 import io.lippia.api.lowcode.internal.PicklesBuilder;
 import io.lippia.api.service.CallerService;
 import io.lippia.api.service.CommonService;
+import io.lippia.api.utils.XmlUtils;
+
 import org.testng.Assert;
 
 import java.io.IOException;
@@ -47,42 +55,13 @@ public class Engine {
         return EventDispatcher.trigger(entries);
     }
 
-    @Beta
     public void set(String value, String key, String in) {
-        if (CommonService.BODY.get() == null) {
-            Object json = evaluateExpression(in);
-            if (json instanceof List || json instanceof Map) {
-                json = new Gson().toJson(json);
-            }
-            CommonService.BODY.set(json.toString());
-        }
-
-        String[] splJsonPath = key.split("\\.");
-        String completeJsonPath = "$";
-
-        if (splJsonPath.length > 1) {
-            key = splJsonPath[splJsonPath.length - 1];
-
-            for (int i = 0; i <= splJsonPath.length - 2; i++) {
-                completeJsonPath = completeJsonPath.concat(".").concat(splJsonPath[i]);
-            }
-        }
-
-        String newJson;
-        if (value.equals("null")) {
-            newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, null);
-        } else {
-            newJson = JsonPathAnalyzer.set(CommonService.BODY.get(), completeJsonPath, key, evaluateExpression(value));
-        }
-
-        CommonService.BODY.set(newJson);
-        if (in.startsWith("$(") && in.endsWith(")")) {
-            in = in.substring(6, in.length() - 1);
-            setVariable(in, CommonService.BODY.get());
-        }
-        EndpointConfiguration.body(CommonService.BODY.get());
+        JsonKeysProcessor.set(value, key, in);
     }
 
+    public void delete(String key, String in) {
+        JsonKeysProcessor.delete(key, in);
+    }
 
     public void set(String key, String value) throws UnsupportedEncodingException {
         if (value.matches("^response\\.?\\S+$") || value.matches("^\\$\\.?\\S+$")) {
@@ -167,9 +146,15 @@ public class Engine {
 
     public Object responseMatcherGeneric(String path, Charset Standard) {
         Object entry = APIManager.getLastResponse().getResponse();
-        if (entry instanceof List || entry instanceof Map) {
-            entry = new Gson().toJson(entry);
+
+        if (JsonUtils.isJSONValid(entry)) {
+            if (entry instanceof List || entry instanceof Map) {
+                entry = new Gson().toJson(entry);
+            }
+        } else if (XmlUtils.isXMLValid(entry.toString())) {
+            entry = XmlUtils.asJson(entry.toString());
         }
+
         return JsonPathAnalyzer.read(new String(entry.toString().getBytes(Standard)), path);
     }
 

@@ -54,5 +54,12 @@ public class JsonPathAnalyzer {
                 .parse(jsonString)
                 .read(jsonPath);
     }
+
+    public static String delete(String jsonString, String jsonPath) {
+        return JsonPath.using(configuration)
+                .parse(jsonString)
+                .delete(jsonPath)
+                .jsonString();
+    }
 }
 

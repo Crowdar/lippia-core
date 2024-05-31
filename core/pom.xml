@@ -7,12 +7,12 @@
 	<parent>
 		<groupId>io.lippia</groupId>
 		<artifactId>root</artifactId>
-		<version>3.3.0.2-SNAPSHOT</version>
+		<version>3.3.0.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>core</artifactId>
 	<packaging>jar</packaging>
-	<url>http://lippia.io</url>
+	<url>https://lippia.io</url>
 
 	<name>lippia-core</name>
 
