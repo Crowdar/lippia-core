@@ -1,20 +1,40 @@
 package io.lippia.api.utils;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import io.lippia.api.lowcode.exception.LippiaException;
+
 import org.apache.log4j.Logger;
 
 import com.crowdar.core.PropertyManager;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.TagType;
 import com.github.jknack.handlebars.Template;
+
+import org.json.JSONException;
+import org.json.XML;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 public class XmlUtils {
 
@@ -25,6 +45,40 @@ public class XmlUtils {
             mapper = new XmlMapper();
         }
         return mapper;
+    }
+
+    public static boolean isXMLValid(String xml) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource inputSource = new InputSource(new StringReader(xml));
+            builder.parse(inputSource);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isXSDValid(String xsd) {
+        try {
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            factory.newSchema(new StreamSource(new StringReader(xsd)));
+            return true;
+        } catch (SAXException var4) {
+            return false;
+        }
+    }
+
+    public static String asJson(String xmlString) {
+        if (isXMLValid(xmlString)) {
+            try {
+                return XML.toJSONObject(xmlString).toString();
+            } catch (JSONException e) {
+                throw new LippiaException(e.getMessage());
+            }
+        } else {
+            throw new LippiaException("Invalid XML provided, \n\t%s", xmlString);
+        }
     }
 
     public static <T> T deserialize(String xml, Class<T> type) {
