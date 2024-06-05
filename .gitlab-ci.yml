@@ -68,8 +68,14 @@ GitHub publish:
     - name: docker:19.03.12-dind
       alias: docker
   script:
-    - git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/Crowdar/lippia-core.git
-    - git push -v -u github HEAD:master
+    #- git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/Crowdar/lippia-core.git
+    #- git push -v -u github HEAD:master
+    - mkdir -p ~/.ssh
+    - echo "${GITHUB_DEPLOY_KEY}" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    - git push git@github.com:${GITHUB_REPO}.git HEAD:${CI_COMMIT_REF_NAME} --force
+    - git push git@github.com:${GITHUB_REPO}.git --tags
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
  
