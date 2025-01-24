@@ -28,7 +28,7 @@ public abstract class PrimitiveDefinitionTypeParser extends DefinitionTypeParser
         @Override
         public java.lang.Number parse(java.lang.Object... entries) throws JsonProcessingException {
             try {
-                return new ObjectMapper().readValue((java.lang.String) entries[0], java.lang.Integer.class);
+                return new ObjectMapper().readValue(entries[0].toString(), java.lang.Integer.class);
             } catch(InputCoercionException ex) {
                 return new ObjectMapper().readValue(entries[0].toString(), BigInteger.class);
             }
