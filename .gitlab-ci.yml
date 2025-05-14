@@ -82,12 +82,31 @@ GitHub publish:
 Deploy OSSRH:
   stage: Deploy
   script:
-    - sh create-settings.sh # Create our settings.xml file.  Will fail if environment variables aren't set properly.
-    - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d -md sha256
-    - gpg --batch --import ${GPG_KEY_FILE}
+    - mkdir -p ~/.gnupg
+    - echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
+    - gpgconf --kill gpg-agent
+
+
+    - openssl aes-256-cbc -d -md sha256 -in private-key.gpg.enc -out private-key.gpg -pass pass:$OPENSSL_PWD
+    - gpg --batch --import private-key.gpg
+    - echo -e "5\ny\n" | gpg --batch --command-fd 0 --edit-key $GPG_KEY trust
+
+    - export GPG_PASSPHRASE="$GPG_PASSPHRASE"
+    - export GPG_TTY=$(tty)
+
     - mvn versions:set -DremoveSnapshot
-    - mvn -P ossrh -B -s settings.xml verify
-    - mvn -P ossrh -B -s settings.xml deploy
+    - mvn -P ossrh -B -s settings.xml \
+        -Dgpg.executable=gpg \
+        -Dgpg.keyname=$GPG_KEY \
+        -Dgpg.passphrase=$GPG_PASSPHRASE \
+        -Dgpg.arguments="--pinentry-mode","loopback" \
+        verify
+    - mvn -P ossrh -B -s settings.xml \
+        -Dgpg.executable=gpg \
+        -Dgpg.keyname=$GPG_KEY \
+        -Dgpg.passphrase=$GPG_PASSPHRASE \
+        -Dgpg.arguments="--pinentry-mode","loopback" \
+        deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
       changes:
