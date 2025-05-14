@@ -6,7 +6,7 @@
 
 	<groupId>io.lippia</groupId>
 	<artifactId>root</artifactId>
-	<version>3.3.0.3-SNAPSHOT</version>
+	<version>3.3.0.4-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<url>https://lippia.io</url>
@@ -483,16 +483,6 @@
 					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 				</repository>
 			</distributionManagement>
-
 		</profile>
-
 	</profiles>
-
-    <repositories>
-        <repository>
-            <id>crowdarRepo</id>
-            <name>crowdar-repository</name>
-            <url>https://nexus-v3-repositories.automation.crowdaronline.com/repository/maven-public/</url>
-        </repository>
-    </repositories>
 </project>

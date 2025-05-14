@@ -35,7 +35,7 @@ public enum ConfigurationType {
     }
 
     public void assign(String key, String value) {
-        value = (String) evaluateExpression(value);
+        value = evaluateExpression(value).toString();
         if (configResolver != null) {
             value = configResolver.apply(value);
         }

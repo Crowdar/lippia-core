@@ -13,6 +13,8 @@ deploy Nexus:
     - mvn -B -s settings.xml deploy 
   rules:
     - if: '$CI_COMMIT_BRANCH == "release"'
+      changes:
+        - "*[^.md]"    
 
 deploy DockerHub:
   stage: Deploy
@@ -32,9 +34,9 @@ deploy DockerHub:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
     - docker push crowdar/lippia:$PROJECT_VERSION
   rules:
-    - if: '$CI_COMMIT_BRANCH == "release"'
-    - if: '$CI_COMMIT_BRANCH == "master"'
-
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release"'
+      changes:
+        - "*[^.md]"  
 
 Sample test:
   stage: Test
@@ -57,6 +59,8 @@ Sample test:
     #- docker compose -f api-docker-compose.yml up --abort-on-container-exit --exit-code-from lippia
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
+      changes:
+        - "*[^.md]"   
 
 GitHub publish:
   stage: Publish
@@ -64,11 +68,17 @@ GitHub publish:
     - name: docker:19.03.12-dind
       alias: docker
   script:
-    - git remote add github https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Crowdar/lippia-core.git
-    - git push -u github HEAD:master
+    #- git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/Crowdar/lippia-core.git
+    #- git push -v -u github HEAD:master
+    - mkdir -p ~/.ssh
+    - echo "${GITHUB_DEPLOY_KEY}" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    - git push git@github.com:${GITHUB_REPO}.git HEAD:${CI_COMMIT_REF_NAME} --force
+    - git push git@github.com:${GITHUB_REPO}.git --tags
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-
+ 
 Deploy OSSRH:
   stage: Deploy
   script:
@@ -80,4 +90,6 @@ Deploy OSSRH:
     - mvn -P ossrh -B -s settings.xml deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
+      changes:
+        - "*[^.md]"   
 
